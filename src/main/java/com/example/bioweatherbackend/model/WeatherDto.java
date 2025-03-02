@@ -14,6 +14,8 @@ public class WeatherDto {
     private double lat;
     private double lon;
     private String placeName;
+    private String countryCode;
+    private String countryName;
 
     private String  weatherDesc;
     private String  temperature;
