@@ -29,14 +29,12 @@ public class WeatherController {
     public @ResponseBody WeatherDto getWeather(@RequestParam(defaultValue = "0") Double lat, @RequestParam(defaultValue = "0") Double lon) {
         WeatherDto weatherDto = new WeatherDto();
 
-
-
         List<NearbyPlace> nearbyPlaces = locationService.fetchNearbyPlace(lat, lon);
-
-        NearbyPlace place  = nearbyPlaces.getFirst();
-        if (place == null) {
+        if (nearbyPlaces.isEmpty()) {
             throw new RuntimeException("Place not found.");
         }
+
+        NearbyPlace place = nearbyPlaces.getFirst();
 
         weatherDto.setLat(Double.parseDouble(place.getLat()));
         weatherDto.setLon(Double.parseDouble(place.getLng()));
