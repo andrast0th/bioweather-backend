@@ -26,10 +26,10 @@ public class WeatherController {
     private LocationService locationService;
 
     @GetMapping
-    public @ResponseBody WeatherDto getWeather(@RequestParam(defaultValue = "0") Double lat, @RequestParam(defaultValue = "0") Double lon) {
+    public @ResponseBody WeatherDto getWeather(@RequestParam(defaultValue = "0") Double lat, @RequestParam(defaultValue = "0") Double lng) {
         WeatherDto weatherDto = new WeatherDto();
 
-        List<Place> places = locationService.fetchNearbyPlace(lat, lon);
+        List<Place> places = locationService.fetchNearbyPlace(lat, lng);
         if (places.isEmpty()) {
             throw new RuntimeException("Place not found.");
         }
@@ -37,7 +37,7 @@ public class WeatherController {
         Place place = places.getFirst();
 
         weatherDto.setLat(Double.parseDouble(place.getLat()));
-        weatherDto.setLon(Double.parseDouble(place.getLng()));
+        weatherDto.setLng(Double.parseDouble(place.getLng()));
         weatherDto.setCountryCode(place.getCountryCode());
         weatherDto.setCountryName(place.getCountryName());
 

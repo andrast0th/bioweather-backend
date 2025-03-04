@@ -24,8 +24,8 @@ public class LocationController {
     }
 
     @GetMapping(value = "georeference", produces = {"application/json"})
-    public @ResponseBody Place geoReference(@RequestParam(defaultValue = "0") Double lat, @RequestParam(defaultValue = "0") Double lon) {
-        List<Place> places = locationService.fetchNearbyPlace(lat, lon);
+    public @ResponseBody Place geoReference(@RequestParam(defaultValue = "0") Double lat, @RequestParam(defaultValue = "0") Double lng) {
+        List<Place> places = locationService.fetchNearbyPlace(lat, lng);
 
         if (places.isEmpty()) {
             throw new RuntimeException("Place not found.");

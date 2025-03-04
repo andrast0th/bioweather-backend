@@ -12,7 +12,7 @@ import java.util.List;
 public class WeatherDto {
 
     private double lat;
-    private double lon;
+    private double lng;
     private String placeName;
     private String countryCode;
     private String countryName;
