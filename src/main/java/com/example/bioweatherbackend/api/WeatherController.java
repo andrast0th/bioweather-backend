@@ -2,7 +2,7 @@ package com.example.bioweatherbackend.api;
 
 import com.example.bioweatherbackend.model.BioWeatherConditionDto;
 import com.example.bioweatherbackend.model.BioWeatherForecastDto;
-import com.example.bioweatherbackend.model.NearbyPlace;
+import com.example.bioweatherbackend.model.Place;
 import com.example.bioweatherbackend.model.WeatherDto;
 import com.example.bioweatherbackend.service.LocationService;
 import lombok.AllArgsConstructor;
@@ -29,12 +29,12 @@ public class WeatherController {
     public @ResponseBody WeatherDto getWeather(@RequestParam(defaultValue = "0") Double lat, @RequestParam(defaultValue = "0") Double lon) {
         WeatherDto weatherDto = new WeatherDto();
 
-        List<NearbyPlace> nearbyPlaces = locationService.fetchNearbyPlace(lat, lon);
-        if (nearbyPlaces.isEmpty()) {
+        List<Place> places = locationService.fetchNearbyPlace(lat, lon);
+        if (places.isEmpty()) {
             throw new RuntimeException("Place not found.");
         }
 
-        NearbyPlace place = nearbyPlaces.getFirst();
+        Place place = places.getFirst();
 
         weatherDto.setLat(Double.parseDouble(place.getLat()));
         weatherDto.setLon(Double.parseDouble(place.getLng()));

@@ -1,6 +1,6 @@
 package com.example.bioweatherbackend.api;
 
-import com.example.bioweatherbackend.model.NearbyPlace;
+import com.example.bioweatherbackend.model.Place;
 import com.example.bioweatherbackend.service.LocationService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -19,19 +19,19 @@ public class LocationController {
     private LocationService locationService;
 
     @GetMapping(value = "search", produces = {"application/json"})
-    public @ResponseBody String search(@RequestParam(name = "q") String query) {
+    public @ResponseBody List<Place>  search(@RequestParam(name = "q") String query) {
         return locationService.search(query);
     }
 
     @GetMapping(value = "georeference", produces = {"application/json"})
-    public @ResponseBody NearbyPlace geoReference(@RequestParam(defaultValue = "0") Double lat, @RequestParam(defaultValue = "0") Double lon) {
-        List<NearbyPlace> nearbyPlaces = locationService.fetchNearbyPlace(lat, lon);
+    public @ResponseBody Place geoReference(@RequestParam(defaultValue = "0") Double lat, @RequestParam(defaultValue = "0") Double lon) {
+        List<Place> places = locationService.fetchNearbyPlace(lat, lon);
 
-        if (nearbyPlaces.isEmpty()) {
+        if (places.isEmpty()) {
             throw new RuntimeException("Place not found.");
         }
 
-        return nearbyPlaces.getFirst();
+        return places.getFirst();
     }
 
 }

@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class NearbyPlace {
+public class Place {
     public String adminCode1;
     public String lng;
     public String distance;

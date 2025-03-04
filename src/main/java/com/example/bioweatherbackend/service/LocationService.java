@@ -1,6 +1,6 @@
 package com.example.bioweatherbackend.service;
 
-import com.example.bioweatherbackend.model.NearbyPlace;
+import com.example.bioweatherbackend.model.Place;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,35 +38,36 @@ public class LocationService {
         }
     }
 
-    public List<NearbyPlace> fetchNearbyPlace(double lat, double lng) {
+    public List<Place> fetchNearbyPlace(double lat, double lng) {
         String url = BASE_URL_NEARBY + "?lat=" + lat + "&lng=" + lng + "&username=" + USERNAME;
         String response;
         try {
             response = fetchFromApi(url);
-            return parseNearbyPlaces(response);
+            return parsePlaces(response);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private static List<NearbyPlace> parseNearbyPlaces(String jsonResponse) throws JsonProcessingException {
+    private static List<Place> parsePlaces(String jsonResponse) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode rootNode = objectMapper.readTree(jsonResponse);
-        List<NearbyPlace> places = new ArrayList<>();
+        List<Place> places = new ArrayList<>();
 
         if (rootNode.has("geonames")) {
             for (JsonNode node : rootNode.get("geonames")) {
-                NearbyPlace place = objectMapper.treeToValue(node, NearbyPlace.class);
+                Place place = objectMapper.treeToValue(node, Place.class);
                 places.add(place);
             }
         }
         return places;
     }
 
-    public String search(String query) {
+    public List<Place> search(String query) {
         String url = BASE_URL_SEARCH + "?q=" + query + "&maxRows=10&lang=en&username=" + USERNAME + "&style=MEDIUM&featureClass=P";
         try {
-            return fetchFromApi(url);
+            String response = fetchFromApi(url);
+            return parsePlaces(response);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
