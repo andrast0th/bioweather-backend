@@ -93,4 +93,8 @@ public class LocationService {
             }
         }
     }
+
+    public int getCacheSize() {
+        return cache.size();
+    }
 }

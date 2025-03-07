@@ -66,4 +66,8 @@ public class WeatherService {
 
     }
 
+    public int getCacheSize() {
+        return cache.size();
+    }
+
 }

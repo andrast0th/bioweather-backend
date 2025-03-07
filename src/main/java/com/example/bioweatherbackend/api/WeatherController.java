@@ -18,7 +18,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 @Controller
-@RequestMapping("weather")
+@RequestMapping("/api/weather")
 @AllArgsConstructor
 public class WeatherController {
 
