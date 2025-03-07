@@ -19,7 +19,7 @@ public class LocationController {
     private LocationService locationService;
 
     @GetMapping(value = "search", produces = {"application/json"})
-    public @ResponseBody List<Place>  search(@RequestParam(name = "q") String query) {
+    public @ResponseBody List<Place> search(@RequestParam(name = "q") String query) {
         return locationService.search(query);
     }
 
