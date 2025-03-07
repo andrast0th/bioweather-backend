@@ -4,7 +4,6 @@ import com.example.bioweatherbackend.model.BioWeatherConditionDto;
 import com.example.bioweatherbackend.model.BioWeatherForecastDto;
 import com.example.bioweatherbackend.model.WeatherResponseDto;
 import com.example.bioweatherbackend.model.weather.WeatherForecastDto;
-import com.example.bioweatherbackend.service.LocationService;
 import com.example.bioweatherbackend.service.WeatherService;
 import lombok.AllArgsConstructor;
 import net.datafaker.Faker;
