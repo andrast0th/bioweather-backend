@@ -11,8 +11,6 @@ import java.util.List;
 @Getter
 @Setter
 public class WeatherResponseDto {
-
-    private Place place;
     private WeatherForecastDto forecast;
     private List<BioWeatherForecastDto> bioWeather = new ArrayList<>();
 

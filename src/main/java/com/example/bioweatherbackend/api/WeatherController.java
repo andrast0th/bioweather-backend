@@ -2,7 +2,6 @@ package com.example.bioweatherbackend.api;
 
 import com.example.bioweatherbackend.model.BioWeatherConditionDto;
 import com.example.bioweatherbackend.model.BioWeatherForecastDto;
-import com.example.bioweatherbackend.model.Place;
 import com.example.bioweatherbackend.model.WeatherResponseDto;
 import com.example.bioweatherbackend.model.weather.WeatherForecastDto;
 import com.example.bioweatherbackend.service.LocationService;
@@ -18,31 +17,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.List;
 
 @Controller
 @RequestMapping("weather")
 @AllArgsConstructor
 public class WeatherController {
 
-    private LocationService locationService;
     private WeatherService weatherService;
 
     @GetMapping
     public @ResponseBody WeatherResponseDto getWeather(@RequestParam(defaultValue = "0") Double lat, @RequestParam(defaultValue = "0") Double lng) {
         WeatherResponseDto weatherResponseDto = new WeatherResponseDto();
 
-        List<Place> places = locationService.fetchNearbyPlace(lat, lng);
-        if (places.isEmpty()) {
-            throw new RuntimeException("Place not found.");
-        }
-
-        // place
-        Place place = places.getFirst();
-        weatherResponseDto.setPlace(place);
-
         // weather
-        WeatherForecastDto weatherForecastDto = weatherService.fetchWeather(Double.parseDouble(place.lat), Double.parseDouble(place.lng));
+        WeatherForecastDto weatherForecastDto = weatherService.fetchWeather(lat, lng);
         weatherResponseDto.setForecast(weatherForecastDto);
 
         // Bio
