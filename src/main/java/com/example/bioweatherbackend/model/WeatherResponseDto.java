@@ -1,5 +1,6 @@
 package com.example.bioweatherbackend.model;
 
+import com.example.bioweatherbackend.model.weather.WeatherForecastDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,17 +10,10 @@ import java.util.List;
 
 @Getter
 @Setter
-public class WeatherDto {
+public class WeatherResponseDto {
 
-    private double lat;
-    private double lng;
-    private String placeName;
-    private String countryCode;
-    private String countryName;
-
-    private String  weatherDesc;
-    private String  temperature;
-
+    private Place place;
+    private WeatherForecastDto forecast;
     private List<BioWeatherForecastDto> bioWeather = new ArrayList<>();
 
     private ZonedDateTime dt;

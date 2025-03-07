@@ -3,8 +3,10 @@ package com.example.bioweatherbackend.api;
 import com.example.bioweatherbackend.model.BioWeatherConditionDto;
 import com.example.bioweatherbackend.model.BioWeatherForecastDto;
 import com.example.bioweatherbackend.model.Place;
-import com.example.bioweatherbackend.model.WeatherDto;
+import com.example.bioweatherbackend.model.WeatherResponseDto;
+import com.example.bioweatherbackend.model.weather.WeatherForecastDto;
 import com.example.bioweatherbackend.service.LocationService;
+import com.example.bioweatherbackend.service.WeatherService;
 import lombok.AllArgsConstructor;
 import net.datafaker.Faker;
 import org.springframework.stereotype.Controller;
@@ -24,33 +26,41 @@ import java.util.List;
 public class WeatherController {
 
     private LocationService locationService;
+    private WeatherService weatherService;
 
     @GetMapping
-    public @ResponseBody WeatherDto getWeather(@RequestParam(defaultValue = "0") Double lat, @RequestParam(defaultValue = "0") Double lng) {
-        WeatherDto weatherDto = new WeatherDto();
+    public @ResponseBody WeatherResponseDto getWeather(@RequestParam(defaultValue = "0") Double lat, @RequestParam(defaultValue = "0") Double lng) {
+        WeatherResponseDto weatherResponseDto = new WeatherResponseDto();
 
         List<Place> places = locationService.fetchNearbyPlace(lat, lng);
         if (places.isEmpty()) {
             throw new RuntimeException("Place not found.");
         }
 
+        // place
         Place place = places.getFirst();
+        weatherResponseDto.setPlace(place);
 
-        weatherDto.setLat(Double.parseDouble(place.getLat()));
-        weatherDto.setLng(Double.parseDouble(place.getLng()));
-        weatherDto.setCountryCode(place.getCountryCode());
-        weatherDto.setCountryName(place.getCountryName());
+        // weather
+        WeatherForecastDto weatherForecastDto = weatherService.fetchWeather(Double.parseDouble(place.lat), Double.parseDouble(place.lng));
+        weatherResponseDto.setForecast(weatherForecastDto);
 
-        weatherDto.setDt(ZonedDateTime.now(ZoneId.of("UTC")));
+        // Bio
+        LocalDate today = LocalDate.now();
+        weatherResponseDto.getBioWeather().add(getMockedBioWeather(today));
+        weatherResponseDto.getBioWeather().add(getMockedBioWeather(today.plusDays(1)));
 
+        weatherResponseDto.setDt(ZonedDateTime.now(ZoneId.of("UTC")));
+        return weatherResponseDto;
+
+    }
+
+    private BioWeatherForecastDto getMockedBioWeather(LocalDate date) {
         var faker = new Faker();
 
-        weatherDto.setPlaceName(place.getName());
-        weatherDto.setTemperature(faker.weather().temperatureCelsius());
-        weatherDto.setWeatherDesc(faker.weather().description());
-
         BioWeatherForecastDto forecastDto = new BioWeatherForecastDto();
-        forecastDto.setDate(LocalDate.now());
+
+        forecastDto.setDate(date);
         forecastDto.getConditions().add(new BioWeatherConditionDto("cardiovascular system", faker.number().numberBetween(0, 4)));
         forecastDto.getConditions().add(new BioWeatherConditionDto("gastrointestinal tract", faker.number().numberBetween(0, 4)));
         forecastDto.getConditions().add(new BioWeatherConditionDto("headache/migraine", faker.number().numberBetween(0, 4)));
@@ -62,10 +72,7 @@ public class WeatherController {
         forecastDto.getConditions().add(new BioWeatherConditionDto("skin", faker.number().numberBetween(0, 4)));
         forecastDto.getConditions().add(new BioWeatherConditionDto("sleep quality", faker.number().numberBetween(0, 4)));
 
-        weatherDto.getBioWeather().add(forecastDto);
-
-        return weatherDto;
-
+        return forecastDto;
     }
 
 }
