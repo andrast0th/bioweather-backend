@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/api/weather")
@@ -48,13 +49,13 @@ public class WeatherController {
         BioWeatherForecastDto forecastDto = new BioWeatherForecastDto();
 
         forecastDto.setDate(date);
-        forecastDto.getConditions().add(new BioWeatherConditionDto("cardiovascular system", faker.number().numberBetween(0, 4)));
-        forecastDto.getConditions().add(new BioWeatherConditionDto("gastrointestinal tract", faker.number().numberBetween(0, 4)));
-        forecastDto.getConditions().add(new BioWeatherConditionDto("headache/migraine", faker.number().numberBetween(0, 4)));
-        forecastDto.getConditions().add(new BioWeatherConditionDto("high blood pressure", faker.number().numberBetween(0, 4)));
-        forecastDto.getConditions().add(new BioWeatherConditionDto("low blood pressure", faker.number().numberBetween(0, 4)));
-        forecastDto.getConditions().add(new BioWeatherConditionDto("nervous system", faker.number().numberBetween(0, 4)));
-        forecastDto.getConditions().add(new BioWeatherConditionDto("respiratory tract", faker.number().numberBetween(0, 4)));
+        forecastDto.getConditions().add(new BioWeatherConditionDto("cardiovascular_system", faker.number().numberBetween(0, 4)));
+        forecastDto.getConditions().add(new BioWeatherConditionDto("gastrointestinal_tract", faker.number().numberBetween(0, 4)));
+        forecastDto.getConditions().add(new BioWeatherConditionDto("headache_migraine", faker.number().numberBetween(0, 4)));
+        forecastDto.getConditions().add(new BioWeatherConditionDto("high_blood_pressure", faker.number().numberBetween(0, 4)));
+        forecastDto.getConditions().add(new BioWeatherConditionDto("low_blood_pressure", faker.number().numberBetween(0, 4)));
+        forecastDto.getConditions().add(new BioWeatherConditionDto("nervous_system", faker.number().numberBetween(0, 4)));
+        forecastDto.getConditions().add(new BioWeatherConditionDto("respiratory_tract", faker.number().numberBetween(0, 4)));
         forecastDto.getConditions().add(new BioWeatherConditionDto("rheumatism", faker.number().numberBetween(0, 4)));
         forecastDto.getConditions().add(new BioWeatherConditionDto("skin", faker.number().numberBetween(0, 4)));
         forecastDto.getConditions().add(new BioWeatherConditionDto("sleep quality", faker.number().numberBetween(0, 4)));
