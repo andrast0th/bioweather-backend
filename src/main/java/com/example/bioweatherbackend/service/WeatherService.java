@@ -11,17 +11,10 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.concurrent.ConcurrentHashMap;
-
-class CacheEntry {
-    WeatherForecastDto response;
-    long timestamp;
-
-    CacheEntry(WeatherForecastDto response, long timestamp) {
-        this.response = response;
-        this.timestamp = timestamp;
-    }
-}
 
 @Service
 @Slf4j
@@ -29,11 +22,10 @@ public class WeatherService {
 
     private static final String BASE_URL = "https://api.openweathermap.org/data/3.0/onecall";
     private static final String API_KEY = System.getenv("OPENWEATHERMAP_API_KEY");
-    private static final long CACHE_EXPIRY_TIME = 24 * 60 * 60 * 1000; // 26h
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    private static final ConcurrentHashMap<String, CacheEntry> cache = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, WeatherForecastDto> cache = new ConcurrentHashMap<>();
 
     public WeatherForecastDto fetchWeather(double lat, double lng) {
 
@@ -41,11 +33,11 @@ public class WeatherService {
 
         // Check cache first
         String cacheKey = "" + lat + lng;
-        CacheEntry cachedEntry = cache.get(cacheKey);
+        WeatherForecastDto cachedEntry = cache.get(cacheKey);
 
-        if (cachedEntry != null && (currentTime - cachedEntry.timestamp) < CACHE_EXPIRY_TIME) {
+        if (cachedEntry != null && !isCacheExpired(cachedEntry.getCurrent().getDt(), cachedEntry.getTimezoneOffset())) {
             log.info("Cache hit: Returning cached response. Cache size: {}", cache.size());
-            return cachedEntry.response;
+            return cachedEntry;
         }
 
         String url = BASE_URL + "?lat=" + lat + "&lon=" + lng + "&appid=" + API_KEY;
@@ -56,7 +48,7 @@ public class WeatherService {
                 String responseBody = EntityUtils.toString(response.getEntity());
 
                 WeatherForecastDto dto = objectMapper.readValue(responseBody, WeatherForecastDto.class);
-                cache.put(cacheKey, new CacheEntry(dto, currentTime)); // Store response in cache
+                cache.put(cacheKey, dto); // Store response in cache
 
                 return dto;
             }
@@ -68,6 +60,17 @@ public class WeatherService {
 
     public int getCacheSize() {
         return cache.size();
+    }
+
+    public boolean isCacheExpired(long millis, Integer timezoneOffset) {
+        // get the time now for the fixed offset
+        ZonedDateTime now = ZonedDateTime.now(ZoneOffset.ofTotalSeconds(timezoneOffset));
+
+        // get a zoned date time from millis with a given offset
+        ZonedDateTime zdt = ZonedDateTime.ofInstant(Instant.ofEpochSecond(millis), ZoneOffset.ofTotalSeconds(timezoneOffset));
+
+        // is different day
+        return now.getDayOfYear() != zdt.getDayOfYear();
     }
 
 }
