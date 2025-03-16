@@ -29,8 +29,6 @@ public class WeatherService {
 
     public WeatherForecastDto fetchWeather(double lat, double lng) {
 
-        long currentTime = System.currentTimeMillis();
-
         // Check cache first
         String cacheKey = "" + lat + lng;
         WeatherForecastDto cachedEntry = cache.get(cacheKey);
