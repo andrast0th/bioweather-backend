@@ -58,7 +58,7 @@ public class WeatherController {
         forecastDto.getConditions().add(new BioWeatherConditionDto("respiratory_tract", faker.number().numberBetween(0, 4)));
         forecastDto.getConditions().add(new BioWeatherConditionDto("rheumatism", faker.number().numberBetween(0, 4)));
         forecastDto.getConditions().add(new BioWeatherConditionDto("skin", faker.number().numberBetween(0, 4)));
-        forecastDto.getConditions().add(new BioWeatherConditionDto("sleep quality", faker.number().numberBetween(0, 4)));
+        forecastDto.getConditions().add(new BioWeatherConditionDto("sleep_quality", faker.number().numberBetween(0, 4)));
 
         return forecastDto;
     }
