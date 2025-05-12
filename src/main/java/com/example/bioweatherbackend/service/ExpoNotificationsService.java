@@ -23,7 +23,7 @@ public class ExpoNotificationsService {
     public void sendNotification(String token) {
         List<String> to = new ArrayList<>();
         CloseableHttpClient httpClient = HttpClients.createDefault();
-        to.add("ExponentPushToken[" + token + "]");
+        to.add(token);
 
         ExpoPushNotificationClient client = ExpoPushNotificationClient
                 .builder()
