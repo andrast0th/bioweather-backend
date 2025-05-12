@@ -6,8 +6,6 @@ import com.example.bioweatherbackend.service.NotificationService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/notifications")
 @AllArgsConstructor
