@@ -1,15 +1,12 @@
 package com.example.bioweatherbackend.service;
 
 import com.example.bioweatherbackend.model.notifications.SubscriptionDto;
-import com.niamedtech.expo.exposerversdk.response.TicketResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
-import static com.niamedtech.expo.exposerversdk.response.TicketResponse.Ticket.Error.DEVICE_NOT_REGISTERED;
 
 @Service
 @AllArgsConstructor
