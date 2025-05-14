@@ -2,10 +2,11 @@ package com.example.bioweatherbackend.mapper;
 
 import com.example.bioweatherbackend.entity.NotificationSubscriptionEntity;
 import com.example.bioweatherbackend.model.notifications.SubscriptionDto;
+import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface NotificationSubscriptionMapper {
 
     @Mapping(target = "id.pushToken", source = "pushToken")
