@@ -1,4 +1,4 @@
-package com.example.bioweatherbackend.model;
+package com.example.bioweatherbackend.model.api;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

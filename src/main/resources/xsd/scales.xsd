@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="xs3p.xsl"?>
+<xsd:schema xmlns="http://schema.feeds.meteonews.net" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://schema.feeds.meteonews.net" elementFormDefault="qualified" version="2013-03-20 Rev. 244">
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">Specification of the scales-XML-Feed</xsd:documentation>
+  </xsd:annotation>
+  <xsd:element name="scales">
+    <xsd:annotation>
+      <xsd:documentation>root-Tag (contains between 3 and 5 elements: (optionally) parameters, content, errors, ref, (optionally) debug)</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="parameters" type="ScalesParameters" minOccurs="0"/>
+        <xsd:element name="content" type="ScalesContent"/>
+        <xsd:element name="errors" type="Errors"/>
+        <xsd:element name="ref" type="HomepageReference"/>
+        <xsd:element name="debug" type="Debug" minOccurs="0"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:complexType name="ScalesParameters">
+    <xsd:annotation>
+      <xsd:documentation>This element lists all parameters that are used to create the result of the XML-Feed. These parameters can be set in the query-string part of the URL (except id, this element is set by the path-part of the URL).</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="lang" type="xsd:string"/>
+      <xsd:element name="id" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ScalesContent">
+    <xsd:annotation>
+      <xsd:documentation>The content-element contains a sequence of category-elements.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="category" type="ScaleCategory" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ScaleCategory">
+    <xsd:annotation>
+      <xsd:documentation>Each category refers to a certain scale forecast. The category is called as given in the attribute "name". The scaled forecast returns values between (inclusive) of the attributes "min" and "max". In the attribute "last_update" contains a timestamp, when the forecast was updated/reviewed for the last time. To identify a category the value of "category_id" can be used, this value does not change for a certain category.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:all>
+      <xsd:element name="scales" type="Scales" minOccurs="1"/>
+      <xsd:element name="source" type="xsd:string" minOccurs="1"/>
+    </xsd:all>
+    <xsd:attribute name="category_id" type="xsd:string" use="required"/>
+    <xsd:attribute name="name" type="xsd:string" use="required"/>
+    <xsd:attribute name="min" type="xsd:nonNegativeInteger" use="required"/>
+    <xsd:attribute name="max" type="xsd:nonNegativeInteger" use="required"/>
+    <xsd:attribute name="last_update" type="DatetimeTimezone" use="required"/>
+  </xsd:complexType>
+  <xsd:complexType name="Scales">
+    <xsd:annotation>
+      <xsd:documentation>For a certain forecast category, there exists several forecasted types. Each of these types is returned in a "scale" element.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="scale" type="Scale" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Scale">
+    <xsd:annotation>
+      <xsd:documentation>For a certain forecast type, the forecast may exist at several days. Each of these forecast days is returned in a "forecast" element. The "name" attribute returns the name of the forecasted type.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="forecast" type="ScaleForecast" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="scale_id" type="xsd:string" use="required"/>
+    <xsd:attribute name="name" type="xsd:string" use="required"/>
+  </xsd:complexType>
+  <xsd:complexType name="ScaleForecast">
+    <xsd:annotation>
+      <xsd:documentation>A specific forecast for a type. "date" gives the date at which the forecast is valid. The content of the element is a value on a scale (ranges from "min" to "max" (see element "category"). The name of the scale is given in the attribute "name".</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:nonNegativeInteger">
+        <xsd:attribute name="date" type="Date" use="required"/>
+        <xsd:attribute name="name" type="xsd:string" use="required"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:simpleType name="Date">
+    <xsd:annotation>
+      <xsd:documentation>Content described by "YYYY-MM-DD" date-format</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[0-9]{4}-[0-9]{2}-[0-9]{2}"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="DatetimeTimezone">
+    <xsd:annotation>
+      <xsd:documentation>Content described by "YYYY-MM-DD HH:MM:SS" date-format</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2} UTC"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="Errors">
+    <xsd:annotation>
+      <xsd:documentation>If this element is empty, no errors occured during the generation of the XML-Feed. Otherwise a list of occured errors describes the kind of errors.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="error" type="Error" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Error">
+    <xsd:annotation>
+      <xsd:documentation>Contains an occured error during the generation of the XML-Feed. The element "code" contains an error-code-number (defined very close to HTTP status codes), the element "description" describes the error by a string.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="code" type="xsd:nonNegativeInteger"/>
+      <xsd:element name="description" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="HomepageReference">
+    <xsd:annotation>
+      <xsd:documentation>Link and Title of reference MeteoNews web page</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:string">
+        <xsd:attribute name="url" type="xsd:anyURI" use="required"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="Debug">
+    <xsd:annotation>
+      <xsd:documentation>This element is for internal use of MeteoNews. It's always hidden for the customers.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="include_path" type="xsd:string"/>
+      <xsd:element name="unspecified" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>
+

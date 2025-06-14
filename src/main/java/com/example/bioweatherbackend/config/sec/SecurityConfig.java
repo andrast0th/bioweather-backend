@@ -1,4 +1,4 @@
-package com.example.bioweatherbackend.sec;
+package com.example.bioweatherbackend.config.sec;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

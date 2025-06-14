@@ -1,4 +1,4 @@
-package com.example.bioweatherbackend.model.notifications;
+package com.example.bioweatherbackend.model.api.notifications;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;

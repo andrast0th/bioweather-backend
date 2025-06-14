@@ -1,0 +1,9 @@
+<jaxb:bindings xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+               xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+               version="2.1">
+    <jaxb:bindings schemaLocation="scales.xsd">
+        <jaxb:bindings node="//xsd:complexType[@name='Scales']">
+            <jaxb:class name="ScalesAlt"/>
+        </jaxb:bindings>
+    </jaxb:bindings>
+</jaxb:bindings>

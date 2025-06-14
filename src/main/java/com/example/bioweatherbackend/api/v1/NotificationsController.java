@@ -1,10 +1,10 @@
-package com.example.bioweatherbackend.api;
+package com.example.bioweatherbackend.api.v1;
 
-import com.example.bioweatherbackend.model.notifications.NotificationDto;
-import com.example.bioweatherbackend.model.notifications.SubscriptionDto;
-import com.example.bioweatherbackend.sec.RequireAuth;
+import com.example.bioweatherbackend.config.sec.RequireAuth;
+import com.example.bioweatherbackend.model.api.notifications.NotificationDto;
+import com.example.bioweatherbackend.model.api.notifications.SubscriptionDto;
+import com.example.bioweatherbackend.service.ExpoNotificationService;
 import com.example.bioweatherbackend.service.NotificationJobService;
-import com.example.bioweatherbackend.service.NotificationService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 public class NotificationsController {
 
-    private NotificationService service;
+    private ExpoNotificationService service;
     private NotificationJobService jobService;
 
     @PostMapping("subscription")
@@ -29,13 +29,19 @@ public class NotificationsController {
     @PostMapping("/manual")
     @RequireAuth
     public void triggerNotification(@RequestBody NotificationDto notificationDto) {
-        service.sendNotification(notificationDto.getTitle(), notificationDto.getSubtitle());
+        service.sendTextNotification(notificationDto.getTitle(), notificationDto.getSubtitle());
     }
 
-    @PostMapping("/work")
+    @PostMapping("/schedule-work")
     @RequireAuth
-    public void triggerWork() {
-        jobService.runHourlyJob();
+    public void runScheduleWorkJob() {
+        jobService.runScheduleWorkJob();
+    }
+
+    @PostMapping("/push-receipts")
+    @RequireAuth
+    public void runPushTicketCheckJob() {
+        jobService.runPushTicketCheckJob();
     }
 
 }

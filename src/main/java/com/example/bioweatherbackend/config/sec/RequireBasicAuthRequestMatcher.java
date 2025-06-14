@@ -1,4 +1,4 @@
-package com.example.bioweatherbackend.sec;
+package com.example.bioweatherbackend.config.sec;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.web.util.matcher.RequestMatcher;
