@@ -21,7 +21,7 @@ public final class PushNotification {
     @JsonProperty("high")
     ERROR,
     @JsonProperty("normal")
-    NORMAL;
+    NORMAL
   }
 
   private List<String> to;

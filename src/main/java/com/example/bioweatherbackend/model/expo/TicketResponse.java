@@ -19,7 +19,7 @@ public final class TicketResponse extends ExpoBaseResponse<List<TicketResponse.T
       @JsonProperty("DeviceNotRegistered")
       DEVICE_NOT_REGISTERED,
       @JsonProperty("InvalidCredentials")
-      INVALID_CREDENTIALS;
+      INVALID_CREDENTIALS
     }
 
     @Data

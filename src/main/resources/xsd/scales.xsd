@@ -40,8 +40,8 @@
       <xsd:documentation>Each category refers to a certain scale forecast. The category is called as given in the attribute "name". The scaled forecast returns values between (inclusive) of the attributes "min" and "max". In the attribute "last_update" contains a timestamp, when the forecast was updated/reviewed for the last time. To identify a category the value of "category_id" can be used, this value does not change for a certain category.</xsd:documentation>
     </xsd:annotation>
     <xsd:all>
-      <xsd:element name="scales" type="Scales" minOccurs="1"/>
-      <xsd:element name="source" type="xsd:string" minOccurs="1"/>
+      <xsd:element name="scales" type="Scales"/>
+      <xsd:element name="source" type="xsd:string"/>
     </xsd:all>
     <xsd:attribute name="category_id" type="xsd:string" use="required"/>
     <xsd:attribute name="name" type="xsd:string" use="required"/>

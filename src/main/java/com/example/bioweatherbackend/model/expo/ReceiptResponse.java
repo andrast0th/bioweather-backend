@@ -33,7 +33,7 @@ public final class ReceiptResponse extends ExpoBaseResponse<Map<String, ReceiptR
         INVALID_CREDENTIALS,
 
         @JsonProperty("InvalidProviderToken")
-        INVALID_PROVIDERTOKEN;
+        INVALID_PROVIDERTOKEN
       }
 
       private Error error;
