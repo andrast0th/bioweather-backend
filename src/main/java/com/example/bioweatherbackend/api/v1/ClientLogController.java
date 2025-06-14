@@ -71,6 +71,7 @@ public class ClientLogController {
             Arrays.stream(files)
                     .filter(File::isFile)
                     .sorted(Comparator.comparing(File::getName))
+                    .filter(file -> file.getName().endsWith(".log"))
                     .forEach(file -> {
                         try {
                             response.append(Files.readString(file.toPath()));
