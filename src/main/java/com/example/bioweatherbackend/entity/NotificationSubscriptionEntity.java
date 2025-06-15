@@ -26,4 +26,7 @@ public class NotificationSubscriptionEntity {
 
     @Column(name = "updated_via_subscribe")
     private Instant updatedViaSubscribe;
+
+    @Column(name = "is_disabled")
+    private boolean isDisabled;
 }

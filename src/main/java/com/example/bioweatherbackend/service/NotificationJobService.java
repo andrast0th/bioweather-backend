@@ -19,21 +19,28 @@ public class NotificationJobService {
     }
 
     public void runPushTicketCheckJob(List<String> pushTokens) {
-        notificationService.handleSavedPushTickets(pushTokens);
+        notificationService.checkPendingPushTicketReceipts(pushTokens);
     }
 
-    @Scheduled(cron = "0 0 */4 * * *")
+    @Scheduled(cron = "0 0 1,3,5,10,15 * * *", zone = "UTC")
     public void scheduledRunWorkJob() {
         log.info("Running scheduled job to send work notifications");
         notificationService.sendScheduleWorkNotifications();
         log.info("Finished scheduled job to send work notifications");
     }
 
-    @Scheduled(cron = "0 30 */4 * * *")
+    @Scheduled(cron = "0 0 2,4,11,16 * * *")
     public void scheduledRunPushTicketCheckJob() {
         log.info("Running scheduled job to check push tickets");
-        notificationService.handleSavedPushTickets();
-        log.info("Finished scheduled to check push tickets");
+        notificationService.checkPendingPushTicketReceipts();
+        log.info("Finished scheduled job check push tickets");
+    }
+
+    @Scheduled(cron = "0 0 0 * * *", zone = "UTC")
+    public void cleanupPushTokensWithErrors() {
+        log.info("Running scheduled job to cleanup push tokens with errors");
+        notificationService.cleanupDevicesWithPushReceiptErrors();
+        log.info("Finished scheduled job to cleanup push tokens with errors");
     }
 
 }

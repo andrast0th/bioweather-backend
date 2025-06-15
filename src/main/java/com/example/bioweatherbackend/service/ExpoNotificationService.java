@@ -16,6 +16,7 @@ import org.springframework.web.client.RestClient;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -98,7 +99,7 @@ public class ExpoNotificationService {
 
             if (ticket.getStatus() == Status.ERROR) {
                 log.error("Ticket response with error, unsubscribing: {}", ticket.getDetails().getError());
-                unsubscribeByPushToken(pushToken);
+                disablePushToken(pushToken);
             }
 
             if (ticket.getStatus() == Status.OK) {
@@ -118,21 +119,22 @@ public class ExpoNotificationService {
     public void subscribe(SubscriptionDto subscriptionDto) {
         var entity = mapper.toEntity(subscriptionDto);
         entity.setUpdatedViaSubscribe(Instant.now());
+        entity.setDisabled(false);
         subscriptionRepository.save(entity);
     }
 
     public void unsubscribe(SubscriptionDto subscriptionDto) {
         Optional.ofNullable(subscriptionDto)
                 .map(SubscriptionDto::getPushToken)
-                .ifPresent(this::unsubscribeByPushToken);
+                .ifPresent(this::disablePushToken);
     }
 
-    public void unsubscribeByPushToken(String pushToken) {
-        subscriptionRepository.deleteById(pushToken);
+    public void disablePushToken(String pushToken) {
+        subscriptionRepository.updateIsDisabledByPushToken(pushToken, true);
     }
 
     public List<String> getAllPushTokens() {
-        return subscriptionRepository.findAll()
+        return subscriptionRepository.findByIsDisabled(false)
                 .stream()
                 .map(NotificationSubscriptionEntity::getPushToken)
                 .toList();
@@ -145,11 +147,11 @@ public class ExpoNotificationService {
                 .toList();
     }
 
-    public void handleSavedPushTickets() {
-        handleSavedPushTickets(null);
+    public void checkPendingPushTicketReceipts() {
+        checkPendingPushTicketReceipts(null);
     }
 
-    public void handleSavedPushTickets(List<String> pushTokens) {
+    public void checkPendingPushTicketReceipts(List<String> pushTokens) {
 
         List<PushTicketEntity> pushTickets;
         if (pushTokens == null || pushTokens.isEmpty()) {
@@ -182,7 +184,10 @@ public class ExpoNotificationService {
                     Optional.of(receipt)
                             .map(ReceiptResponse.Receipt::getDetails)
                             .map(ReceiptResponse.Receipt.Details::getError)
-                            .ifPresent(receiptError -> ticket.setReceiptError(receiptError.toString()));
+                            .ifPresent(receiptError -> {
+                                log.error("Received error response for saving push ticket: {}, error: {}, message: {}", ticket.getId(), receiptError, receipt.getMessage());
+                                ticket.setReceiptError(receiptError.toString());
+                            });
 
                     pushTicketRepository.save(ticket);
                 } else {
@@ -190,7 +195,23 @@ public class ExpoNotificationService {
                 }
             });
         }
+    }
 
+    public void cleanupDevicesWithPushReceiptErrors() {
+        List<String> tokensWithErrors = pushTicketRepository.findPushTokensWithErrorsSince(2, Instant.now().minusSeconds(60 * 60 * 24));
+        if (tokensWithErrors.isEmpty()) {
+            log.info("No devices with push receipt errors found.");
+            return;
+        }
+        tokensWithErrors.forEach(token -> {
+            List<PushTicketEntity> tickets = pushTicketRepository.findAllByPushToken(token);
+            tickets.stream().findFirst().ifPresent(pushTicket -> {
+                if(Objects.equals(pushTicket.getReceiptStatus(), "ERROR")) {
+                    log.warn("Unsubscribing device with push token due to receipt errors: {}", token);
+                    disablePushToken(token);
+                }
+            });
+        });
     }
 
 }
