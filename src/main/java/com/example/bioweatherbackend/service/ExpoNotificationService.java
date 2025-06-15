@@ -57,9 +57,16 @@ public class ExpoNotificationService {
     }
 
     public void sendScheduleWorkNotifications() {
+        sendScheduleWorkNotifications(null);
+    }
+
+    public void sendScheduleWorkNotifications(List<String> pushTokens) {
         PushNotification notification = new PushNotification();
 
-        List<String> pushTokens = getAllPushTokens();
+        if (pushTokens == null || pushTokens.isEmpty()) {
+            log.warn("No push tokens provided, using all available tokens.");
+            pushTokens = getAllPushTokens();
+        }
         notification.setTo(pushTokens);
 
         notification.set_contentAvailable(true);
@@ -131,7 +138,23 @@ public class ExpoNotificationService {
     }
 
     public void handleSavedPushTickets() {
-        List<PushTicketEntity> pushTickets = pushTicketRepository.findAllByWasReceiptCheckedIsFalse();
+        handleSavedPushTickets(null);
+    }
+
+    public void handleSavedPushTickets(List<String> pushTokens) {
+
+        List<PushTicketEntity> pushTickets;
+        if (pushTokens == null || pushTokens.isEmpty()) {
+            pushTickets = pushTicketRepository.findAllByWasReceiptCheckedIsFalse();
+        } else {
+            pushTickets = pushTicketRepository.findAllNotCheckedByPushTokens(pushTokens);
+        }
+
+        if(pushTickets.isEmpty()) {
+            log.info("No push tickets to check receipts for.");
+            return;
+        }
+
         ReceiptRequest request = new ReceiptRequest(pushTickets.stream().map(PushTicketEntity::getId).toList());
 
         ReceiptResponse receiptResponse = restClient.post()
