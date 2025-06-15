@@ -21,12 +21,12 @@ import java.util.Objects;
 @Slf4j
 public class ClientLogController {
 
-    private final String uploadLogsPath;
+    private final String uploadClientLogsPath;
     private final NotificationSubscriptionRepository subscriptionRepository;
 
     @Autowired
-    public ClientLogController(@Value("${upload.logs-path}") String uploadLogsPath, NotificationSubscriptionRepository subscriptionRepository) {
-        this.uploadLogsPath = uploadLogsPath;
+    public ClientLogController(@Value("${upload.client-logs-path}") String uploadClientLogsPath, NotificationSubscriptionRepository subscriptionRepository) {
+        this.uploadClientLogsPath = uploadClientLogsPath;
         this.subscriptionRepository = subscriptionRepository;
     }
 
@@ -37,7 +37,7 @@ public class ClientLogController {
             return ResponseEntity.internalServerError().build();
         }
 
-        var uploadDir = new File(uploadLogsPath.trim(), pushToken);
+        var uploadDir = new File(uploadClientLogsPath.trim(), pushToken);
         if (!uploadDir.exists()) {
             uploadDir.mkdirs();
         }
@@ -59,7 +59,7 @@ public class ClientLogController {
             return ResponseEntity.internalServerError().build();
         }
 
-        var uploadDir = new File(uploadLogsPath.trim(), pushToken);
+        var uploadDir = new File(uploadClientLogsPath.trim(), pushToken);
         if (!uploadDir.exists() || !uploadDir.isDirectory()) {
             log.error("Upload directory does not exist or is not a directory: {}", uploadDir.getAbsolutePath());
             return ResponseEntity.notFound().build();
