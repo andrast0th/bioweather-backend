@@ -13,8 +13,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 @Slf4j
-public class ExpoRestClientLoggingInterceptor implements ClientHttpRequestInterceptor {
-    private static final Logger logger = LoggerFactory.getLogger(ExpoRestClientLoggingInterceptor.class);
+public class RestClientLoggingInterceptor implements ClientHttpRequestInterceptor {
+    private static final Logger logger = LoggerFactory.getLogger(RestClientLoggingInterceptor.class);
 
 
     @Override
