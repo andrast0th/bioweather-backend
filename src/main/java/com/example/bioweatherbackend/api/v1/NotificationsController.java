@@ -2,6 +2,7 @@ package com.example.bioweatherbackend.api.v1;
 
 import com.example.bioweatherbackend.config.sec.RequireAuth;
 import com.example.bioweatherbackend.model.api.notifications.NotificationDto;
+import com.example.bioweatherbackend.model.api.notifications.NotificationSubscriptionDto;
 import com.example.bioweatherbackend.model.api.notifications.SubscriptionDto;
 import com.example.bioweatherbackend.service.ExpoNotificationService;
 import com.example.bioweatherbackend.service.NotificationJobService;
@@ -26,6 +27,12 @@ public class NotificationsController {
     @DeleteMapping("subscription")
     public void unsubscribe(@RequestBody SubscriptionDto subscription) {
         service.unsubscribe(subscription);
+    }
+
+    @GetMapping("/subscription")
+    @RequireAuth
+    public List<NotificationSubscriptionDto> runPushTicketCheckJob() {
+        return service.getAllNotificationSubscriptions();
     }
 
     @PostMapping("/manual")

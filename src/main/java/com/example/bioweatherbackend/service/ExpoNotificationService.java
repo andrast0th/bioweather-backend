@@ -3,6 +3,7 @@ package com.example.bioweatherbackend.service;
 import com.example.bioweatherbackend.entity.NotificationSubscriptionEntity;
 import com.example.bioweatherbackend.entity.PushTicketEntity;
 import com.example.bioweatherbackend.mapper.NotificationSubscriptionMapper;
+import com.example.bioweatherbackend.model.api.notifications.NotificationSubscriptionDto;
 import com.example.bioweatherbackend.model.api.notifications.SubscriptionDto;
 import com.example.bioweatherbackend.model.expo.*;
 import com.example.bioweatherbackend.repository.NotificationSubscriptionRepository;
@@ -134,6 +135,13 @@ public class ExpoNotificationService {
         return subscriptionRepository.findAll()
                 .stream()
                 .map(NotificationSubscriptionEntity::getPushToken)
+                .toList();
+    }
+
+    public List<NotificationSubscriptionDto> getAllNotificationSubscriptions() {
+        return subscriptionRepository.findAll()
+                .stream()
+                .map(mapper::toDto)
                 .toList();
     }
 
