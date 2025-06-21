@@ -1,4 +1,4 @@
-package com.example.bioweatherbackend.model.meteonews;
+package com.example.bioweatherbackend.model.weather;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

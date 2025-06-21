@@ -1,7 +1,7 @@
 package com.example.bioweatherbackend.mapper;
 
-import com.example.bioweatherbackend.model.meteonews.ApiLocation;
-import com.example.bioweatherbackend.model.meteonews.ApiSearchLocation;
+import com.example.bioweatherbackend.model.weather.ApiLocation;
+import com.example.bioweatherbackend.model.weather.ApiSearchLocation;
 import net.meteonews.feeds.schema.Geonames;
 import net.meteonews.feeds.schema.Search;
 import net.meteonews.feeds.schema.Suggest;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
-public interface MeteoNewsApiMapper {
+public interface LocationMapper {
 
     // Map a single object
     @Mapping(source = "id", target = "id")

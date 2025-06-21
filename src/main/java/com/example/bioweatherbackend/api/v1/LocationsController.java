@@ -1,7 +1,7 @@
 package com.example.bioweatherbackend.api.v1;
 
-import com.example.bioweatherbackend.model.meteonews.ApiLocation;
-import com.example.bioweatherbackend.model.meteonews.ApiSearchLocation;
+import com.example.bioweatherbackend.model.weather.ApiLocation;
+import com.example.bioweatherbackend.model.weather.ApiSearchLocation;
 import com.example.bioweatherbackend.service.MeteoNewsDataService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

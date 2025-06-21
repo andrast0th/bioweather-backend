@@ -1,13 +1,13 @@
 package com.example.bioweatherbackend.service;
 
-import com.example.bioweatherbackend.mapper.MeteoNewsApiMapper;
-import com.example.bioweatherbackend.model.meteonews.ApiLocation;
-import com.example.bioweatherbackend.model.meteonews.ApiSearchLocation;
+import com.example.bioweatherbackend.mapper.LocationMapper;
+import com.example.bioweatherbackend.mapper.WeatherMapper;
+import com.example.bioweatherbackend.model.weather.ApiLocation;
+import com.example.bioweatherbackend.model.weather.ApiSearchLocation;
+import com.example.bioweatherbackend.model.weather.ApiWeatherForecast;
+import com.example.bioweatherbackend.model.weather.CumulationPeriod;
 import io.micrometer.common.util.StringUtils;
-import net.meteonews.feeds.schema.Geo;
-import net.meteonews.feeds.schema.GeoContent;
-import net.meteonews.feeds.schema.Geonames;
-import net.meteonews.feeds.schema.Search;
+import net.meteonews.feeds.schema.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -20,32 +20,38 @@ import java.util.Optional;
 public class MeteoNewsDataService {
 
     private final RestClient restClient;
-    private final MeteoNewsApiMapper mapper;
+    private final LocationMapper locationMapper;
+    private final WeatherMapper weatherMapper;
     private final String LANG = "en";
 
-    public MeteoNewsDataService(@Qualifier("meteoNewsRestClient") RestClient restClient, MeteoNewsApiMapper mapper) {
+    public MeteoNewsDataService(@Qualifier("meteoNewsRestClient") RestClient restClient, LocationMapper locationMapper, WeatherMapper weatherMapper) {
         this.restClient = restClient;
-        this.mapper = mapper;
+        this.locationMapper = locationMapper;
+        this.weatherMapper = weatherMapper;
     }
 
     @Cacheable("locationById")
     public ApiLocation getLocationById(String id) {
-        String url = "geonames/id/" + id.trim() + ".xml?lang=" + LANG;
-
         Geonames response = restClient.get()
-                .uri(url)
+                .uri(uriBuilder -> uriBuilder
+                        .path("geonames/id/{id}.xml")
+                        .queryParam("lang", LANG)
+                        .build(id.trim()))
                 .retrieve()
                 .body(Geonames.class);
 
-        return mapper.toLocationDto(response);
+        return locationMapper.toLocationDto(response);
     }
 
     @Cacheable("geoRefLocation")
     public ApiLocation geoRef(String lat, String lon) {
-        String url = "/geo/id.xml?lang=" + LANG + "&lat=" + lat.trim() + "&lon=" + lon.trim();
-
         Geo response = restClient.get()
-                .uri(url)
+                .uri(uriBuilder -> uriBuilder
+                        .path("/geo/id.xml")
+                        .queryParam("lang", LANG)
+                        .queryParam("lat", lat.trim())
+                        .queryParam("lon", lon.trim())
+                        .build())
                 .retrieve()
                 .body(Geo.class);
 
@@ -56,19 +62,34 @@ public class MeteoNewsDataService {
                 .orElseThrow(() -> new IllegalArgumentException("No location found for lat: " + lat + ", lon: " + lon));
     }
 
-
     @Cacheable("searchLocations")
     public List<ApiSearchLocation> searchLocations(String searchQuery) {
-        String url = "search/" + searchQuery.trim() + ".xml?autofill=0&limit=10&lang=" + LANG;
-
         Search response = restClient.get()
-                .uri(url)
+                .uri(uriBuilder -> uriBuilder
+                        .path("search/{query}.xml")
+                        .queryParam("autofill", 0)
+                        .queryParam("limit", 10)
+                        .queryParam("lang", LANG)
+                        .build(searchQuery.trim()))
                 .retrieve()
                 .body(Search.class);
 
-        List<ApiSearchLocation> res = mapper.toSearchDtoList(response);
+        List<ApiSearchLocation> res = locationMapper.toSearchDtoList(response);
         res = res.stream().filter(val -> StringUtils.isNotEmpty(val.getSubdivision())).toList();
         return res;
+    }
+
+    public List<ApiWeatherForecast> getWeatherByLocationId(String id, CumulationPeriod period) {
+        Forecasts response = restClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("forecasts/id/{id}.xml")
+                        .queryParam("lang", LANG)
+                        .queryParam("cumulation", period.getValue())
+                        .build(id.trim()))
+                .retrieve()
+                .body(Forecasts.class);
+
+        return weatherMapper.toWeatherForecastDto(response);
     }
 
 }

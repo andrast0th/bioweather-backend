@@ -88,7 +88,7 @@
     </xsd:annotation>
     <xsd:simpleContent>
       <xsd:extension base="GeoDistanceData">
-        <xsd:attribute name="unit" type="DistanceUnit" use="required"/>
+        <xsd:attribute name="unit" type="common:DistanceUnit" use="required"/>
       </xsd:extension>
     </xsd:simpleContent>
   </xsd:complexType>
@@ -100,21 +100,13 @@
       <xsd:pattern value="|-?[0-9]+\.?[0-9]*"/>
     </xsd:restriction>
   </xsd:simpleType>
-  <xsd:simpleType name="DistanceUnit">
-    <xsd:annotation>
-      <xsd:documentation>Data expressed as distance has the unit km (kilometers).</xsd:documentation>
-    </xsd:annotation>
-    <xsd:restriction base="xsd:string">
-      <xsd:pattern value="km"/>
-    </xsd:restriction>
-  </xsd:simpleType>
   <xsd:complexType name="GeoVerticalDistance">
     <xsd:annotation>
       <xsd:documentation>Contains the vertical elevation difference between your input elevation and the found geo feature</xsd:documentation>
     </xsd:annotation>
     <xsd:simpleContent>
       <xsd:extension base="GeoVerticalDistanceData">
-        <xsd:attribute name="unit" type="GeoVerticalDistanceUnit" use="required"/>
+        <xsd:attribute name="unit" type="common:DistanceUnit" use="required"/>
       </xsd:extension>
     </xsd:simpleContent>
   </xsd:complexType>
@@ -123,14 +115,6 @@
       <xsd:documentation>Data for vertical elevation difference is a non negative integer. It could be empty, if no feature could be found.</xsd:documentation>
     </xsd:annotation>
     <xsd:union memberTypes="xsd:nonNegativeInteger common:Empty"/>
-  </xsd:simpleType>
-  <xsd:simpleType name="GeoVerticalDistanceUnit">
-    <xsd:annotation>
-      <xsd:documentation>Data expressed as vertical elevation difference has the unit metres</xsd:documentation>
-    </xsd:annotation>
-    <xsd:restriction base="xsd:string">
-      <xsd:pattern value="m"/>
-    </xsd:restriction>
   </xsd:simpleType>
   <xsd:complexType name="Errors">
     <xsd:annotation>
