@@ -1,5 +1,6 @@
 package com.example.bioweatherbackend.api.v1;
 
+import com.example.bioweatherbackend.model.meteonews.ApiLocation;
 import com.example.bioweatherbackend.model.meteonews.ApiSearchLocation;
 import com.example.bioweatherbackend.service.MeteoNewsDataService;
 import lombok.AllArgsConstructor;
@@ -17,8 +18,13 @@ public class LocationsController {
 
     private final MeteoNewsDataService meteoNewsDataService;
 
+    @GetMapping("/{id}")
+    public ApiLocation getById(@PathVariable("id") String id) {
+        return meteoNewsDataService.getLocationById(id);
+    }
+
     @GetMapping("/search/{searchQuery}")
-    public List<ApiSearchLocation> uploadFiles(@PathVariable("searchQuery") String searchQuery) {
+    public List<ApiSearchLocation> searchLocations(@PathVariable("searchQuery") String searchQuery) {
         return meteoNewsDataService.searchLocations(searchQuery);
     }
 

@@ -53,55 +53,19 @@
       <xsd:documentation>Contains country code (ISO 3166-1 alpha-2) or 
                             is empty</xsd:documentation>
     </xsd:annotation>
-    <xsd:union memberTypes="CountryCode Empty"/>
-  </xsd:simpleType>
-  <xsd:simpleType name="CountryCode">
-    <xsd:annotation>
-      <xsd:documentation>Contains country code (ISO 3166-1 alpha-2)</xsd:documentation>
-    </xsd:annotation>
-    <xsd:restriction base="xsd:string">
-      <xsd:pattern value="[A-Z]{2}"/>
-    </xsd:restriction>
-  </xsd:simpleType>
-  <xsd:simpleType name="Empty">
-    <xsd:annotation>
-      <xsd:documentation>Element with no content (but optionally attributes, according to corresponding definition)</xsd:documentation>
-    </xsd:annotation>
-    <xsd:restriction base="xsd:string">
-      <xsd:pattern value=""/>
-    </xsd:restriction>
+    <xsd:union memberTypes="common:CountryCode common:Empty"/>
   </xsd:simpleType>
   <xsd:simpleType name="SearchLat">
     <xsd:annotation>
       <xsd:documentation>Contains latitude or is empty</xsd:documentation>
     </xsd:annotation>
-    <xsd:union memberTypes="Lat Empty"/>
-  </xsd:simpleType>
-  <xsd:simpleType name="Lat">
-    <xsd:annotation>
-      <xsd:documentation>latitude information within -90° (south pole) and 90° (north pole)</xsd:documentation>
-    </xsd:annotation>
-    <xsd:restriction base="xsd:decimal">
-      <xsd:minInclusive value="-90"/>
-      <xsd:maxInclusive value="90"/>
-      <xsd:fractionDigits value="2"/>
-    </xsd:restriction>
+    <xsd:union memberTypes="common:Lat common:Empty"/>
   </xsd:simpleType>
   <xsd:simpleType name="SearchLon">
     <xsd:annotation>
       <xsd:documentation>Contains longitude or is empty</xsd:documentation>
     </xsd:annotation>
-    <xsd:union memberTypes="Lon Empty"/>
-  </xsd:simpleType>
-  <xsd:simpleType name="Lon">
-    <xsd:annotation>
-      <xsd:documentation>longitude information within -180° (West) and 180° (East)</xsd:documentation>
-    </xsd:annotation>
-    <xsd:restriction base="xsd:decimal">
-      <xsd:minInclusive value="-180"/>
-      <xsd:maxInclusive value="180"/>
-      <xsd:fractionDigits value="2"/>
-    </xsd:restriction>
+    <xsd:union memberTypes="common:Lon common:Empty"/>
   </xsd:simpleType>
   <xsd:simpleType name="SearchMeta">
     <xsd:annotation>
@@ -127,13 +91,13 @@
       <xsd:element name="match_string" type="xsd:string"/>
       <xsd:element name="name" type="xsd:string"/>
       <xsd:element name="zip" type="xsd:string"/>
-      <xsd:element name="country" type="CountryCode"/>
+      <xsd:element name="country" type="common:CountryCode"/>
       <xsd:element name="geoname_id" type="GeonameID"/>
       <xsd:element name="state" type="State"/>
-      <xsd:element name="subdivision" type="Subdivision"/>
-      <xsd:element name="elevation" type="ElevationData" minOccurs="0"/>
-      <xsd:element name="lat" type="Lat" minOccurs="0"/>
-      <xsd:element name="lon" type="Lon" minOccurs="0"/>
+      <xsd:element name="subdivision" type="common:Subdivision"/>
+      <xsd:element name="elevation" type="common:ElevationData" minOccurs="0"/>
+      <xsd:element name="lat" type="common:Lat" minOccurs="0"/>
+      <xsd:element name="lon" type="common:Lon" minOccurs="0"/>
     </xsd:sequence>
     <xsd:attribute name="id" type="xsd:string" use="required"/>
   </xsd:complexType>
@@ -156,49 +120,4 @@
       </xsd:extension>
     </xsd:simpleContent>
   </xsd:complexType>
-  <xsd:complexType name="Subdivision">
-    <xsd:annotation>
-      <xsd:documentation>This element contains information about the 
-                            administrative subdivision for the given
-                            geographical object. The type of subdivision
-                            (e.g. state, canton, department, province)
-                            used depends on the country. The tag contains
-                            a code commonly used and known in this country
-                            (e.g. on car license plates), if available.
-                            Otherwise you can use the id and name attributes
-                            that refer to the geoname feed where you can
-                            retrieve additional meta-data for the given
-                            administrative subdivision object.</xsd:documentation>
-    </xsd:annotation>
-    <xsd:simpleContent>
-      <xsd:extension base="xsd:string">
-        <xsd:attribute name="id" type="xsd:string" use="required"/>
-        <xsd:attribute name="name" type="xsd:string" use="required"/>
-      </xsd:extension>
-    </xsd:simpleContent>
-  </xsd:complexType>
-  <xsd:complexType name="ElevationData">
-    <xsd:annotation>
-      <xsd:documentation>This element contains information about the 
-                            elevation of the geo-object. The information 
-                            is given in meters above sealevel.</xsd:documentation>
-    </xsd:annotation>
-    <xsd:simpleContent>
-      <xsd:extension base="xsd:integer">
-        <xsd:attribute name="exact" type="ElevationExact"/>
-      </xsd:extension>
-    </xsd:simpleContent>
-  </xsd:complexType>
-  <xsd:simpleType name="ElevationExact">
-    <xsd:annotation>
-      <xsd:documentation>If this value is set to '1', the elevation
-                           information is an exact value. If the value is 
-                           set to '0', the elevation is just an estimation. 
-                           So the elevation info should be displayed like 
-                           'ca. 180m' (or similiar)</xsd:documentation>
-    </xsd:annotation>
-    <xsd:restriction base="xsd:string">
-      <xsd:pattern value="1|0"/>
-    </xsd:restriction>
-  </xsd:simpleType>
 </xsd:schema>

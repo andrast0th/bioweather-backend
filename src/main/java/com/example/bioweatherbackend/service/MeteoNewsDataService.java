@@ -1,8 +1,10 @@
 package com.example.bioweatherbackend.service;
 
 import com.example.bioweatherbackend.mapper.MeteoNewsApiMapper;
+import com.example.bioweatherbackend.model.meteonews.ApiLocation;
 import com.example.bioweatherbackend.model.meteonews.ApiSearchLocation;
 import io.micrometer.common.util.StringUtils;
+import net.meteonews.feeds.schema.Geonames;
 import net.meteonews.feeds.schema.Search;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
@@ -23,16 +25,28 @@ public class MeteoNewsDataService {
         this.mapper = mapper;
     }
 
+    @Cacheable("locationById")
+    public ApiLocation getLocationById(String id) {
+        String url = "geonames/id/"+id.trim()+".xml?lang=" + LANG;
+
+        Geonames response =  restClient.get()
+                .uri(url)
+                .retrieve()
+                .body(Geonames.class);
+
+        return mapper.toLocationDto(response);
+    }
+
     @Cacheable("searchLocations")
     public List<ApiSearchLocation> searchLocations(String searchQuery) {
         String url = "search/"+searchQuery.trim()+".xml?autofill=0&limit=10&lang=" + LANG;
 
-        Search search =  restClient.get()
+        Search response =  restClient.get()
                 .uri(url)
                 .retrieve()
                 .body(Search.class);
 
-        List<ApiSearchLocation> res = mapper.toDtoList(search);
+        List<ApiSearchLocation> res = mapper.toSearchDtoList(response);
         res = res.stream().filter(val -> StringUtils.isNotEmpty(val.getSubdivision())).toList();
         return res;
     }

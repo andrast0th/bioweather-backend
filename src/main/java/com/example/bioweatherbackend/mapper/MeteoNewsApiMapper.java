@@ -1,6 +1,8 @@
 package com.example.bioweatherbackend.mapper;
 
+import com.example.bioweatherbackend.model.meteonews.ApiLocation;
 import com.example.bioweatherbackend.model.meteonews.ApiSearchLocation;
+import net.meteonews.feeds.schema.Geonames;
 import net.meteonews.feeds.schema.Search;
 import net.meteonews.feeds.schema.Suggest;
 import org.mapstruct.InjectionStrategy;
@@ -18,9 +20,27 @@ public interface MeteoNewsApiMapper {
     @Mapping(source = "country", target = "countryCode")
     @Mapping(source = "name", target = "name")
     @Mapping(source = "subdivision.name", target = "subdivision")
-    ApiSearchLocation toDto(Suggest suggest);
+    ApiSearchLocation toSearchLocationDto(Suggest suggest);
 
-    default List<ApiSearchLocation> toDtoList(Search searchResponse) {
-        return searchResponse.getContent().getSuggest().stream().map(this::toDto).collect(Collectors.toList());
+    // Map a single object
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "country", target = "countryCode")
+    @Mapping(source = "name", target = "name")
+    @Mapping(source = "subdivision.name", target = "subdivision")
+    ApiLocation toLocationDto(Suggest suggest);
+
+    default List<ApiSearchLocation> toSearchDtoList(Search searchResponse) {
+        return searchResponse.getContent().getSuggest().stream().map(this::toSearchLocationDto).collect(Collectors.toList());
     }
+
+    @Mapping(source = "content.id", target = "id")
+    @Mapping(source = "content.country", target = "countryCode")
+    @Mapping(source = "content.name", target = "name")
+    @Mapping(source = "content.subdivision.name", target = "subdivision")
+    @Mapping(source = "content.lat", target = "lat")
+    @Mapping(source = "content.lon", target = "lon")
+    @Mapping(source = "content.utcOffset.value", target = "utcOffset")
+    @Mapping(source = "content.utcOffset.unit", target = "utcOffsetUnit")
+    ApiLocation toLocationDto(Geonames geonamesResponse);
+
 }
