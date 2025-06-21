@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="xs3p.xsl"?>
+<xsd:schema xmlns="http://schema.feeds.meteonews.net"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:common="http://schema.feeds.meteonews.net/common"
+            targetNamespace="http://schema.feeds.meteonews.net"
+            elementFormDefault="qualified" version="2013-11-14 Rev. 290">
+    <xsd:annotation>
+        <xsd:documentation xml:lang="en">Specification of the astronomy-XML-Feed</xsd:documentation>
+    </xsd:annotation>
+    <xsd:import namespace="http://schema.feeds.meteonews.net/common" schemaLocation="common.xsd"/>
+    <xsd:element name="astronomy">
+        <xsd:annotation>
+            <xsd:documentation>root-Tag (contains between 3 and 5 elements: (optionally) parameters, content, errors,
+                ref, (optionally) debug)
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="parameters" type="AstronomyParameters" minOccurs="0"/>
+                <xsd:element name="content" type="AstronomyContent"/>
+                <xsd:element name="errors" type="common:Errors"/>
+                <xsd:element name="ref" type="common:HomepageReference"/>
+                <xsd:element name="debug" type="common:Debug" minOccurs="0"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:complexType name="AstronomyParameters">
+        <xsd:annotation>
+            <xsd:documentation>This element lists all parameters that are used to create the result of the XML-Feed.
+                These parameters can be set in the query-string part of the URL (except mexs_id or geoname_id, these
+                elements are set by the path-part of the URL). This element contains always 6 elments (either the
+                element "mexs_id" or "geoname_id").
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="begin" type="AstronomyBegin" minOccurs="0"/>
+            <xsd:element name="end" type="AstronomyEnd" minOccurs="0"/>
+            <xsd:element name="id" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:simpleType name="AstronomyBegin">
+        <xsd:annotation>
+            <xsd:documentation>Contains the datetime-mark at which the output of data should begin. The specification of
+                these marks is given in the documentation: http://***.feeds.meteonews.net/doc/astronomy.php
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:union memberTypes="common:ForecastsDayCount common:ForecastsDateTime"/>
+    </xsd:simpleType>
+    <xsd:simpleType name="AstronomyEnd">
+        <xsd:annotation>
+            <xsd:documentation>Contains the datetime-mark at which the output of data should end. The specification of
+                these marks is given in the documentation: http://***.feeds.meteonews.net/doc/astronomy.php
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:union memberTypes="common:ForecastsDayCount common:ForecastsDateTime"/>
+    </xsd:simpleType>
+    <xsd:complexType name="AstronomyContent">
+        <xsd:annotation>
+            <xsd:documentation>The content-element contains a sequence of day-elements</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="day" type="AstronomyDay" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="datetime" type="MoonphasesDatetime" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="AstronomyDay">
+        <xsd:annotation>
+            <xsd:documentation>The day-elements list all astronomy events of one calendar day (indicated in the
+                attribute date). For every event (sunrise/-set, moonrise/-set) the local time of occurrence on this day
+                is returned in an appropriate element. Please consider that each of the events can either be missing or
+                occur multiple times within one calendar day (e.g. north or south of the northern or the southern polar
+                circle, respectively, there's no sunrise/sunset during winter/summer; there are days without
+                moonrise/moonset as the cycle of the moon does not align with the cycle of the days/the sun; daylight
+                saving switches can generate days of more than 24 hours and thus multiple events; and so on). The
+                situation with a missing event occurs frequently and must be handled by every application (there should
+                be a form of visual representation in the UI). The situation with multiple events of the same type (up
+                to two) could be considered a little bit more "degenerate" and applications could choose to just ignore
+                it (only display the first or last one for each type) if they do not strive for absolute correctness.
+                They must still be able to cope with the respective tag showing up twice, as we do handle these (rare)
+                situations correctly in the XML output.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:all>
+            <xsd:element name="sunrise" type="AstronomyTime" minOccurs="0"/>
+            <xsd:element name="sunrise" type="AstronomyTime" minOccurs="0"/>
+            <xsd:element name="sunset" type="AstronomyTime" minOccurs="0"/>
+            <xsd:element name="sunset" type="AstronomyTime" minOccurs="0"/>
+            <xsd:element name="moonrise" type="AstronomyTime" minOccurs="0"/>
+            <xsd:element name="moonrise" type="AstronomyTime" minOccurs="0"/>
+            <xsd:element name="moonset" type="AstronomyTime" minOccurs="0"/>
+            <xsd:element name="moonset" type="AstronomyTime" minOccurs="0"/>
+        </xsd:all>
+        <xsd:attribute name="date" type="common:Date" use="required"/>
+    </xsd:complexType>
+    <xsd:simpleType name="AstronomyTime">
+        <xsd:annotation>
+            <xsd:documentation/>
+        </xsd:annotation>
+        <xsd:union memberTypes="Time common:Empty"/>
+    </xsd:simpleType>
+    <xsd:simpleType name="Time">
+        <xsd:annotation>
+            <xsd:documentation>Content described by "HH:MM" time-format</xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="[0-9]{2}:[0-9]{2}"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:complexType name="MoonphasesDatetime">
+        <xsd:annotation>
+            <xsd:documentation>The element contains the timestamp for the event (time in timezone UTC). The attribute
+                "event" describes which event will take place.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleContent>
+            <xsd:extension base="common:SQLDatetime">
+                <xsd:attribute name="event" type="AstronomyEvent" use="required"/>
+                <xsd:attribute name="timezone" type="xsd:string" use="required"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:simpleType name="AstronomyEvent">
+        <xsd:annotation>
+            <xsd:documentation>This is a closed list of types.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="newmoon|fullmoon|firstquartermoon|lastquartermoon"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+</xsd:schema>
+

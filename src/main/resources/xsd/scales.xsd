@@ -53,7 +53,7 @@
     <xsd:attribute name="name" type="xsd:string" use="required"/>
     <xsd:attribute name="min" type="xsd:nonNegativeInteger" use="required"/>
     <xsd:attribute name="max" type="xsd:nonNegativeInteger" use="required"/>
-    <xsd:attribute name="last_update" type="DatetimeTimezone" use="required"/>
+    <xsd:attribute name="last_update" type="common:DatetimeTimezone" use="required"/>
   </xsd:complexType>
   <xsd:complexType name="Scales">
     <xsd:annotation>
@@ -79,25 +79,9 @@
     </xsd:annotation>
     <xsd:simpleContent>
       <xsd:extension base="xsd:nonNegativeInteger">
-        <xsd:attribute name="date" type="Date" use="required"/>
+        <xsd:attribute name="date" type="common:Date" use="required"/>
         <xsd:attribute name="name" type="xsd:string" use="required"/>
       </xsd:extension>
     </xsd:simpleContent>
   </xsd:complexType>
-  <xsd:simpleType name="Date">
-    <xsd:annotation>
-      <xsd:documentation>Content described by "YYYY-MM-DD" date-format</xsd:documentation>
-    </xsd:annotation>
-    <xsd:restriction base="xsd:string">
-      <xsd:pattern value="[0-9]{4}-[0-9]{2}-[0-9]{2}"/>
-    </xsd:restriction>
-  </xsd:simpleType>
-  <xsd:simpleType name="DatetimeTimezone">
-    <xsd:annotation>
-      <xsd:documentation>Content described by "YYYY-MM-DD HH:MM:SS" date-format</xsd:documentation>
-    </xsd:annotation>
-    <xsd:restriction base="xsd:string">
-      <xsd:pattern value="[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2} UTC"/>
-    </xsd:restriction>
-  </xsd:simpleType>
 </xsd:schema>

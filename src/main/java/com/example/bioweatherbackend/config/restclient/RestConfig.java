@@ -1,4 +1,4 @@
-package com.example.bioweatherbackend.config;
+package com.example.bioweatherbackend.config.restclient;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

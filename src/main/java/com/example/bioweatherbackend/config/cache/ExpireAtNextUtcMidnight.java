@@ -1,4 +1,4 @@
-package com.example.bioweatherbackend.config;
+package com.example.bioweatherbackend.config.cache;
 import com.github.benmanes.caffeine.cache.Expiry;
 import org.checkerframework.checker.index.qual.NonNegative;
 

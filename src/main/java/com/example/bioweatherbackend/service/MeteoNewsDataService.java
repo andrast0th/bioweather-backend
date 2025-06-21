@@ -1,11 +1,9 @@
 package com.example.bioweatherbackend.service;
 
+import com.example.bioweatherbackend.mapper.AstronomyMapper;
 import com.example.bioweatherbackend.mapper.LocationMapper;
 import com.example.bioweatherbackend.mapper.WeatherMapper;
-import com.example.bioweatherbackend.model.weather.ApiLocation;
-import com.example.bioweatherbackend.model.weather.ApiSearchLocation;
-import com.example.bioweatherbackend.model.weather.ApiWeatherForecast;
-import com.example.bioweatherbackend.model.weather.CumulationPeriod;
+import com.example.bioweatherbackend.model.weather.*;
 import io.micrometer.common.util.StringUtils;
 import net.meteonews.feeds.schema.*;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,12 +20,14 @@ public class MeteoNewsDataService {
     private final RestClient restClient;
     private final LocationMapper locationMapper;
     private final WeatherMapper weatherMapper;
+    private final AstronomyMapper astronomyMapper;
     private final String LANG = "en";
 
-    public MeteoNewsDataService(@Qualifier("meteoNewsRestClient") RestClient restClient, LocationMapper locationMapper, WeatherMapper weatherMapper) {
+    public MeteoNewsDataService(@Qualifier("meteoNewsRestClient") RestClient restClient, LocationMapper locationMapper, WeatherMapper weatherMapper, AstronomyMapper astronomyMapper) {
         this.restClient = restClient;
         this.locationMapper = locationMapper;
         this.weatherMapper = weatherMapper;
+        this.astronomyMapper = astronomyMapper;
     }
 
     @Cacheable("locationById")
@@ -91,6 +91,36 @@ public class MeteoNewsDataService {
                 .body(Forecasts.class);
 
         return weatherMapper.toWeatherForecastDto(response);
+    }
+
+    @Cacheable("astronomyByLocationId")
+    public List<ApiAstronomy> getAstronomyByLocationId(String id, String beginDate, String endDate) {
+        Astronomy response = restClient.get()
+                .uri(uriBuilder -> {
+                    var builder = uriBuilder
+                            .path("astronomy/id/{id}.xml")
+                            .queryParam("lang", LANG);
+
+                    if (StringUtils.isNotEmpty(beginDate)) {
+                        builder = builder.queryParam("begin", beginDate);
+                    }
+                    if (StringUtils.isNotEmpty(endDate)) {
+                        builder = builder.queryParam("end", endDate);
+                    }
+
+                    return builder.build(id.trim());
+                })
+                .retrieve()
+                .body(Astronomy.class);
+
+        var apiResponse = astronomyMapper.toApiResponse(response);
+        var location = getLocationById(id);
+        apiResponse.forEach(astronomy -> {
+            astronomy.setUtcOffset(location.getUtcOffset());
+            astronomy.setUtcOffsetUnit(location.getUtcOffsetUnit());
+        });
+
+        return apiResponse;
     }
 
 }

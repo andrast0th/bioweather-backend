@@ -55,26 +55,7 @@
                 these marks is given in the documentation: http://***.feeds.meteonews.net/doc/forecasts.php
             </xsd:documentation>
         </xsd:annotation>
-        <xsd:union memberTypes="ForecastsDayCount ForecastsDateTime"/>
-    </xsd:simpleType>
-    <xsd:simpleType name="ForecastsDayCount">
-        <xsd:annotation>
-            <xsd:documentation>Describes a period in days</xsd:documentation>
-        </xsd:annotation>
-        <xsd:restriction base="xsd:string">
-            <xsd:pattern value="[0-9]+d"/>
-        </xsd:restriction>
-    </xsd:simpleType>
-    <xsd:simpleType name="ForecastsDateTime">
-        <xsd:annotation>
-            <xsd:documentation>Definition of the allowed input datetime-type. Either a date (e.g. 2010-08-23) or a date
-                with hour (e.g. 2010-08-23T18) or a datetime (e.g. 2010-08-23T18:05) is allowed. Instead of the "T"
-                seperator a white space is allowed, too.
-            </xsd:documentation>
-        </xsd:annotation>
-        <xsd:restriction base="xsd:string">
-            <xsd:pattern value="\d{4}-\d{2}-\d{2}(|[T ]{1}\d{2}|[T ]{1}\d{2}:\d{2})"/>
-        </xsd:restriction>
+        <xsd:union memberTypes="common:ForecastsDayCount common:ForecastsDateTime"/>
     </xsd:simpleType>
     <xsd:simpleType name="ForecastsEnd">
         <xsd:annotation>
@@ -82,7 +63,7 @@
                 these marks is given in the documentation: http://***.feeds.meteonews.net/doc/forecasts.php
             </xsd:documentation>
         </xsd:annotation>
-        <xsd:union memberTypes="ForecastsDayCount ForecastsDateTime"/>
+        <xsd:union memberTypes="common:ForecastsDayCount common:ForecastsDateTime"/>
     </xsd:simpleType>
     <xsd:complexType name="ForecastsContent">
         <xsd:annotation>
