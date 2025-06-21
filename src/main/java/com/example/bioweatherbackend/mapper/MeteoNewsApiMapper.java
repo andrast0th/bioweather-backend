@@ -22,13 +22,6 @@ public interface MeteoNewsApiMapper {
     @Mapping(source = "subdivision.name", target = "subdivision")
     ApiSearchLocation toSearchLocationDto(Suggest suggest);
 
-    // Map a single object
-    @Mapping(source = "id", target = "id")
-    @Mapping(source = "country", target = "countryCode")
-    @Mapping(source = "name", target = "name")
-    @Mapping(source = "subdivision.name", target = "subdivision")
-    ApiLocation toLocationDto(Suggest suggest);
-
     default List<ApiSearchLocation> toSearchDtoList(Search searchResponse) {
         return searchResponse.getContent().getSuggest().stream().map(this::toSearchLocationDto).collect(Collectors.toList());
     }

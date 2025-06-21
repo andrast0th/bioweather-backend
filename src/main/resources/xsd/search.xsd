@@ -92,7 +92,7 @@
       <xsd:element name="name" type="xsd:string"/>
       <xsd:element name="zip" type="xsd:string"/>
       <xsd:element name="country" type="common:CountryCode"/>
-      <xsd:element name="geoname_id" type="GeonameID"/>
+      <xsd:element name="geoname_id" type="common:GeonameID"/>
       <xsd:element name="state" type="State"/>
       <xsd:element name="subdivision" type="common:Subdivision"/>
       <xsd:element name="elevation" type="common:ElevationData" minOccurs="0"/>
@@ -101,14 +101,6 @@
     </xsd:sequence>
     <xsd:attribute name="id" type="xsd:string" use="required"/>
   </xsd:complexType>
-  <xsd:simpleType name="GeonameID">
-    <xsd:annotation>
-      <xsd:documentation>This element contains a Geoname-ID. This is an ID for a geographic locality specified by the database geonames.org. It consistes of digits. Information for such an ID is available in the geonames-feed: http://***.feeds.meteonews.net/geonames/{id}.xml The content of the feed is returned for this ID.</xsd:documentation>
-    </xsd:annotation>
-    <xsd:restriction base="xsd:string">
-      <xsd:pattern value="[0-9]+"/>
-    </xsd:restriction>
-  </xsd:simpleType>
   <xsd:complexType name="State">
     <xsd:annotation>
       <xsd:documentation>This tag is deprecated. See the subdivision

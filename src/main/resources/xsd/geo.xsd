@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="xs3p.xsl"?>
+<xsd:schema xmlns="http://schema.feeds.meteonews.net"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:common="http://schema.feeds.meteonews.net/common"
+            targetNamespace="http://schema.feeds.meteonews.net"
+            elementFormDefault="qualified"
+            version="2012-03-21 Rev. 253">
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">Specification of the geo-XML-Feed</xsd:documentation>
+  </xsd:annotation>
+  <xsd:import namespace="http://schema.feeds.meteonews.net/common" schemaLocation="common.xsd"/>
+  <xsd:element name="geo">
+    <xsd:annotation>
+      <xsd:documentation>root-Tag (contains between 3 and 5 elements: (optionally) parameters, content, errors, ref, (optionally) debug)</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="parameters" type="GeoParameters" minOccurs="0"/>
+        <xsd:element name="content" type="GeoContent"/>
+        <xsd:element name="errors" type="Errors"/>
+        <xsd:element name="ref" type="HomepageReference"/>
+        <xsd:element name="debug" type="Debug" minOccurs="0"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:complexType name="GeoParameters">
+    <xsd:annotation>
+      <xsd:documentation>This element lists all parameters that are used to create the result of the XML-Feed. These parameters can be set in the query-string part of the URL (except "demands", these elements are set by the path-part of the URL).</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="demand" type="GeoDemand"/>
+      <xsd:element name="lat" type="common:Lat"/>
+      <xsd:element name="lon" type="common:Lon"/>
+      <xsd:element name="elevation" type="GeoElevation"/>
+      <xsd:element name="type" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:simpleType name="GeoDemand">
+    <xsd:annotation>
+      <xsd:documentation>It contains wheter you look for a mexs or a geonames feature (filename in the feeds URL)</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="mexs|geonames|id"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="GeoElevation">
+    <xsd:annotation>
+      <xsd:documentation>It contains the value of your third geo coordinate, the elevation. Is empty if no specific elevation is specified.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:union memberTypes="xsd:nonNegativeInteger common:Empty"/>
+  </xsd:simpleType>
+  <xsd:complexType name="GeoContent">
+    <xsd:annotation>
+      <xsd:documentation>The content-element contains always exact 3 elements. Either a mexs_id- or a geoname_id-element. It contains the found id for the geo feature. If it is a mexs_id-element you could for example read the feature properties with the http://*.feeds.meteonews.net/mexs/{id}.xml feed, or with a geoname_id-element http://*.feeds.meteonews.net/geonames/{id}.xml). The second element "distance" contains the horizontal distance in kilometers for your input coordinates to the position of the geo feature, the last element "vertical_height" contains the vertical distance in meters for your input elevation to the elevation of the geo feature.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="mexs_id" type="GeoMexsID" minOccurs="0"/>
+      <xsd:element name="geoname_id" type="GeoGeonameID" minOccurs="0"/>
+      <xsd:element name="id" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="distance" type="GeoDistance"/>
+      <xsd:element name="vertical_height" type="GeoVerticalDistance"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:simpleType name="GeoMexsID">
+    <xsd:annotation>
+      <xsd:documentation>The element contains the found mexs ID of a found geo feature. If it is empty, no feature could be found near your coordinates.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:union memberTypes="MexsID common:Empty"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="MexsID">
+    <xsd:annotation>
+      <xsd:documentation>This element contains a Mexs-ID. This is a MeteoNews specific ID for a geographic locality and consistes of excatly 8 digits. Information for such an ID is available in the mexs-feed: http://***.feeds.meteonews.net/mexs/{id}.xml The content of the feed is returned for this ID.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[0-9]{8}"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="GeoGeonameID">
+    <xsd:annotation>
+      <xsd:documentation>The element contains the found geonames ID of a found geo feature. If it is empty, no feature could be found near your coordinates.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:union memberTypes="common:GeonameID common:Empty"/>
+  </xsd:simpleType>
+  <xsd:complexType name="GeoDistance">
+    <xsd:annotation>
+      <xsd:documentation>Contains the horizontal distance between your input coordinates and the found geo feature</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="GeoDistanceData">
+        <xsd:attribute name="unit" type="DistanceUnit" use="required"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:simpleType name="GeoDistanceData">
+    <xsd:annotation>
+      <xsd:documentation>Data for horizontal distance is a floating number with 3 digits. It could be empty, if no feature could be found.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="|-?[0-9]+\.?[0-9]*"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="DistanceUnit">
+    <xsd:annotation>
+      <xsd:documentation>Data expressed as distance has the unit km (kilometers).</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="km"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="GeoVerticalDistance">
+    <xsd:annotation>
+      <xsd:documentation>Contains the vertical elevation difference between your input elevation and the found geo feature</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="GeoVerticalDistanceData">
+        <xsd:attribute name="unit" type="GeoVerticalDistanceUnit" use="required"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:simpleType name="GeoVerticalDistanceData">
+    <xsd:annotation>
+      <xsd:documentation>Data for vertical elevation difference is a non negative integer. It could be empty, if no feature could be found.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:union memberTypes="xsd:nonNegativeInteger common:Empty"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="GeoVerticalDistanceUnit">
+    <xsd:annotation>
+      <xsd:documentation>Data expressed as vertical elevation difference has the unit metres</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="m"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="Errors">
+    <xsd:annotation>
+      <xsd:documentation>If this element is empty, no errors occured during the generation of the XML-Feed. Otherwise a list of occured errors describes the kind of errors.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="error" type="Error" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Error">
+    <xsd:annotation>
+      <xsd:documentation>Contains an occured error during the generation of the XML-Feed. The element "code" contains an error-code-number (defined very close to HTTP status codes), the element "description" describes the error by a string.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="code" type="xsd:nonNegativeInteger"/>
+      <xsd:element name="description" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="HomepageReference">
+    <xsd:annotation>
+      <xsd:documentation>Link and Title of reference MeteoNews web page</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:string">
+        <xsd:attribute name="url" type="xsd:anyURI" use="required"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="Debug">
+    <xsd:annotation>
+      <xsd:documentation>This element is for internal use of MeteoNews. It's always hidden for the customers.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="include_path" type="xsd:string"/>
+      <xsd:element name="unspecified" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>

@@ -125,4 +125,13 @@
             <xsd:pattern value="1|0"/>
         </xsd:restriction>
     </xsd:simpleType>
+
+    <xsd:simpleType name="GeonameID">
+        <xsd:annotation>
+            <xsd:documentation>This element contains a Geoname-ID. This is an ID for a geographic locality specified by the database geonames.org. It consistes of digits. Information for such an ID is available in the geonames-feed: http://***.feeds.meteonews.net/geonames/{id}.xml The content of the feed is returned for this ID.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="[0-9]+"/>
+        </xsd:restriction>
+    </xsd:simpleType>
 </xsd:schema>

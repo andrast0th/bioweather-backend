@@ -23,6 +23,11 @@ public class LocationsController {
         return meteoNewsDataService.getLocationById(id);
     }
 
+    @GetMapping("/georef/lat/{lat}/lon/{lon}")
+    public ApiLocation geoRef(@PathVariable("lat") String lat, @PathVariable("lon") String lon) {
+        return meteoNewsDataService.geoRef(lat, lon);
+    }
+
     @GetMapping("/search/{searchQuery}")
     public List<ApiSearchLocation> searchLocations(@PathVariable("searchQuery") String searchQuery) {
         return meteoNewsDataService.searchLocations(searchQuery);
