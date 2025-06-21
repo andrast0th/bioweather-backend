@@ -79,6 +79,7 @@ public class MeteoNewsDataService {
         return res;
     }
 
+    @Cacheable("weatherByLocationId")
     public List<ApiWeatherForecast> getWeatherByLocationId(String id, CumulationPeriod period) {
         Forecasts response = restClient.get()
                 .uri(uriBuilder -> uriBuilder
