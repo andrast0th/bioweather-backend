@@ -16,7 +16,7 @@ public class AstronomyController {
 
     @GetMapping("/{id}")
     public List<ApiAstronomy> getByLocationId(@PathVariable("id") String id, @RequestParam(required = false) String beginDate, @RequestParam(required = false) String endDate) {
-        return meteoNewsDataService.getAstronomyByLocationId(id, beginDate, endDate);
+        return meteoNewsDataService.getAstronomy(id, beginDate, endDate);
     }
 
 }

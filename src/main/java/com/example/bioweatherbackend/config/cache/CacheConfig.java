@@ -12,16 +12,24 @@ import java.util.List;
 
 @Configuration
 public class CacheConfig {
+    public static final String WEATHER = "weather";
+    public static final String ASTRONOMY = "astronomy";
+    public static final String SEARCH_LOCATIONS = "searchLocations";
+    public static final String LOCATION = "location";
+    public static final String GEO_REF_LOCATION = "geoRefLocation";
+    public static final String SCALES = "scales";
+
     @Bean
     public CacheManager cacheManager() {
-        CaffeineCache weatherCache = buildUtcAfterMidnightCache("weatherByLocationId");
-        CaffeineCache astronomyCache = buildUtcAfterMidnightCache("astronomyByLocationId");
-        CaffeineCache searchLocations = build10MinuteCache("searchLocations");
-        CaffeineCache locationById = build10MinuteCache("locationById");
-        CaffeineCache geoRefLocation = build10MinuteCache("geoRefLocation");
-
         SimpleCacheManager manager = new SimpleCacheManager();
-        manager.setCaches(List.of(weatherCache, searchLocations, locationById, geoRefLocation, astronomyCache));
+        manager.setCaches(List.of(
+                buildUtcAfterMidnightCache(SCALES),
+                buildUtcAfterMidnightCache(WEATHER),
+                buildUtcAfterMidnightCache(ASTRONOMY),
+                build10MinuteCache(SEARCH_LOCATIONS),
+                build10MinuteCache(LOCATION),
+                build10MinuteCache(GEO_REF_LOCATION)
+        ));
         return manager;
     }
 

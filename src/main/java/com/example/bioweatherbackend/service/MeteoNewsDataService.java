@@ -1,7 +1,9 @@
 package com.example.bioweatherbackend.service;
 
+import com.example.bioweatherbackend.config.cache.CacheConfig;
 import com.example.bioweatherbackend.mapper.AstronomyMapper;
 import com.example.bioweatherbackend.mapper.LocationMapper;
+import com.example.bioweatherbackend.mapper.ScalesMapper;
 import com.example.bioweatherbackend.mapper.WeatherMapper;
 import com.example.bioweatherbackend.model.weather.*;
 import io.micrometer.common.util.StringUtils;
@@ -11,7 +13,9 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -21,16 +25,18 @@ public class MeteoNewsDataService {
     private final LocationMapper locationMapper;
     private final WeatherMapper weatherMapper;
     private final AstronomyMapper astronomyMapper;
+    private final ScalesMapper scalesMapper;
     private final String LANG = "en";
 
-    public MeteoNewsDataService(@Qualifier("meteoNewsRestClient") RestClient restClient, LocationMapper locationMapper, WeatherMapper weatherMapper, AstronomyMapper astronomyMapper) {
+    public MeteoNewsDataService(@Qualifier("meteoNewsRestClient") RestClient restClient, LocationMapper locationMapper, WeatherMapper weatherMapper, AstronomyMapper astronomyMapper, ScalesMapper scalesMapper) {
         this.restClient = restClient;
         this.locationMapper = locationMapper;
         this.weatherMapper = weatherMapper;
         this.astronomyMapper = astronomyMapper;
+        this.scalesMapper = scalesMapper;
     }
 
-    @Cacheable("locationById")
+    @Cacheable(CacheConfig.LOCATION)
     public ApiLocation getLocationById(String id) {
         Geonames response = restClient.get()
                 .uri(uriBuilder -> uriBuilder
@@ -43,7 +49,7 @@ public class MeteoNewsDataService {
         return locationMapper.toLocationDto(response);
     }
 
-    @Cacheable("geoRefLocation")
+    @Cacheable(CacheConfig.GEO_REF_LOCATION)
     public ApiLocation geoRef(String lat, String lon) {
         Geo response = restClient.get()
                 .uri(uriBuilder -> uriBuilder
@@ -62,7 +68,7 @@ public class MeteoNewsDataService {
                 .orElseThrow(() -> new IllegalArgumentException("No location found for lat: " + lat + ", lon: " + lon));
     }
 
-    @Cacheable("searchLocations")
+    @Cacheable(CacheConfig.SEARCH_LOCATIONS)
     public List<ApiSearchLocation> searchLocations(String searchQuery) {
         Search response = restClient.get()
                 .uri(uriBuilder -> uriBuilder
@@ -79,7 +85,7 @@ public class MeteoNewsDataService {
         return res;
     }
 
-    @Cacheable("weatherByLocationId")
+    @Cacheable(CacheConfig.WEATHER)
     public List<ApiWeatherForecast> getWeatherByLocationId(String id, CumulationPeriod period) {
         Forecasts response = restClient.get()
                 .uri(uriBuilder -> uriBuilder
@@ -93,8 +99,8 @@ public class MeteoNewsDataService {
         return weatherMapper.toWeatherForecastDto(response);
     }
 
-    @Cacheable("astronomyByLocationId")
-    public List<ApiAstronomy> getAstronomyByLocationId(String id, String beginDate, String endDate) {
+    @Cacheable(CacheConfig.ASTRONOMY)
+    public List<ApiAstronomy> getAstronomy(String id, String beginDate, String endDate) {
         Astronomy response = restClient.get()
                 .uri(uriBuilder -> {
                     var builder = uriBuilder
@@ -121,6 +127,27 @@ public class MeteoNewsDataService {
         });
 
         return apiResponse;
+    }
+
+    @Cacheable(CacheConfig.SCALES)
+    public List<ApiBioWeatherByDate> getScalesByLocationId(String id) {
+        Scales scales = restClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("scales/id/{id}.xml")
+                        .queryParam("lang", LANG)
+                        .build(id.trim()))
+                .retrieve()
+                .body(Scales.class);
+
+        return scales.getContent()
+                .getCategory()
+                .stream()
+                .filter(category -> Objects.equals(category.getCategoryId(), "meteoropathy"))
+                .findFirst()
+                .map(ScaleCategory::getScales)
+                .map(ScalesAlt::getScale)
+                .map(scalesMapper::toResponse)
+                .orElse(Collections.emptyList());
     }
 
 }
