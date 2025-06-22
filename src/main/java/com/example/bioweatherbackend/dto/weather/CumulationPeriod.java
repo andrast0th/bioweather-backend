@@ -1,4 +1,4 @@
-package com.example.bioweatherbackend.model.weather;
+package com.example.bioweatherbackend.dto.weather;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 

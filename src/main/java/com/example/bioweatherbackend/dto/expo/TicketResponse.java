@@ -1,4 +1,4 @@
-package com.example.bioweatherbackend.model.expo;
+package com.example.bioweatherbackend.dto.expo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;

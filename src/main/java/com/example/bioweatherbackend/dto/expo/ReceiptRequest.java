@@ -1,4 +1,4 @@
-package com.example.bioweatherbackend.model.expo;
+package com.example.bioweatherbackend.dto.expo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

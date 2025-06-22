@@ -1,7 +1,7 @@
 package com.example.bioweatherbackend.mapper;
 
-import com.example.bioweatherbackend.model.weather.ApiBioWeatherByDate;
-import com.example.bioweatherbackend.model.weather.ApiBioWeatherCondition;
+import com.example.bioweatherbackend.dto.weather.ApiBioWeatherByDate;
+import com.example.bioweatherbackend.dto.weather.ApiBioWeatherCondition;
 import net.meteonews.feeds.schema.Scale;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;

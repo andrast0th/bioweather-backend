@@ -1,6 +1,6 @@
 package com.example.bioweatherbackend.mapper;
 
-import com.example.bioweatherbackend.model.weather.ApiAstronomy;
+import com.example.bioweatherbackend.dto.weather.ApiAstronomy;
 import net.meteonews.feeds.schema.Astronomy;
 import net.meteonews.feeds.schema.AstronomyDay;
 import org.mapstruct.InjectionStrategy;

@@ -1,8 +1,8 @@
 package com.example.bioweatherbackend.mapper;
 
+import com.example.bioweatherbackend.dto.notifications.NotificationSubscriptionDto;
+import com.example.bioweatherbackend.dto.notifications.SubscriptionDto;
 import com.example.bioweatherbackend.entity.NotificationSubscriptionEntity;
-import com.example.bioweatherbackend.model.api.notifications.NotificationSubscriptionDto;
-import com.example.bioweatherbackend.model.api.notifications.SubscriptionDto;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

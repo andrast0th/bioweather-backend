@@ -1,4 +1,4 @@
-package com.example.bioweatherbackend.model.weather;
+package com.example.bioweatherbackend.dto.weather;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;

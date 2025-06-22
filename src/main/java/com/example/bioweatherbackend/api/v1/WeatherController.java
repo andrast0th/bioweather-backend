@@ -1,7 +1,7 @@
 package com.example.bioweatherbackend.api.v1;
 
-import com.example.bioweatherbackend.model.weather.ApiWeatherForecast;
-import com.example.bioweatherbackend.model.weather.CumulationPeriod;
+import com.example.bioweatherbackend.dto.weather.ApiWeatherForecast;
+import com.example.bioweatherbackend.dto.weather.CumulationPeriod;
 import com.example.bioweatherbackend.service.MeteoNewsDataService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;

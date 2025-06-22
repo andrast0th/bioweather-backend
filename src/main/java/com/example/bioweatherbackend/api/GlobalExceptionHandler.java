@@ -1,6 +1,6 @@
 package com.example.bioweatherbackend.api;
 
-import com.example.bioweatherbackend.model.api.ErrorResponse;
+import com.example.bioweatherbackend.dto.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;

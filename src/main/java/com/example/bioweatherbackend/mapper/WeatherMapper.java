@@ -1,6 +1,6 @@
 package com.example.bioweatherbackend.mapper;
 
-import com.example.bioweatherbackend.model.weather.ApiWeatherForecast;
+import com.example.bioweatherbackend.dto.weather.ApiWeatherForecast;
 import net.meteonews.feeds.schema.Forecasts;
 import net.meteonews.feeds.schema.ForecastsTimeperiod;
 import org.mapstruct.Condition;

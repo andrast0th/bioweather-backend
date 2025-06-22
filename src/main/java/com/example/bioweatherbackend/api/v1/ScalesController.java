@@ -1,6 +1,6 @@
 package com.example.bioweatherbackend.api.v1;
 
-import com.example.bioweatherbackend.model.weather.ApiBioWeatherByDate;
+import com.example.bioweatherbackend.dto.weather.ApiBioWeatherByDate;
 import com.example.bioweatherbackend.service.MeteoNewsDataService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

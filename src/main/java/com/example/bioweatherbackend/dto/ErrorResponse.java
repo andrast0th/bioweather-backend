@@ -1,4 +1,4 @@
-package com.example.bioweatherbackend.model.api;
+package com.example.bioweatherbackend.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,5 +11,5 @@ import lombok.Setter;
 @Setter
 public class ErrorResponse {
     private String message;
-    private int statusCode;
+    private int errorCode;
 }  

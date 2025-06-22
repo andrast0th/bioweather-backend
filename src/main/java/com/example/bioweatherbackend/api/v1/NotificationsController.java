@@ -1,9 +1,9 @@
 package com.example.bioweatherbackend.api.v1;
 
 import com.example.bioweatherbackend.config.sec.RequireAuth;
-import com.example.bioweatherbackend.model.api.notifications.NotificationDto;
-import com.example.bioweatherbackend.model.api.notifications.NotificationSubscriptionDto;
-import com.example.bioweatherbackend.model.api.notifications.SubscriptionDto;
+import com.example.bioweatherbackend.dto.notifications.NotificationDto;
+import com.example.bioweatherbackend.dto.notifications.NotificationSubscriptionDto;
+import com.example.bioweatherbackend.dto.notifications.SubscriptionDto;
 import com.example.bioweatherbackend.service.ExpoNotificationService;
 import com.example.bioweatherbackend.service.NotificationJobService;
 import lombok.AllArgsConstructor;

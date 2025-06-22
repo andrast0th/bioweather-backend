@@ -1,11 +1,11 @@
 package com.example.bioweatherbackend.service;
 
 import com.example.bioweatherbackend.config.cache.CacheConfig;
+import com.example.bioweatherbackend.dto.weather.*;
 import com.example.bioweatherbackend.mapper.AstronomyMapper;
 import com.example.bioweatherbackend.mapper.LocationMapper;
 import com.example.bioweatherbackend.mapper.ScalesMapper;
 import com.example.bioweatherbackend.mapper.WeatherMapper;
-import com.example.bioweatherbackend.model.weather.*;
 import io.micrometer.common.util.StringUtils;
 import net.meteonews.feeds.schema.*;
 import org.springframework.beans.factory.annotation.Qualifier;

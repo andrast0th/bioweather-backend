@@ -1,11 +1,11 @@
 package com.example.bioweatherbackend.service;
 
+import com.example.bioweatherbackend.dto.expo.*;
+import com.example.bioweatherbackend.dto.notifications.NotificationSubscriptionDto;
+import com.example.bioweatherbackend.dto.notifications.SubscriptionDto;
 import com.example.bioweatherbackend.entity.NotificationSubscriptionEntity;
 import com.example.bioweatherbackend.entity.PushTicketEntity;
 import com.example.bioweatherbackend.mapper.NotificationSubscriptionMapper;
-import com.example.bioweatherbackend.model.api.notifications.NotificationSubscriptionDto;
-import com.example.bioweatherbackend.model.api.notifications.SubscriptionDto;
-import com.example.bioweatherbackend.model.expo.*;
 import com.example.bioweatherbackend.repository.NotificationSubscriptionRepository;
 import com.example.bioweatherbackend.repository.PushTicketRepository;
 import lombok.extern.slf4j.Slf4j;

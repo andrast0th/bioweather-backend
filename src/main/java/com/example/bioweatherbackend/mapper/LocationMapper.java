@@ -1,7 +1,7 @@
 package com.example.bioweatherbackend.mapper;
 
-import com.example.bioweatherbackend.model.weather.ApiLocation;
-import com.example.bioweatherbackend.model.weather.ApiSearchLocation;
+import com.example.bioweatherbackend.dto.weather.ApiLocation;
+import com.example.bioweatherbackend.dto.weather.ApiSearchLocation;
 import net.meteonews.feeds.schema.Geonames;
 import net.meteonews.feeds.schema.Search;
 import net.meteonews.feeds.schema.Suggest;
