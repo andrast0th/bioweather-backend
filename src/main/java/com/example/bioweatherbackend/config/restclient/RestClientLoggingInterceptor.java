@@ -16,15 +16,14 @@ import java.nio.charset.StandardCharsets;
 public class RestClientLoggingInterceptor implements ClientHttpRequestInterceptor {
     private static final Logger logger = LoggerFactory.getLogger(RestClientLoggingInterceptor.class);
 
-
     @Override
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
-        logger.info("request method: {}, request URI: {}, request headers: {}, request body: {}",
+        logger.debug("request method: {}, request URI: {}, request headers: {}, request body: {}",
                 request.getMethod(), request.getURI(), request.getHeaders(), new String(body, StandardCharsets.UTF_8));
 
         ClientHttpResponse response = execution.execute(request, body);
 
-        logger.info("response status code: {}, response headers: {}, response body: {}",
+        logger.debug("response status code: {}, response headers: {}, response body: {}",
                 response.getStatusCode(), response.getHeaders(), new String(StreamUtils.copyToByteArray(response.getBody()), StandardCharsets.UTF_8));
 
         return response;
