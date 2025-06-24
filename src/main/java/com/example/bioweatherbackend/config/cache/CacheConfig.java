@@ -36,6 +36,7 @@ public class CacheConfig {
     private CaffeineCache build10MinuteCache(String name) {
         return new CaffeineCache(name,
                 Caffeine.newBuilder()
+                        .recordStats()
                         .maximumSize(1000)
                         .expireAfterWrite(Duration.ofMinutes(10))
                         .build());
@@ -44,6 +45,7 @@ public class CacheConfig {
     private CaffeineCache buildUtcAfterMidnightCache(String name) {
         return new CaffeineCache(name,
                 Caffeine.newBuilder()
+                        .recordStats()
                         .expireAfter(new ExpireAtNextUtcMidnight())
                         .build());
     }
