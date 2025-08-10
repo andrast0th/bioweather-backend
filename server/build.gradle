@@ -83,3 +83,37 @@ xjcGenerate {
 	outputDirectory = file('build/generated-sources/xjc')
 	bindingFiles = files('src/main/resources/xsd/bindings.xjb')
 }
+
+// Task to build the dashboard using npm
+
+def dashboardDir = '../dashboard'
+def buildOutputDir = "${dashboardDir}/build"
+def staticTargetDir = "${projectDir}/src/main/resources/static"
+
+tasks.register('npmInstallDashboard', Exec) {
+	workingDir dashboardDir
+	commandLine 'npm', 'install'
+}
+
+tasks.register('npmBuildDashboard', Exec) {
+	workingDir dashboardDir
+	commandLine 'npm', 'run', 'build'
+	dependsOn 'npmInstallDashboard'
+}
+
+tasks.register('deleteStaticDir', Delete) {
+	delete staticTargetDir
+}
+
+tasks.register('copyDashboardBuild', Copy) {
+	from buildOutputDir
+	into staticTargetDir
+	dependsOn 'npmBuildDashboard', 'deleteStaticDir'
+}
+
+// Ensure static files are ready before building the server
+if (project.hasProperty('buildDashboard')) {
+	tasks.named('processResources') {
+		dependsOn 'npmInstallDashboard'
+	}
+}

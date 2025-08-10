@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bioweather-backend.main.iml" filepath="$PROJECT_DIR$/.idea/modules/bioweather-backend.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/dashboard/dashboard.iml" filepath="$PROJECT_DIR$/dashboard/dashboard.iml" />
     </modules>
   </component>
