@@ -1,5 +1,6 @@
 package com.example.bioweatherbackend.entity;
 
+import com.example.bioweatherbackend.dto.notifications.NotificationType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,10 +21,23 @@ public class PushTicketEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "push_token", referencedColumnName = "push_token", nullable = false)
-    private NotificationSubscriptionEntity notificationSubscription;
+    private DeviceEntity deviceEntity;
 
     @Column(length = 20)
     private String receiptStatus;
+
+    @Column(length = 20)
+    @Enumerated(EnumType.STRING)
+    private NotificationType notificationType;
+
+    @Column
+    private String notificationTitle;
+
+    @Column
+    private String notificationBody;
+
+    @Column
+    private String locationId;
 
     @Column(length = 100)
     private String receiptError;

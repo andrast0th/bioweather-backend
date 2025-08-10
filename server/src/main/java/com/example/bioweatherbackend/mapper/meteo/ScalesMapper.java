@@ -1,4 +1,4 @@
-package com.example.bioweatherbackend.mapper;
+package com.example.bioweatherbackend.mapper.meteo;
 
 import com.example.bioweatherbackend.dto.weather.ApiBioWeatherByDate;
 import com.example.bioweatherbackend.dto.weather.ApiBioWeatherCondition;

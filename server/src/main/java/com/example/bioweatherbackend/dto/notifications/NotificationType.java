@@ -10,7 +10,8 @@ public enum NotificationType {
     LAST_MEAL("last-meal"),
     NEXT_REST("next-rest"),
     PEAK("peak"),
-    EXERCISE("exercise");
+    EXERCISE("exercise"),
+    TEST("test");
 
     private final String value;
 

@@ -1,9 +1,14 @@
 package com.example.bioweatherbackend.api.v1;
 
+import com.example.bioweatherbackend.config.sec.RequireAuth;
 import com.example.bioweatherbackend.dto.notifications.SubscriptionDto;
+import com.example.bioweatherbackend.dto.notifications.TestNotificationDto;
 import com.example.bioweatherbackend.service.DeviceManagementService;
+import com.example.bioweatherbackend.service.NotificationService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/notifications")
@@ -11,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class NotificationsController {
 
     private DeviceManagementService service;
+    private NotificationService notificationService;
 
     @PostMapping("subscription")
     public void subscribe(@RequestBody SubscriptionDto subscription) {
@@ -22,28 +28,16 @@ public class NotificationsController {
         service.unsubscribe(subscription);
     }
 
-//    @GetMapping("/subscription")
-//    @RequireAuth
-//    public List<NotificationSubscriptionDto> runPushTicketCheckJob() {
-//        return service.getAllNotificationSubscriptions();
-//    }
-//
-//    @PostMapping("/manual")
-//    @RequireAuth
-//    public void triggerNotification(@RequestBody NotificationDto notificationDto) {
-//        service.sendTextNotification(notificationDto.getTitle(), notificationDto.getSubtitle());
-//    }
-//
-//    @PostMapping("/schedule-work")
-//    @RequireAuth
-//    public void runScheduleWorkJob(@RequestParam("pushTokens") List<String> pushTokens) {
-//        jobService.runScheduleWorkJob(pushTokens);
-//    }
-//
-//    @PostMapping("/push-receipts")
-//    @RequireAuth
-//    public void runPushTicketCheckJob(@RequestParam("pushTokens") List<String> pushTokens) {
-//        jobService.runPushTicketCheckJob(pushTokens);
-//    }
+    @GetMapping("/subscription")
+    @RequireAuth
+    public List<SubscriptionDto> getSubscription() {
+        return service.getSubscriptions();
+    }
+
+    @PostMapping("/test-notification")
+    @RequireAuth
+    public void triggerNotification(@RequestBody TestNotificationDto notificationDto) {
+        notificationService.sendTestNotification(notificationDto.getPushToken(),"Test Notification", notificationDto.getMessage());
+    }
 
 }

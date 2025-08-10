@@ -1,0 +1,47 @@
+package com.example.bioweatherbackend.mapper;
+
+import com.example.bioweatherbackend.dto.notifications.DeviceDto;
+import com.example.bioweatherbackend.dto.notifications.SubscriptionDto;
+import com.example.bioweatherbackend.entity.DeviceEntity;
+import com.example.bioweatherbackend.entity.NotificationSubscriptionEntity;
+import org.mapstruct.InjectionStrategy;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
+public interface DashboardMapper {
+
+    @Mapping(source = "device.userId", target = "userId")
+    @Mapping(source = "device.deviceInfo", target = "deviceInfo")
+    @Mapping(source = "device.language", target = "language")
+    @Mapping(source = "device.timezoneOffset", target = "timezoneOffset")
+    SubscriptionDto toSubscriptionDto(NotificationSubscriptionEntity entity);
+    List<SubscriptionDto> toSubscriptionDtoList(List<NotificationSubscriptionEntity> entities);
+
+    @Mapping(source = "deviceInfo", target = "deviceInfo", qualifiedByName = "customDeviceInfo")
+    DeviceDto toDeviceDto(DeviceEntity entity);
+    @Named("customDeviceInfo")
+    default Map<String, String> customDeviceInfo(String deviceInfo) {
+
+        Map<String, String> result = new HashMap<>();
+        var values = deviceInfo.split("\\|");
+
+        Arrays.stream(values).forEach(entry -> {
+            var key = entry.split(":")[0];
+            var value = entry.split(":")[1];
+            result.put(key, value);
+        });
+
+        return result;
+    }
+
+
+    List<DeviceDto> toDeviceDtoList(List<DeviceEntity> entities);
+
+}

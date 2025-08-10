@@ -1,4 +1,4 @@
-package com.example.bioweatherbackend.mapper;
+package com.example.bioweatherbackend.mapper.meteo;
 
 import com.example.bioweatherbackend.dto.weather.ApiAstronomy;
 import net.meteonews.feeds.schema.Astronomy;

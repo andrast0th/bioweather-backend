@@ -20,6 +20,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import AppBarHeader from '~/components/header/AppBarHeader';
 import { RouteGuard } from '~/components/RouteGuard';
+import { SnackbarProvider } from 'notistack';
 
 const darkTheme = createTheme({
   palette: {
@@ -40,7 +41,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <ThemeProvider theme={darkTheme}>
           <CssBaseline />
           <RouteGuard />
-          {children}
+          <SnackbarProvider maxSnack={3}>{children}</SnackbarProvider>
         </ThemeProvider>
         <ScrollRestoration />
         <Scripts />
@@ -55,7 +56,7 @@ export default function App() {
       <Box sx={{ pl: 0, pr: 0 }}>
         <AppBarHeader />
       </Box>
-      <Box sx={{ p: 0 }}>
+      <Box sx={{ p: 2 }}>
         <Outlet />
       </Box>
     </>
