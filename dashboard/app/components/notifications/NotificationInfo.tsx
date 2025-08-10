@@ -7,6 +7,7 @@ import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button';
 import { useSnackbar } from 'notistack';
 import { sendTestNotification } from '~/services/api.service';
+import { NotificationHistory } from '~/components/notifications/NotificationHistory';
 
 // DeviceList.tsx
 type NotificationsInfoProps = {
@@ -91,6 +92,8 @@ export function NotificationsInfo({ device }: NotificationsInfoProps) {
             </Grid>
           </Grid>
         </form>
+
+        <NotificationHistory device={device} />
       </Paper>
     </Box>
   );

@@ -17,43 +17,43 @@ export function DeviceInfo({ device }: DeviceInfoProps) {
       <Paper elevation={3} sx={{ padding: 2 }}>
         <Typography variant="h4">Device: {device.deviceInfo.deviceName}</Typography>
         <Divider sx={{ pt: 1, mb: 2 }} />
-        <Grid container spacing={1} columns={24} wrap={'wrap'}>
-          <Grid size={4}>
+        <Grid container spacing={1} columns={12} wrap={'wrap'}>
+          <Grid size={3}>
             <Typography fontWeight={'bold'} color={'primary'}>
               Push Token:
             </Typography>
           </Grid>
-          <Grid size={8}>{device.pushToken}</Grid>
+          <Grid size={9}>{device.pushToken}</Grid>
 
-          <Grid size={4}>
+          <Grid size={3}>
             <Typography fontWeight={'bold'} color={'primary'}>
               Device Language:
             </Typography>
           </Grid>
-          <Grid size={8}>{device.language}</Grid>
+          <Grid size={9}>{device.language}</Grid>
 
-          <Grid size={4}>
+          <Grid size={3}>
             <Typography fontWeight={'bold'} color={'primary'}>
               Device Timezone:
             </Typography>
           </Grid>
-          <Grid size={8}>{getTimezoneName(device.timezoneOffset)}</Grid>
+          <Grid size={9}>{getTimezoneName(device.timezoneOffset)}</Grid>
 
-          <Grid size={4}>
+          <Grid size={3}>
             <span className={'font-bold'}>
               <Typography fontWeight={'bold'} color={'primary'}>
                 Activity:
               </Typography>
             </span>
           </Grid>
-          <Grid size={8}>{dateIsoToString(device.updatedTimestamp)}</Grid>
+          <Grid size={9}>{dateIsoToString(device.updatedTimestamp)}</Grid>
 
-          <Grid size={4}>
+          <Grid size={3}>
             <Typography fontWeight={'bold'} color={'primary'}>
               Device:
             </Typography>
           </Grid>
-          <Grid size={8}>
+          <Grid size={9}>
             {device.deviceInfo.brand} {device.deviceInfo.modelName} | OS: {device.deviceInfo.osName}{' '}
             {device.deviceInfo.osVersion}
           </Grid>

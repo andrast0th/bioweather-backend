@@ -52,8 +52,10 @@ export const getActuatorInfo = async (): Promise<ActuatorInfo> => {
   return response.data;
 };
 
-export const fetchSubscriptions = async (): Promise<Subscription[]> => {
-  const response = await apiClient.get<Subscription[]>('/notifications/subscription');
+export const fetchSubscriptions = async (pushToken: string): Promise<Subscription[]> => {
+  const response = await apiClient.get<Subscription[]>(
+    `/notifications/subscription/${encodeURIComponent(pushToken)}`
+  );
   return response.data;
 };
 

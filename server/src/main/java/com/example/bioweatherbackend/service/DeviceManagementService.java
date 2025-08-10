@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -66,9 +69,30 @@ public class DeviceManagementService {
     }
 
     @Transactional
-    public List<SubscriptionDto> getSubscriptions() {
-        var entities = subscriptionRepository.findAll();
-        return dashboardMapper.toSubscriptionDtoList(entities);
+    public List<SubscriptionDto> getSubscriptions(String pushToken) {
+        var entities = subscriptionRepository.findByPushToken(pushToken);
+
+        if (entities.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        // Group by locationId
+        var groupedByLoc = new ArrayList<SubscriptionDto>();
+        var locationMap = new HashMap<String, SubscriptionDto>();
+
+        for (var entity : entities) {
+            var locationId = entity.getLocationId();
+            var dto = locationMap.get(locationId);
+            if (dto == null) {
+                dto = dashboardMapper.toSubscriptionDto(entity);
+                dto.getNotificationTypes().clear();
+                locationMap.put(locationId, dto);
+                groupedByLoc.add(dto);
+            }
+            dto.getNotificationTypes().add(entity.getNotificationType());
+        }
+
+        return groupedByLoc;
     }
 
     @Transactional

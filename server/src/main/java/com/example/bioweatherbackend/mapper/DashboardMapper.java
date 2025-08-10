@@ -22,7 +22,6 @@ public interface DashboardMapper {
     @Mapping(source = "device.language", target = "language")
     @Mapping(source = "device.timezoneOffset", target = "timezoneOffset")
     SubscriptionDto toSubscriptionDto(NotificationSubscriptionEntity entity);
-    List<SubscriptionDto> toSubscriptionDtoList(List<NotificationSubscriptionEntity> entities);
 
     @Mapping(source = "deviceInfo", target = "deviceInfo", qualifiedByName = "customDeviceInfo")
     DeviceDto toDeviceDto(DeviceEntity entity);

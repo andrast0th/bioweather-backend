@@ -3,7 +3,7 @@ import * as React from 'react';
 import type { Device } from '~/model/api.model';
 import Box from '@mui/material/Box';
 import { DeviceInfo } from '~/components/devices/DeviceInfo';
-import { NotificationsInfo } from '~/components/devices/NotificationInfo';
+import { NotificationsInfo } from '~/components/notifications/NotificationInfo';
 
 // DeviceList.tsx
 type DeviceInfoProps = {

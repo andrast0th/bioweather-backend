@@ -28,10 +28,10 @@ public class NotificationsController {
         service.unsubscribe(subscription);
     }
 
-    @GetMapping("/subscription")
+    @GetMapping("/subscription/{pushToken}")
     @RequireAuth
-    public List<SubscriptionDto> getSubscription() {
-        return service.getSubscriptions();
+    public List<SubscriptionDto> getSubscriptionsByPushToken(@PathVariable String pushToken) {
+        return service.getSubscriptions(pushToken);
     }
 
     @PostMapping("/test-notification")
