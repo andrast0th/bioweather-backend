@@ -35,3 +35,18 @@ export interface Device {
   timezoneOffset: number;
   updatedTimestamp: string; // ISO 8601 date string
 }
+
+export interface CacheStats {
+  requestCount: number;
+  hitCount: number;
+  missCount: number;
+  loadSuccessCount: number;
+  loadFailureCount: number;
+  totalLoadTime: number;
+  evictionCount: number;
+  evictionWeight: number;
+}
+
+export interface CacheStatistics {
+  [cacheName: string]: CacheStats;
+}

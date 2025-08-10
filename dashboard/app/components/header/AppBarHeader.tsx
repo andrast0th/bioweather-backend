@@ -21,9 +21,6 @@ export default function AppBarHeader() {
           <Button component={Link} to="/caching">
             Caching
           </Button>
-          <Button component={Link} to="/logs">
-            Logs
-          </Button>
         </Toolbar>
       </AppBar>
     </Box>

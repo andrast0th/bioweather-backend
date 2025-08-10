@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import { DevicePanel } from '~/components/devices/DevicePanel';
 
 export function meta({}: Route.MetaArgs) {
-  return [{ title: 'BioWeather Dashboard' }];
+  return [{ title: 'BioWeather Dashboard - Devices' }];
 }
 
 export default function Home() {

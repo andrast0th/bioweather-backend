@@ -1,6 +1,6 @@
 import axios from 'axios';
 import type { ActuatorInfo } from '~/model/actuator.model';
-import type { Device, Subscription } from '~/model/api.model';
+import type { CacheStatistics, Device, Subscription } from '~/model/api.model';
 
 export const API_BASE_URL = '/api/v1/';
 
@@ -49,6 +49,11 @@ actuatorClient.interceptors.response.use((response) => response, responseInterce
 
 export const getActuatorInfo = async (): Promise<ActuatorInfo> => {
   const response = await actuatorClient.get<ActuatorInfo>('/info');
+  return response.data;
+};
+
+export const getCacheStatistics = async (): Promise<CacheStatistics> => {
+  const response = await apiClient.get<CacheStatistics>('/cache');
   return response.data;
 };
 
