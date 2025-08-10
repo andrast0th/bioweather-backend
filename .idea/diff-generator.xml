@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DiffGenerationConfig">
+    <option name="snapshotDb" value="false" />
+    <option name="snapshotModelValue" value="bioweather-backend.main:entityManagerFactory" />
+    <option name="sourceModelValue" value="bioweather-backend.main:entityManagerFactory" />
+    <option name="targetDbValue" value="31e50fd2-4d80-4d17-add7-2ce039d4b41b" />
+  </component>
+</project>
