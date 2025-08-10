@@ -87,7 +87,7 @@ xjcGenerate {
 // Task to build the dashboard using npm
 
 def dashboardDir = '../dashboard'
-def buildOutputDir = "${dashboardDir}/build"
+def buildOutputDir = "${dashboardDir}/build/client"
 def staticTargetDir = "${projectDir}/src/main/resources/static"
 
 tasks.register('npmInstallDashboard', Exec) {
@@ -114,6 +114,6 @@ tasks.register('copyDashboardBuild', Copy) {
 // Ensure static files are ready before building the server
 if (project.hasProperty('buildDashboard')) {
 	tasks.named('processResources') {
-		dependsOn 'npmInstallDashboard'
+		dependsOn 'copyDashboardBuild'
 	}
 }
