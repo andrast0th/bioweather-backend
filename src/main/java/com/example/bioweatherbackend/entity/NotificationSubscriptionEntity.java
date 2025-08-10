@@ -1,16 +1,17 @@
 package com.example.bioweatherbackend.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.example.bioweatherbackend.dto.notifications.NotificationType;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.Instant;
 
 @Entity
 @Table(name = "notification_subscription")
+@IdClass(NotificationSubscriptionId.class)
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 public class NotificationSubscriptionEntity {
@@ -18,15 +19,16 @@ public class NotificationSubscriptionEntity {
     @Column(name = "push_token", nullable = false, length = 200)
     private String pushToken;
 
-    @Column(name = "user_id", nullable = false, length = 200)
-    private String userId;
+    @Id
+    @Column(name = "notification_type", nullable = false, length = 200)
+    @Enumerated(EnumType.STRING)
+    private NotificationType notificationType;
 
-    @Column(name = "device_info", nullable = false, length = 1000)
-    private String deviceInfo;
+    @Id
+    @Column(name = "location_id", nullable = false, length = 1000)
+    private String locationId;
 
-    @Column(name = "updated_via_subscribe")
-    private Instant updatedViaSubscribe;
-
-    @Column(name = "is_disabled")
-    private boolean isDisabled;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "push_token", referencedColumnName = "push_token", insertable = false, updatable = false)
+    private DeviceEntity device;
 }

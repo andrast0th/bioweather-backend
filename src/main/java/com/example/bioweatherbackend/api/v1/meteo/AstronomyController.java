@@ -1,4 +1,4 @@
-package com.example.bioweatherbackend.api.v1;
+package com.example.bioweatherbackend.api.v1.meteo;
 
 import com.example.bioweatherbackend.dto.weather.ApiAstronomy;
 import com.example.bioweatherbackend.service.MeteoNewsDataService;

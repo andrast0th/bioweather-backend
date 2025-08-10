@@ -1,7 +1,7 @@
 package com.example.bioweatherbackend.api.v1;
 
 import com.example.bioweatherbackend.config.sec.RequireAuth;
-import com.example.bioweatherbackend.repository.NotificationSubscriptionRepository;
+import com.example.bioweatherbackend.repository.DeviceRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,17 +22,17 @@ import java.util.Objects;
 public class ClientLogController {
 
     private final String uploadClientLogsPath;
-    private final NotificationSubscriptionRepository subscriptionRepository;
+    private final DeviceRepository deviceRepository;
 
     @Autowired
-    public ClientLogController(@Value("${upload.client-logs-path}") String uploadClientLogsPath, NotificationSubscriptionRepository subscriptionRepository) {
+    public ClientLogController(@Value("${upload.client-logs-path}") String uploadClientLogsPath, DeviceRepository deviceRepository) {
         this.uploadClientLogsPath = uploadClientLogsPath;
-        this.subscriptionRepository = subscriptionRepository;
+        this.deviceRepository = deviceRepository;
     }
 
     @PostMapping()
     public ResponseEntity<Void> uploadFiles(@RequestParam("file") MultipartFile[] files, @RequestParam("pushToken") String pushToken) {
-        if (!subscriptionRepository.existsById(pushToken)) {
+        if (!deviceRepository.existsById(pushToken)) {
             log.error("Push token not found {}", pushToken);
             return ResponseEntity.internalServerError().build();
         }
@@ -54,7 +54,7 @@ public class ClientLogController {
     @GetMapping("/{pushToken}")
     @RequireAuth
     public ResponseEntity<String> getLogs(@PathVariable("pushToken") String pushToken) {
-        if (!subscriptionRepository.existsById(pushToken)) {
+        if (!deviceRepository.existsById(pushToken)) {
             log.error("Push token not found {}", pushToken);
             return ResponseEntity.internalServerError().build();
         }
