@@ -14,6 +14,7 @@ export interface Subscription {
   language: string;
   timezoneOffset: number;
   locationId: string;
+  locationName: string;
   notificationTypes: NotificationType[];
 }
 
@@ -34,6 +35,12 @@ export interface Device {
   language: string;
   timezoneOffset: number;
   updatedTimestamp: string; // ISO 8601 date string
+}
+
+export interface Translation {
+  id: string;
+  language: string;
+  text: string;
 }
 
 export interface CacheStats {

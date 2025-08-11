@@ -16,5 +16,7 @@ public class SubscriptionDto {
     private int timezoneOffset;
 
     private String locationId;
+    private String locationName;
+
     private List<NotificationType> notificationTypes = new ArrayList<>();
 }

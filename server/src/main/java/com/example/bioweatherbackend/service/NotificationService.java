@@ -34,7 +34,7 @@ public class NotificationService {
         this.mapper = dashboardMapper;
     }
 
-    public void sendTestNotification(String pushToken, String title, String subtitle) {
+    public void sendTextNotification(String pushToken, String title, String subtitle) {
         PushNotification notification = new PushNotification();
         notification.setTo(Collections.singletonList(pushToken));
         notification.setTitle(title);

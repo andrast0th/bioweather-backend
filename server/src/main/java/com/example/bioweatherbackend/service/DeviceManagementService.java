@@ -25,6 +25,7 @@ public class DeviceManagementService {
     private final DeviceRepository deviceRepository;
     private final NotificationSubscriptionRepository subscriptionRepository;
     private final DashboardMapper dashboardMapper;
+    private final MeteoNewsDataService meteoNewsDataService;
 
     @Transactional
     public void subscribe(SubscriptionDto subscriptionDto) {
@@ -86,6 +87,7 @@ public class DeviceManagementService {
             if (dto == null) {
                 dto = dashboardMapper.toSubscriptionDto(entity);
                 dto.getNotificationTypes().clear();
+                dto.setLocationName(meteoNewsDataService.getLocationById(locationId).getName());
                 locationMap.put(locationId, dto);
                 groupedByLoc.add(dto);
             }

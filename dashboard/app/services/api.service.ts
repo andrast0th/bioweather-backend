@@ -1,6 +1,12 @@
 import axios from 'axios';
 import type { ActuatorInfo } from '~/model/actuator.model';
-import type { CacheStatistics, Device, PushTicket, Subscription } from '~/model/api.model';
+import type {
+  CacheStatistics,
+  Device,
+  PushTicket,
+  Subscription,
+  Translation,
+} from '~/model/api.model';
 
 export const API_BASE_URL = '/api/v1/';
 
@@ -68,6 +74,15 @@ export const fetchDevices = async (query?: string): Promise<Device[]> => {
   const params = query ? { params: { query } } : {};
   const response = await apiClient.get<Device[]>('/devices', params);
   return response.data;
+};
+
+export const fetchTranslations = async (): Promise<Translation[]> => {
+  const response = await apiClient.get<Translation[]>('/translations');
+  return response.data;
+};
+
+export const updateTranslations = async (data: Translation[]): Promise<void> => {
+  await apiClient.put<void>('/translations', data);
 };
 
 export const fetchNotificationHistory = async (

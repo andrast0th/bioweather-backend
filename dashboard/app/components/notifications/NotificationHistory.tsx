@@ -105,7 +105,7 @@ export function NotificationHistory({ device }: NotificationHistoryProps) {
         <ToggleButtonGroup value={filterLocationId} onChange={handleFormat} exclusive>
           <ToggleButton value={'ALL'}>ALL</ToggleButton>
           {subscriptions.map((subscription) => (
-            <ToggleButton value={subscription.locationId}>{subscription.locationId}</ToggleButton>
+            <ToggleButton value={subscription.locationId}>{subscription.locationName}</ToggleButton>
           ))}
         </ToggleButtonGroup>
       </Box>

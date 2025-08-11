@@ -4,7 +4,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum NotificationType {
-    BW("bw"),
+    BW_TODAY("bw-today"),
+    BW_TOMORROW("bw-tomorrow"),
     BEDTIME("bedtime"),
     WAKEUP("wakeup"),
     LAST_MEAL("last-meal"),
