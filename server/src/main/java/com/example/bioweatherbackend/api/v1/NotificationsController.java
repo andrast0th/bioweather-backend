@@ -1,6 +1,7 @@
 package com.example.bioweatherbackend.api.v1;
 
 import com.example.bioweatherbackend.config.sec.RequireAuth;
+import com.example.bioweatherbackend.dto.notifications.PushTicketDto;
 import com.example.bioweatherbackend.dto.notifications.SubscriptionDto;
 import com.example.bioweatherbackend.dto.notifications.TestNotificationDto;
 import com.example.bioweatherbackend.service.DeviceManagementService;
@@ -32,6 +33,14 @@ public class NotificationsController {
     @RequireAuth
     public List<SubscriptionDto> getSubscriptionsByPushToken(@PathVariable String pushToken) {
         return service.getSubscriptions(pushToken);
+    }
+
+    @GetMapping("/history/{pushToken}")
+    @RequireAuth
+    public List<PushTicketDto> getHistory(@PathVariable String pushToken,
+                                          @RequestParam(required = false) String locationId) {
+
+        return notificationService.getNotificationHistory(pushToken, locationId);
     }
 
     @PostMapping("/test-notification")

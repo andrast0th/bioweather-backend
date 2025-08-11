@@ -21,7 +21,7 @@ public class PushTicketEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "push_token", referencedColumnName = "push_token", nullable = false)
-    private DeviceEntity deviceEntity;
+    private DeviceEntity device;
 
     @Column(length = 20)
     private String receiptStatus;

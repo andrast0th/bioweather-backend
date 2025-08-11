@@ -50,3 +50,17 @@ export interface CacheStats {
 export interface CacheStatistics {
   [cacheName: string]: CacheStats;
 }
+
+export interface PushTicket {
+  id: string;
+  pushToken: string;
+  receiptStatus: string;
+  notificationType: NotificationType;
+  notificationTitle: string;
+  notificationBody: string;
+  locationId: string;
+  receiptError: string;
+  wasReceiptChecked: boolean;
+  receiptCheckedAt: string; // ISO date string, use Date if you want JS Date object
+  ticketCreatedAt: string; // ISO date string, use Date if you want JS Date object
+}

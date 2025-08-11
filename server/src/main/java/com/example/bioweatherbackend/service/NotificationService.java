@@ -4,9 +4,10 @@ import com.example.bioweatherbackend.dto.expo.PushNotification;
 import com.example.bioweatherbackend.dto.expo.Status;
 import com.example.bioweatherbackend.dto.expo.TicketResponse;
 import com.example.bioweatherbackend.dto.notifications.NotificationType;
+import com.example.bioweatherbackend.dto.notifications.PushTicketDto;
 import com.example.bioweatherbackend.entity.DeviceEntity;
 import com.example.bioweatherbackend.entity.PushTicketEntity;
-import com.example.bioweatherbackend.repository.NotificationSubscriptionRepository;
+import com.example.bioweatherbackend.mapper.DashboardMapper;
 import com.example.bioweatherbackend.repository.PushTicketRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -25,10 +26,12 @@ public class NotificationService {
 
     private final RestClient restClient;
     private final PushTicketRepository pushTicketRepository;
+    private final DashboardMapper mapper;
 
-    public NotificationService(@Qualifier("expoRestClient") RestClient restClient, NotificationSubscriptionRepository subscriptionRepository, PushTicketRepository pushTicketRepository) {
+    public NotificationService(@Qualifier("expoRestClient") RestClient restClient, PushTicketRepository pushTicketRepository, DashboardMapper dashboardMapper) {
         this.restClient = restClient;
         this.pushTicketRepository = pushTicketRepository;
+        this.mapper = dashboardMapper;
     }
 
     public void sendTestNotification(String pushToken, String title, String subtitle) {
@@ -79,7 +82,7 @@ public class NotificationService {
 
                 DeviceEntity device = new DeviceEntity();
                 device.setPushToken(pushToken);
-                pushTicketEntity.setDeviceEntity(device);
+                pushTicketEntity.setDevice(device);
 
                 pushTicketEntity.setNotificationType(notificationType);
                 pushTicketEntity.setNotificationTitle(notificationTitle);
@@ -91,6 +94,19 @@ public class NotificationService {
                 pushTicketRepository.save(pushTicketEntity);
             }
         }
+    }
+
+    public List<PushTicketDto> getNotificationHistory(String pushToken, String locationId) {
+
+        List<PushTicketEntity> res;
+
+        if(locationId == null){
+            res = pushTicketRepository.findAllByPushToken(pushToken);
+        } else {
+            res = pushTicketRepository.findByPushTokenAndLocation(pushToken, locationId);
+        }
+
+        return mapper.toPushTicketDtoList(res);
     }
 
 

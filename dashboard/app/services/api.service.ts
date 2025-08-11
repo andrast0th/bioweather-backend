@@ -1,6 +1,6 @@
 import axios from 'axios';
 import type { ActuatorInfo } from '~/model/actuator.model';
-import type { CacheStatistics, Device, Subscription } from '~/model/api.model';
+import type { CacheStatistics, Device, PushTicket, Subscription } from '~/model/api.model';
 
 export const API_BASE_URL = '/api/v1/';
 
@@ -67,6 +67,20 @@ export const fetchSubscriptions = async (pushToken: string): Promise<Subscriptio
 export const fetchDevices = async (query?: string): Promise<Device[]> => {
   const params = query ? { params: { query } } : {};
   const response = await apiClient.get<Device[]>('/devices', params);
+  return response.data;
+};
+
+export const fetchNotificationHistory = async (
+  pushToken: string,
+  locationId?: string | null
+): Promise<PushTicket[]> => {
+  const params = locationId ? { params: { locationId } } : {};
+
+  const response = await apiClient.get<PushTicket[]>(
+    `/notifications/history/${encodeURIComponent(pushToken)}`,
+    params
+  );
+
   return response.data;
 };
 

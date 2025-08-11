@@ -1,9 +1,11 @@
 package com.example.bioweatherbackend.mapper;
 
 import com.example.bioweatherbackend.dto.notifications.DeviceDto;
+import com.example.bioweatherbackend.dto.notifications.PushTicketDto;
 import com.example.bioweatherbackend.dto.notifications.SubscriptionDto;
 import com.example.bioweatherbackend.entity.DeviceEntity;
 import com.example.bioweatherbackend.entity.NotificationSubscriptionEntity;
+import com.example.bioweatherbackend.entity.PushTicketEntity;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -42,5 +44,9 @@ public interface DashboardMapper {
 
 
     List<DeviceDto> toDeviceDtoList(List<DeviceEntity> entities);
+
+    @Mapping(source = "device.pushToken", target = "pushToken")
+    PushTicketDto toPushTicketDto(PushTicketEntity entity);
+    List<PushTicketDto> toPushTicketDtoList(List<PushTicketEntity> entity);
 
 }
