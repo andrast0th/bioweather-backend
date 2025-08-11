@@ -92,12 +92,12 @@ def staticTargetDir = "${projectDir}/src/main/resources/static"
 
 tasks.register('npmInstallDashboard', Exec) {
 	workingDir dashboardDir
-	commandLine 'npm', 'install'
+	commandLine project.findProperty('npmBin') ?: 'npm', 'install'
 }
 
 tasks.register('npmBuildDashboard', Exec) {
 	workingDir dashboardDir
-	commandLine 'npm', 'run', 'build'
+	commandLine project.findProperty('npmBin') ?: 'npm', 'run', 'build'
 	dependsOn 'npmInstallDashboard'
 }
 
