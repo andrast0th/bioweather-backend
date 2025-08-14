@@ -11,11 +11,11 @@ export function meta({}: Route.MetaArgs) {
 }
 
 const columns: GridColDef<Translation[][number]>[] = [
-  { field: 'id', headerName: 'ID', width: 200 },
+  { field: 'id', headerName: 'ID', width: 300 },
   {
     field: 'text',
     headerName: 'Text',
-    width: 1000,
+    flex: 1,
     editable: true,
   },
 ];
@@ -93,11 +93,11 @@ export default function Translations() {
         initialState={{
           pagination: {
             paginationModel: {
-              pageSize: 10,
+              pageSize: 50,
             },
           },
         }}
-        pageSizeOptions={[5, 10]}
+        pageSizeOptions={[5, 10, 50, 100]}
         sx={{ border: 0 }}
       />
     </Box>

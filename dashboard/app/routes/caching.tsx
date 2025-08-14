@@ -26,7 +26,7 @@ export default function Caching() {
       <Grid container spacing={2} columns={12} wrap="wrap">
         {cacheStatistics &&
           Object.entries(cacheStatistics).map(([k, cacheStats]) => (
-            <Card sx={{ minWidth: 280 }}>
+            <Card sx={{ minWidth: 280 }} key={k}>
               <CardHeader title={k}></CardHeader>
               <CardContent>
                 {Object.entries(cacheStats).map(([statKey, statValue]) => (

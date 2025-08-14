@@ -30,7 +30,7 @@ const columns: GridColDef<PushTicket[][number]>[] = [
   {
     field: 'receiptCheckedAt',
     headerName: 'Checked',
-    width: 200,
+    width: 100,
     valueGetter: (value, row) => (row.wasReceiptChecked ? dateIsoToString(value) : '-'),
   },
   {
@@ -41,12 +41,7 @@ const columns: GridColDef<PushTicket[][number]>[] = [
   {
     field: 'notificationBody',
     headerName: 'Notification Content',
-    width: 150,
-  },
-  {
-    field: 'notificationBody',
-    headerName: 'Notification Content',
-    width: 150,
+    flex: 1,
   },
 ];
 

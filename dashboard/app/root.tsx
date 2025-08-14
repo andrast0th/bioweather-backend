@@ -21,6 +21,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import AppBarHeader from '~/components/header/AppBarHeader';
 import { RouteGuard } from '~/components/RouteGuard';
 import { SnackbarProvider } from 'notistack';
+import AppBarFooter from '~/components/header/AppBarFooter';
 
 const darkTheme = createTheme({
   palette: {
@@ -53,12 +54,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <>
-      <Box sx={{ pl: 0, pr: 0 }}>
-        <AppBarHeader />
-      </Box>
-      <Box sx={{ p: 2 }}>
+      <AppBarHeader />
+      <Box sx={{ p: 2, mb: 4 }}>
         <Outlet />
       </Box>
+      <AppBarFooter />
     </>
   );
 }
