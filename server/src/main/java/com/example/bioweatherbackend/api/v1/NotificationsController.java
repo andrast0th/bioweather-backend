@@ -1,6 +1,7 @@
 package com.example.bioweatherbackend.api.v1;
 
 import com.example.bioweatherbackend.config.sec.RequireAuth;
+import com.example.bioweatherbackend.dto.notifications.NotificationType;
 import com.example.bioweatherbackend.dto.notifications.PushTicketDto;
 import com.example.bioweatherbackend.dto.notifications.SubscriptionDto;
 import com.example.bioweatherbackend.dto.notifications.TestNotificationDto;
@@ -48,7 +49,7 @@ public class NotificationsController {
     @PostMapping("/test-notification")
     @RequireAuth
     public void triggerNotification(@RequestBody TestNotificationDto notificationDto) {
-        notificationService.sendTextNotification(notificationDto.getPushToken(),"Test Notification", notificationDto.getMessage());
+        notificationService.sendTextNotification(notificationDto.getPushToken(), "Test Notification", notificationDto.getMessage(), NotificationType.TEST);
     }
 
     @PostMapping("/test-job")

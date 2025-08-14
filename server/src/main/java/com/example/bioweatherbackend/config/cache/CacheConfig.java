@@ -18,6 +18,8 @@ public class CacheConfig {
     public static final String LOCATION = "location";
     public static final String GEO_REF_LOCATION = "geoRefLocation";
     public static final String SCALES = "scales";
+    public static final String TRANSLATIONS = "translations";
+    public static final String TRANSLATIONS_MAP = "translations_map";
 
     @Bean
     public CacheManager cacheManager() {
@@ -28,7 +30,9 @@ public class CacheConfig {
                 buildUtcAfterMidnightCache(ASTRONOMY),
                 build10MinuteCache(SEARCH_LOCATIONS),
                 build10MinuteCache(LOCATION),
-                build10MinuteCache(GEO_REF_LOCATION)
+                build10MinuteCache(GEO_REF_LOCATION),
+                build10MinuteCache(TRANSLATIONS),
+                build10MinuteCache(TRANSLATIONS_MAP)
         ));
         return manager;
     }

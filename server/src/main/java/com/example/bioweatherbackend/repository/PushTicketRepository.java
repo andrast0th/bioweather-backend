@@ -25,4 +25,18 @@ public interface PushTicketRepository extends JpaRepository<PushTicketEntity, St
 
     @Query("SELECT p FROM PushTicketEntity p WHERE p.device.pushToken = :pushToken and p.locationId = :locationId ORDER BY p.receiptCheckedAt DESC")
     List<PushTicketEntity> findByPushTokenAndLocation(String pushToken, String locationId);
+
+    @Query("SELECT p FROM PushTicketEntity p " +
+            "WHERE p.device.pushToken = :pushToken " +
+            "AND p.locationId = :locationId " +
+            "AND p.notificationType = :notificationType " +
+            "AND p.ticketCreatedAt >= :startOfDay " +
+            "AND p.ticketCreatedAt < :endOfDay")
+    List<PushTicketEntity> findAllByDeviceLocationTypeAndDate(
+            String pushToken,
+            String locationId,
+            com.example.bioweatherbackend.dto.notifications.NotificationType notificationType,
+            Instant startOfDay,
+            Instant endOfDay
+    );
 }

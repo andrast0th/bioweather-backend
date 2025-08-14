@@ -25,16 +25,23 @@ export default function Translations() {
   const [filteredTranslations, setFilteredTranslations] = React.useState<Translation[]>([]);
   const [languages, setLanguages] = React.useState<string[]>([]);
   const [currentLanguage, setCurrentLanguage] = React.useState<string | null>(null);
+  const [query, setQuery] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState<boolean>(true);
 
-  function filterTranslations(query: string) {
+  function filterTranslations(query: string | null, language: string | null) {
+    setQuery(query);
+    setCurrentLanguage(language);
+
     setFilteredTranslations(
-      serverTranslations.filter(
-        (translation) =>
+      serverTranslations.filter((translation) => {
+        const matchesQuery =
+          !query ||
           translation?.text?.toLowerCase().includes(query.toLowerCase()) ||
-          translation?.id?.toLowerCase().includes(query.toLowerCase()) ||
-          (translation.language && translation.language === currentLanguage)
-      )
+          translation?.id?.toLowerCase().includes(query.toLowerCase());
+        const matchesLanguage =
+          !language || language === 'ALL' || translation.language === language;
+        return matchesQuery && matchesLanguage;
+      })
     );
   }
 
@@ -61,7 +68,7 @@ export default function Translations() {
         fullWidth
         label="Filter"
         variant={'outlined'}
-        onChange={(e) => filterTranslations(e.target.value)}
+        onChange={(e) => filterTranslations(e.target.value || null, currentLanguage)}
       />
 
       <ToggleButtonGroup
@@ -69,7 +76,7 @@ export default function Translations() {
         value={currentLanguage}
         onChange={(_event, value) => {
           setCurrentLanguage(value);
-          filterTranslations(value);
+          filterTranslations(query, value === 'ALL' ? null : value);
         }}
         exclusive
       >

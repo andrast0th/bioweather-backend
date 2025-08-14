@@ -34,7 +34,7 @@ public class NotificationService {
         this.mapper = dashboardMapper;
     }
 
-    public void sendTextNotification(String pushToken, String title, String subtitle) {
+    public void sendTextNotification(String pushToken, String title, String subtitle, NotificationType notificationType) {
         PushNotification notification = new PushNotification();
         notification.setTo(Collections.singletonList(pushToken));
         notification.setTitle(title);
@@ -50,7 +50,7 @@ public class NotificationService {
                 .body(TicketResponse.class);
 
         if (response != null) {
-            handlePushTicketResponse(Collections.singletonList(pushToken), response.getData(), NotificationType.TEST, notification.getTitle(), notification.getBody(), null);
+            handlePushTicketResponse(Collections.singletonList(pushToken), response.getData(), notificationType, notification.getTitle(), notification.getBody(), null);
         }
     }
 
