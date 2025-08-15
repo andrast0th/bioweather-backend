@@ -7,10 +7,11 @@ import com.example.bioweatherbackend.repository.DeviceRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Objects;
 
@@ -19,14 +20,17 @@ import java.util.Objects;
 @Slf4j
 public class NotificationJobService {
 
+    private static final DateTimeFormatter[] TIME_FORMATTERS = {
+        DateTimeFormatter.ofPattern("H:mm"),
+        DateTimeFormatter.ofPattern("HH:mm")
+    };
 
     private final DeviceRepository deviceRepo;
     private final NotificationService notificationService;
     private final TranslationService translationService;
-
     private final MeteoNewsDataService meteoNewsDataService;
+    private final ConfigService configService;
 
-    @Scheduled(cron = "0 */15 * * * *", zone = "UTC")
     @Transactional
     public void scheduledRunWorkJob() {
         log.info("Running scheduled job send notifications");
@@ -46,10 +50,16 @@ public class NotificationJobService {
                 ApiLocation location = meteoNewsDataService.getLocationById(sub.getLocationId());
                 var datetimeLocation = getDateTimeForLocation(location);
 
+                var localTimeBwToday = parseDbTime(configService.getConfig().getBwTodayNotificationHour());
+                var localTimeBwTomorrow = parseDbTime(configService.getConfig().getBwTomorrowNotificationHour());
+                var notificationThresholdMinutes = configService.getConfig().getNotificationThresholdMinutes();
+
                 try {
-                    if (NotificationType.BW_TODAY == sub.getNotificationType() && isInTimeRange(datetimeLocation, LocalTime.of(8, 0), Duration.ofMinutes(10), Duration.ofMinutes(10))) {
+                    if (NotificationType.BW_TODAY == sub.getNotificationType() &&
+                        isInTimeRange(datetimeLocation, localTimeBwToday, Duration.ofMinutes(notificationThresholdMinutes), Duration.ofMinutes(notificationThresholdMinutes))) {
                         sendBwNotification(device, location, sub.getNotificationType(), datetimeLocation);
-                    } else if (NotificationType.BW_TOMORROW == sub.getNotificationType() && isInTimeRange(datetimeLocation, LocalTime.of(18, 0), Duration.ofMinutes(10), Duration.ofMinutes(10))) {
+                    } else if (NotificationType.BW_TOMORROW == sub.getNotificationType() &&
+                        isInTimeRange(datetimeLocation, localTimeBwTomorrow, Duration.ofMinutes(notificationThresholdMinutes), Duration.ofMinutes(notificationThresholdMinutes))) {
                         sendBwNotification(device, location, sub.getNotificationType(), datetimeLocation);
                     }
                 } catch (Exception e) {
@@ -125,6 +135,15 @@ public class NotificationJobService {
         ZonedDateTime now = ZonedDateTime.now(zonedDateTime.getZone());
 
         return !now.isBefore(startTime) && !now.isAfter(endTime);
+    }
+
+    private LocalTime parseDbTime(String timeStr) {
+        for (DateTimeFormatter formatter : TIME_FORMATTERS) {
+            try {
+                return LocalTime.parse(timeStr, formatter);
+            } catch (DateTimeParseException ignored) {}
+        }
+        throw new IllegalArgumentException("Invalid time format: " + timeStr);
     }
 
 }

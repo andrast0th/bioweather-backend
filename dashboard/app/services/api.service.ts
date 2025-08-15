@@ -2,6 +2,7 @@ import axios from 'axios';
 import type { ActuatorInfo } from '~/model/actuator.model';
 import type {
   CacheStatistics,
+  Config,
   Device,
   PushTicket,
   Subscription,
@@ -104,4 +105,13 @@ export const sendTestNotification = async (pushToken: string, message: string): 
     pushToken,
     message,
   });
+};
+
+export const getConfig = async (): Promise<Config> => {
+  const response = await apiClient.get<Config>('/config');
+  return response.data;
+};
+
+export const updateConfig = async (config: Config): Promise<void> => {
+  await apiClient.put<void>('/config', config);
 };

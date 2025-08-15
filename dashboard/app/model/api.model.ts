@@ -71,3 +71,10 @@ export interface PushTicket {
   receiptCheckedAt: string; // ISO date string, use Date if you want JS Date object
   ticketCreatedAt: string; // ISO date string, use Date if you want JS Date object
 }
+
+export interface Config {
+  notificationJobCron: string;
+  notificationThresholdMinutes: number;
+  bwTodayNotificationHour: string;
+  bwTomorrowNotificationHour: string;
+}
