@@ -20,6 +20,7 @@ public class CacheConfig {
     public static final String SCALES = "scales";
     public static final String TRANSLATIONS = "translations";
     public static final String TRANSLATIONS_MAP = "translations_map";
+    public static final String CIRCADIAN_RHYTHM = "translations_map";
 
     @Bean
     public CacheManager cacheManager() {
@@ -28,6 +29,7 @@ public class CacheConfig {
                 buildUtcAfterMidnightCache(SCALES),
                 buildUtcAfterMidnightCache(WEATHER),
                 buildUtcAfterMidnightCache(ASTRONOMY),
+                buildUtcAfterMidnightCache(CIRCADIAN_RHYTHM),
                 build10MinuteCache(SEARCH_LOCATIONS),
                 build10MinuteCache(LOCATION),
                 build10MinuteCache(GEO_REF_LOCATION),

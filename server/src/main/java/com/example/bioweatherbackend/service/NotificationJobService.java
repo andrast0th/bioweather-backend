@@ -4,6 +4,8 @@ import com.example.bioweatherbackend.dto.notifications.NotificationType;
 import com.example.bioweatherbackend.dto.weather.ApiLocation;
 import com.example.bioweatherbackend.entity.DeviceEntity;
 import com.example.bioweatherbackend.repository.DeviceRepository;
+import com.example.bioweatherbackend.service.meteo.CircadianRhythmService;
+import com.example.bioweatherbackend.service.meteo.LocationService;
 import com.example.bioweatherbackend.service.meteo.MeteoNewsDataService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -30,7 +33,9 @@ public class NotificationJobService {
     private final NotificationService notificationService;
     private final TranslationService translationService;
     private final MeteoNewsDataService meteoNewsDataService;
+    private final CircadianRhythmService circadianRhythmService;
     private final ConfigService configService;
+    private final LocationService locationService;
 
     @Transactional
     public void scheduledRunWorkJob() {
@@ -49,7 +54,7 @@ public class NotificationJobService {
                 }
 
                 ApiLocation location = meteoNewsDataService.getLocationById(sub.getLocationId());
-                var datetimeLocation = getDateTimeForLocation(location);
+                var datetimeLocation = locationService.getDateTimeForLocation(location);
 
                 var localTimeBwToday = parseDbTime(configService.getConfig().getBwTodayNotificationHour());
                 var localTimeBwTomorrow = parseDbTime(configService.getConfig().getBwTomorrowNotificationHour());
@@ -62,6 +67,8 @@ public class NotificationJobService {
                     } else if (NotificationType.BW_TOMORROW == sub.getNotificationType() &&
                         isInTimeRange(datetimeLocation, localTimeBwTomorrow, Duration.ofMinutes(notificationThresholdMinutes), Duration.ofMinutes(notificationThresholdMinutes))) {
                         sendBwNotification(device, location, sub.getNotificationType(), datetimeLocation);
+                    } else {
+                        checkAndSendCrNotification(device, location, sub.getNotificationType(), datetimeLocation);
                     }
                 } catch (Exception e) {
                     log.error("Error sending notification for device: {}, location: {}, type: {}", device.getPushToken(), sub.getLocationId(), sub.getNotificationType(), e);
@@ -71,6 +78,34 @@ public class NotificationJobService {
         }
 
         log.info("Finished scheduled job to send work notifications");
+    }
+
+    private void checkAndSendCrNotification(DeviceEntity device, ApiLocation location, NotificationType notificationType, ZonedDateTime datetimeLocation) {
+        var cr = circadianRhythmService.getCircadianRhythm(location.getId(), datetimeLocation.toLocalDate());
+
+        var crMap = new HashMap<NotificationType, LocalDateTime>();
+        crMap.put(NotificationType.BEDTIME, cr.getBed());
+        crMap.put(NotificationType.WAKEUP, cr.getWakeUp());
+        crMap.put(NotificationType.LAST_MEAL, cr.getLastMeal());
+        crMap.put(NotificationType.NEXT_REST, cr.getNextRestPeriodStart());
+        crMap.put(NotificationType.PEAK, cr.getPeakAlertnessStart());
+        crMap.put(NotificationType.EXERCISE, cr.getExerciseStart());
+
+        crMap.forEach((crKey, crValue) -> {
+            if (notificationType == crKey && isInTimeRange(datetimeLocation, crValue.toLocalTime(), Duration.ofMinutes(configService.getConfig().getNotificationThresholdMinutes()), Duration.ofMinutes(configService.getConfig().getNotificationThresholdMinutes()))) {
+                log.info("Sending circadian rhythm notification for device: {}, location: {}, type: {}", device.getPushToken(), location.getId(), notificationType);
+                var translations = translationService.getTranslationsMap(device.getLanguage());
+
+                var title = translations.get("notifications." + crKey.getValue() + ".title");
+                title = title.replace("%{locationName}", location.getName());
+
+                var content = translations.get("notifications." + crKey.getValue() + ".body");
+                content = content.replace("%{locationName}", location.getName());
+
+                notificationService.sendTextNotification(device.getPushToken(), title, content, notificationType);
+            }
+        });
+
     }
 
     private void sendBwNotification(DeviceEntity device, ApiLocation location, NotificationType notificationType, ZonedDateTime datetimeLocation) {
@@ -115,19 +150,6 @@ public class NotificationJobService {
         notificationService.sendTextNotification(device.getPushToken(), title, body, notificationType);
     }
 
-    private ZonedDateTime getDateTimeForLocation(ApiLocation location) {
-        // Implement logic to determine the date for the location
-        // This could be based on the current date, or some other logic
-        int offset = location.getUtcOffset();
-        var offsetUnit = location.getUtcOffsetUnit();
-
-        return switch (offsetUnit) {
-            case "h" -> ZonedDateTime.now(ZoneOffset.ofHours(offset));
-            case "m" -> ZonedDateTime.now(ZoneOffset.ofTotalSeconds(offset * 60));
-            case "s" -> ZonedDateTime.now(ZoneOffset.ofTotalSeconds(offset));
-            default -> throw new IllegalArgumentException("Unsupported UTC offset unit: " + offsetUnit);
-        };
-    }
 
     private boolean isInTimeRange(ZonedDateTime zonedDateTime, LocalTime targetTime, Duration startOffset, Duration endOffset) {
         ZonedDateTime startTime = zonedDateTime.with(targetTime).minus(startOffset);
