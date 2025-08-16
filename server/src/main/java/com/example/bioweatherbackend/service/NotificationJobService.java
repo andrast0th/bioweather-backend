@@ -4,6 +4,7 @@ import com.example.bioweatherbackend.dto.notifications.NotificationType;
 import com.example.bioweatherbackend.dto.weather.ApiLocation;
 import com.example.bioweatherbackend.entity.DeviceEntity;
 import com.example.bioweatherbackend.repository.DeviceRepository;
+import com.example.bioweatherbackend.service.meteo.MeteoNewsDataService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

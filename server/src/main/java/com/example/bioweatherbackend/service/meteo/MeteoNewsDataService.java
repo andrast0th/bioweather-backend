@@ -1,4 +1,4 @@
-package com.example.bioweatherbackend.service;
+package com.example.bioweatherbackend.service.meteo;
 
 import com.example.bioweatherbackend.config.cache.CacheConfig;
 import com.example.bioweatherbackend.dto.weather.*;

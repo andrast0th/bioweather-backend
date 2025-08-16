@@ -2,7 +2,7 @@ package com.example.bioweatherbackend.api.v1.meteo;
 
 import com.example.bioweatherbackend.dto.weather.ApiLocation;
 import com.example.bioweatherbackend.dto.weather.ApiSearchLocation;
-import com.example.bioweatherbackend.service.MeteoNewsDataService;
+import com.example.bioweatherbackend.service.meteo.MeteoNewsDataService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

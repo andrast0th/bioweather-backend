@@ -7,6 +7,7 @@ import com.example.bioweatherbackend.entity.NotificationSubscriptionEntity;
 import com.example.bioweatherbackend.mapper.DashboardMapper;
 import com.example.bioweatherbackend.repository.DeviceRepository;
 import com.example.bioweatherbackend.repository.NotificationSubscriptionRepository;
+import com.example.bioweatherbackend.service.meteo.MeteoNewsDataService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -23,7 +23,9 @@ export function DeviceInfo({ device }: DeviceInfoProps) {
               Push Token:
             </Typography>
           </Grid>
-          <Grid size={9}>{device.pushToken}</Grid>
+          <Grid size={9}>
+            <Typography sx={{ wordBreak: 'break-word' }}>{device.pushToken}</Typography>
+          </Grid>
 
           <Grid size={3}>
             <Typography fontWeight={'bold'} color={'primary'}>

@@ -20,7 +20,7 @@ public interface PushTicketRepository extends JpaRepository<PushTicketEntity, St
     List<String> findPushTokensWithErrorsSince(int errorCount, Instant sinceDate);
 
     // find all tickets by push token order by checked at date
-    @Query("SELECT p FROM PushTicketEntity p WHERE p.device.pushToken = :pushToken ORDER BY p.receiptCheckedAt DESC")
+    @Query("SELECT p FROM PushTicketEntity p WHERE p.device.pushToken = :pushToken ORDER BY p.ticketCreatedAt DESC LIMIT 100")
     List<PushTicketEntity> findAllByPushToken(String pushToken);
 
     @Query("SELECT p FROM PushTicketEntity p WHERE p.device.pushToken = :pushToken and p.locationId = :locationId ORDER BY p.receiptCheckedAt DESC")

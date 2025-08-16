@@ -9,13 +9,6 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { dateIsoToString } from '~/services/util.service';
 
 const columns: GridColDef<PushTicket[][number]>[] = [
-  { field: 'id', headerName: 'Push Ticket ID', width: 200 },
-  {
-    field: 'locationId',
-    headerName: 'Location ID',
-    width: 150,
-    valueGetter: (value, row) => value ?? '-',
-  },
   {
     field: 'notificationType',
     headerName: 'Type',
@@ -126,6 +119,9 @@ export function NotificationHistory({ device }: NotificationHistoryProps) {
           rows={notificationHistory}
           columns={columns}
           initialState={{
+            sorting: {
+              sortModel: [{ field: 'ticketCreatedAt', sort: 'desc' }],
+            },
             pagination: {
               paginationModel: {
                 pageSize: 5,

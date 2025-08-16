@@ -1,99 +1,108 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
-import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
-import Divider from '@mui/material/Divider';
-import type { Device } from '~/model/api.model';
-import { Alert, Avatar, CircularProgress, ListItemAvatar, TextField } from '@mui/material';
-import { fetchDevices } from '~/services/api.service';
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
+import Avatar from '@mui/material/Avatar';
+import CircularProgress from '@mui/material/CircularProgress';
+import Alert from '@mui/material/Alert';
 import { Android, Apple } from '@mui/icons-material';
+import { useLocation, useNavigate } from 'react-router';
+import type { Device } from '~/model/api.model';
+import { fetchDevices } from '~/services/api.service';
+import { Paper } from '@mui/material';
 
-// DeviceList.tsx
 type DeviceListProps = {
   selectedDevice: Device | null;
   setSelectedDevice: (device: Device) => void;
 };
 
 export function DeviceList({ selectedDevice, setSelectedDevice }: DeviceListProps) {
-  const [query, setQuery] = useState<string | null>(null);
-  const [devices, setDevices] = useState<Device[] | null>(null);
+  const [query, setQuery] = useState('');
+  const [devices, setDevices] = useState<Device[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    setLoading(true);
-    getDevices();
-  }, []);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    const handler = setTimeout(() => {
-      getDevices();
-    }, 500); // debounce
-    return () => clearTimeout(handler);
+    let active = true;
+    setLoading(true);
+    fetchDevices(query).then((result) => {
+      if (active) {
+        setDevices(result);
+        setLoading(false);
+      }
+    });
+    return () => {
+      active = false;
+    };
   }, [query]);
 
-  async function getDevices() {
-    setLoading(true);
-    try {
-      const res = await fetchDevices(query ?? '');
-      setDevices(res);
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const deviceToken = params.get('device');
+    if (deviceToken && devices.length) {
+      const found = devices.find((d) => d.pushToken === deviceToken);
+      if (found && found.pushToken !== selectedDevice?.pushToken) {
+        setSelectedDevice(found);
+      }
+    }
+  }, [devices, location.search]);
+
+  function handleChange(_: any, value: Device | null) {
+    if (value) {
+      const params = new URLSearchParams(location.search);
+      params.set('device', value.pushToken);
+      navigate(`${location.pathname}?${params.toString()}`, { replace: true });
+      setSelectedDevice(value);
     }
   }
 
   function getDeviceAvatar(device: Device) {
-    if (device.deviceInfo.osName.toLowerCase().includes('iOs')) {
-      return <Apple />;
-    } else {
-      return <Android />;
-    }
+    return device.deviceInfo.osName.toLowerCase().includes('ios') ? <Apple /> : <Android />;
   }
 
   return (
-    <Box
-      sx={{
-        width: '100%',
-        maxWidth: 360,
-        bgcolor: 'background.paper',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 1,
-        padding: 2,
-      }}
-    >
-      <TextField
-        label="Search devices"
-        variant="outlined"
-        value={query ?? ''}
-        onChange={(e) => setQuery(e.target.value)}
+    <Paper elevation={3} sx={{ width: '100%', p: 2, justifyContent: 'center', display: 'flex' }}>
+      <Autocomplete
+        sx={{ width: 500 }}
+        options={devices}
+        loading={loading}
+        value={selectedDevice}
+        onChange={handleChange}
+        getOptionLabel={(option) => option.deviceInfo.deviceName}
+        isOptionEqualToValue={(option, value) => option.pushToken === value.pushToken}
+        onInputChange={(_, value) => setQuery(value)}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Select device"
+            variant="outlined"
+            InputProps={{
+              ...params.InputProps,
+              endAdornment: (
+                <>
+                  {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                  {params.InputProps.endAdornment}
+                </>
+              ),
+            }}
+          />
+        )}
+        renderOption={(props, option) => (
+          <li {...props} key={option.pushToken}>
+            <Avatar sx={{ mr: 1 }}>{getDeviceAvatar(option)}</Avatar>
+            <Box>
+              <div>{option.deviceInfo.deviceName}</div>
+              <div style={{ fontSize: 12, color: '#888' }}>
+                {option.deviceInfo.brand} {option.deviceInfo.modelName}
+              </div>
+            </Box>
+          </li>
+        )}
+        noOptionsText={<Alert severity="warning">No devices found!</Alert>}
       />
-      <Divider />
-      {loading && (
-        <Box display={'flex'} justifyContent="center" alignItems="center" height={100}>
-          <CircularProgress />
-        </Box>
-      )}
-      {!loading && !devices?.length && <Alert severity={'warning'}>No devices found!</Alert>}
-      <List>
-        {!loading &&
-          devices?.map((device, index) => (
-            <ListItemButton
-              key={device.pushToken}
-              selected={device.pushToken === selectedDevice?.pushToken}
-              onClick={() => setSelectedDevice(device)}
-            >
-              <ListItemAvatar>
-                <Avatar>{getDeviceAvatar(device)}</Avatar>
-              </ListItemAvatar>
-              <ListItemText
-                primary={device.deviceInfo.deviceName}
-                secondary={`${device.deviceInfo.brand} ${device.deviceInfo.modelName}`}
-              />
-            </ListItemButton>
-          ))}
-      </List>
-    </Box>
+    </Paper>
   );
 }
