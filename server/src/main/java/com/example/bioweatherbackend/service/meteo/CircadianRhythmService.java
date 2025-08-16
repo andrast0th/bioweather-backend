@@ -17,22 +17,22 @@ import java.util.List;
 public class CircadianRhythmService {
 
     private final MeteoNewsDataService meteoNewsDataService;
-    private final LocationService locationService;
+    private final DateTimeUtil dateTimeUtil;
 
     @Cacheable(CacheConfig.CIRCADIAN_RHYTHM)
     public CircadianRhythmDto getCircadianRhythm(String locationId, LocalDate localDate) {
+        var location  = meteoNewsDataService.getLocationById(locationId);
 
         if (localDate == null) {
-            var location  = meteoNewsDataService.getLocationById(locationId);
-            var datetime = locationService.getDateTimeForLocation(location);
+            var datetime = dateTimeUtil.getDateTimeForLocation(location);
             localDate = datetime.toLocalDate();
         }
 
         List<ApiAstronomy> astronomyList = meteoNewsDataService.getAstronomy(locationId, localDate.toString(), localDate.toString());
-        ApiAstronomy astronomy = astronomyList.isEmpty() ? null : astronomyList.get(0);
+        ApiAstronomy astronomy = astronomyList.isEmpty() ? null : astronomyList.getFirst();
 
-        CircadianRhythmDto circadian = new CircadianRhythmDto();
-        circadian.setDateStr(localDate.toString());
+        CircadianRhythmDto result = new CircadianRhythmDto();
+        result.setDateStr(localDate.toString());
 
         LocalDateTime sunrise = parseAstronomyTime(localDate, astronomy != null ? astronomy.getSunrise() : null);
         LocalDateTime sunset = parseAstronomyTime(localDate, astronomy != null ? astronomy.getSunset() : null);
@@ -41,26 +41,28 @@ public class CircadianRhythmService {
 
         LocalDateTime wakeUp;
         if (sunrise != null && sunset != null) {
-            wakeUp = sunrise.isAfter(sunriseMax) ? roundToNextQuarterHour(sunriseMax) : roundToNextQuarterHour(sunrise);
-            circadian.setSunrise(sunrise);
-            circadian.setSunset(sunset);
+            wakeUp = sunrise.isAfter(sunriseMax) ? dateTimeUtil.roundToNextQuarterHour(sunriseMax) : dateTimeUtil.roundToNextQuarterHour(sunrise);
+            result.setSunrise(sunrise);
+            result.setSunset(sunset);
         } else {
-            wakeUp = roundToNextQuarterHour(sunriseMax);
+            wakeUp = dateTimeUtil.roundToNextQuarterHour(sunriseMax);
         }
 
         LocalDateTime bed = wakeUp.minusHours(8).withDayOfMonth(wakeUp.getDayOfMonth());
-        circadian.setWakeUp(wakeUp);
-        circadian.setBed(bed);
+        result.setWakeUp(wakeUp);
+        result.setBed(bed);
 
-        circadian.setLastMeal(bed.minusHours(4));
-        circadian.setPeakAlertnessStart(wakeUp.plusHours(3));
-        circadian.setPeakAlertnessEnd(wakeUp.plusHours(5));
-        circadian.setNextRestPeriodStart(wakeUp.plusHours(7));
-        circadian.setNextRestPeriodEnd(wakeUp.plusHours(7).plusMinutes(30));
-        circadian.setExerciseStart(wakeUp.plusHours(9));
-        circadian.setExerciseEnd(wakeUp.plusHours(11));
+        result.setLastMeal(bed.minusHours(4));
+        result.setPeakAlertnessStart(wakeUp.plusHours(3));
+        result.setPeakAlertnessEnd(wakeUp.plusHours(5));
+        result.setNextRestPeriodStart(wakeUp.plusHours(7));
+        result.setNextRestPeriodEnd(wakeUp.plusHours(7).plusMinutes(30));
+        result.setExerciseStart(wakeUp.plusHours(9));
+        result.setExerciseEnd(wakeUp.plusHours(11));
+        result.setUtcOffset(location.getUtcOffset());
+        result.setUtcOffsetUnit(location.getUtcOffsetUnit());
 
-        return circadian;
+        return result;
     }
 
     private LocalDateTime parseAstronomyTime(LocalDate date, String time) {
@@ -73,10 +75,4 @@ public class CircadianRhythmService {
         }
     }
 
-    private LocalDateTime roundToNextQuarterHour(LocalDateTime dateTime) {
-        int minutes = dateTime.getMinute();
-        int remainder = minutes % 15;
-        int minutesToAdd = remainder == 0 ? 0 : 15 - remainder;
-        return dateTime.plusMinutes(minutesToAdd).withSecond(0).withNano(0);
-    }
 }

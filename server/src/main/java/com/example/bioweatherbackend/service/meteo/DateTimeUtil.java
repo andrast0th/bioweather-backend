@@ -3,11 +3,12 @@ package com.example.bioweatherbackend.service.meteo;
 import com.example.bioweatherbackend.dto.weather.ApiLocation;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
 @Service
-public class LocationService {
+public class DateTimeUtil {
 
     public ZonedDateTime getDateTimeForLocation(ApiLocation location) {
         // Implement logic to determine the date for the location
@@ -21,6 +22,13 @@ public class LocationService {
             case "s" -> ZonedDateTime.now(ZoneOffset.ofTotalSeconds(offset));
             default -> throw new IllegalArgumentException("Unsupported UTC offset unit: " + offsetUnit);
         };
+    }
+
+    public LocalDateTime roundToNextQuarterHour(LocalDateTime dateTime) {
+        int minutes = dateTime.getMinute();
+        int remainder = minutes % 15;
+        int minutesToAdd = remainder == 0 ? 0 : 15 - remainder;
+        return dateTime.plusMinutes(minutesToAdd).withSecond(0).withNano(0);
     }
 
 }

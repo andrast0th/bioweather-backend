@@ -9,7 +9,8 @@ import java.time.LocalDateTime;
 @Setter
 public class CircadianRhythmDto {
     private String dateStr; // YYYY-MM-DD
-
+    private int utcOffset;
+    private String utcOffsetUnit;
     private LocalDateTime sunrise;
     private LocalDateTime sunset;
     private LocalDateTime bed;

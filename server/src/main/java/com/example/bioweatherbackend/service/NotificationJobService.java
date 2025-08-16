@@ -5,7 +5,7 @@ import com.example.bioweatherbackend.dto.weather.ApiLocation;
 import com.example.bioweatherbackend.entity.DeviceEntity;
 import com.example.bioweatherbackend.repository.DeviceRepository;
 import com.example.bioweatherbackend.service.meteo.CircadianRhythmService;
-import com.example.bioweatherbackend.service.meteo.LocationService;
+import com.example.bioweatherbackend.service.meteo.DateTimeUtil;
 import com.example.bioweatherbackend.service.meteo.MeteoNewsDataService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -35,7 +35,7 @@ public class NotificationJobService {
     private final MeteoNewsDataService meteoNewsDataService;
     private final CircadianRhythmService circadianRhythmService;
     private final ConfigService configService;
-    private final LocationService locationService;
+    private final DateTimeUtil dateTimeUtil;
 
     @Transactional
     public void scheduledRunWorkJob() {
@@ -54,7 +54,7 @@ public class NotificationJobService {
                 }
 
                 ApiLocation location = meteoNewsDataService.getLocationById(sub.getLocationId());
-                var datetimeLocation = locationService.getDateTimeForLocation(location);
+                var datetimeLocation = dateTimeUtil.getDateTimeForLocation(location);
 
                 var localTimeBwToday = parseDbTime(configService.getConfig().getBwTodayNotificationHour());
                 var localTimeBwTomorrow = parseDbTime(configService.getConfig().getBwTomorrowNotificationHour());
