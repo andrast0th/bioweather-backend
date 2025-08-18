@@ -59,6 +59,13 @@ export function DeviceInfo({ device }: DeviceInfoProps) {
             {device.deviceInfo.brand} {device.deviceInfo.modelName} | OS: {device.deviceInfo.osName}{' '}
             {device.deviceInfo.osVersion}
           </Grid>
+
+          <Grid size={3}>
+            <Typography fontWeight={'bold'} color={'primary'}>
+              Selected Conditions:
+            </Typography>
+          </Grid>
+          <Grid size={9}>{device.selectedBwConditions?.join(', ') || 'none'}</Grid>
         </Grid>
       </Paper>
     </Box>

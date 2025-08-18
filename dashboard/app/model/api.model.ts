@@ -35,6 +35,7 @@ export interface Device {
   language: string;
   timezoneOffset: number;
   updatedTimestamp: string; // ISO 8601 date string
+  selectedBwConditions: string[];
 }
 
 export interface Translation {
