@@ -19,4 +19,5 @@ public class SubscriptionDto {
     private String locationName;
 
     private List<NotificationType> notificationTypes = new ArrayList<>();
+    private List<String> selectedBwConditions;
 }

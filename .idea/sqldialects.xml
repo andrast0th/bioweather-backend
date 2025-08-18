@@ -3,6 +3,7 @@
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/server/src/main/resources/db/migration/V1_4__Translations_Table.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/server/src/main/resources/db/migration/V1_5__Config_Table.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/server/src/main/resources/db/migration/V1_6__Device_Table_Add_Conditions.sql" dialect="PostgreSQL" />
     <file url="PROJECT" dialect="PostgreSQL" />
   </component>
 </project>

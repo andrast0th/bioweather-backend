@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -15,4 +16,5 @@ public class DeviceDto {
     private String language;
     private int timezoneOffset;
     private Instant updatedTimestamp;
+    private List<String> selectedBwConditions;
 }

@@ -134,11 +134,17 @@ public class NotificationJobService {
 
         var conditions = scales.getConditions();
 
-        var alterConditions = conditions.stream().filter(c -> c.getSeverity() > 2).toList();
+        var alertConditions = conditions.stream().filter(c -> c.getSeverity() > 2).toList();
+        var selectedConditions = device.getSelectedBwConditions() == null ? List.of() : device.getSelectedBwConditions();
+        if (selectedConditions.isEmpty()) {
+            log.info("No selected conditions for device: {}, location: {}", device.getPushToken(), location.getId());
+            return;
+        }
+        alertConditions = alertConditions.stream().filter(c -> selectedConditions.contains(c.getCondition())).toList();
 
         var translations = translationService.getTranslationsMap(device.getLanguage());
 
-        List<String> alertConditionsNames = alterConditions.stream().map(condition -> translations.get("bw.conditions." + condition.getCondition() + ".name")).toList();
+        List<String> alertConditionsNames = alertConditions.stream().map(condition -> translations.get("bw.conditions." + condition.getCondition() + ".name")).toList();
 
         String title = translations.get("notifications.bw.title");
         title = title.replace("%{locationName}", location.getName());
@@ -164,7 +170,8 @@ public class NotificationJobService {
         for (DateTimeFormatter formatter : TIME_FORMATTERS) {
             try {
                 return LocalTime.parse(timeStr, formatter);
-            } catch (DateTimeParseException ignored) {}
+            } catch (DateTimeParseException ignored) {
+            }
         }
         throw new IllegalArgumentException("Invalid time format: " + timeStr);
     }

@@ -49,6 +49,7 @@ public class DeviceManagementService {
         device.setUserId(subscriptionDto.getUserId());
         device.setUpdatedTimestamp(Instant.now());
         device.setTimezoneOffset(subscriptionDto.getTimezoneOffset());
+        device.setSelectedBwConditions(subscriptionDto.getSelectedBwConditions());
         device.setDisabled(false);
     }
 

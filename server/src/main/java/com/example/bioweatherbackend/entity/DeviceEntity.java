@@ -34,6 +34,9 @@ public class DeviceEntity {
     @Column(name = "timezone_offset", nullable = false)
     private Integer timezoneOffset = 0;
 
+    @Column(name = "selected_bw_conditions", columnDefinition="text[]" )
+    private List<String> selectedBwConditions;
+
     @OneToMany(mappedBy = "pushToken", fetch = FetchType.LAZY)
     private List<NotificationSubscriptionEntity> subscriptions;
 }
