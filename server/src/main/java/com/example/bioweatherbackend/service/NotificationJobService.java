@@ -102,7 +102,7 @@ public class NotificationJobService {
                 var content = translations.get("notifications." + crKey.getValue() + ".body");
                 content = content.replace("%{locationName}", location.getName());
 
-                notificationService.sendTextNotification(device.getPushToken(), title, content, notificationType);
+                notificationService.sendTextNotification(device.getPushToken(), title, content, notificationType, location.getId());
             }
         });
 
@@ -153,7 +153,7 @@ public class NotificationJobService {
         String body = translations.get("notifications.bw.body");
         body = body.replace("%{conditionsStr}", String.join(", ", alertConditionsNames));
 
-        notificationService.sendTextNotification(device.getPushToken(), title, body, notificationType);
+        notificationService.sendTextNotification(device.getPushToken(), title, body, notificationType, location.getId());
     }
 
 

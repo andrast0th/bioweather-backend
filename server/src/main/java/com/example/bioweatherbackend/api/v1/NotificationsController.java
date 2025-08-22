@@ -49,7 +49,7 @@ public class NotificationsController {
     @PostMapping("/test-notification")
     @RequireAuth
     public void triggerNotification(@RequestBody TestNotificationDto notificationDto) {
-        notificationService.sendTextNotification(notificationDto.getPushToken(), "Test Notification", notificationDto.getMessage(), NotificationType.TEST);
+        notificationService.sendTextNotification(notificationDto.getPushToken(), "Test Notification", notificationDto.getMessage(), NotificationType.TEST, null);
     }
 
     @PostMapping("/test-job")

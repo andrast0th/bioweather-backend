@@ -17,6 +17,7 @@ import org.springframework.web.client.RestClient;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
@@ -34,13 +35,15 @@ public class NotificationService {
         this.mapper = dashboardMapper;
     }
 
-    public void sendTextNotification(String pushToken, String title, String subtitle, NotificationType notificationType) {
+    public void sendTextNotification(String pushToken, String title, String subtitle, NotificationType notificationType, String locationId) {
         PushNotification notification = new PushNotification();
         notification.setTo(Collections.singletonList(pushToken));
         notification.setTitle(title);
         notification.setSubtitle(subtitle);
         notification.setBody(subtitle);
         notification.setSound("default");
+//        notification.setCategoryId("bwtoday");
+        notification.setData(Map.of("notificationType", notificationType.getValue()));
 
         TicketResponse response = restClient.post()
                 .uri("/push/send")
@@ -50,7 +53,7 @@ public class NotificationService {
                 .body(TicketResponse.class);
 
         if (response != null) {
-            handlePushTicketResponse(Collections.singletonList(pushToken), response.getData(), notificationType, notification.getTitle(), notification.getBody(), null);
+            handlePushTicketResponse(Collections.singletonList(pushToken), response.getData(), notificationType, notification.getTitle(), notification.getBody(), locationId);
         }
     }
 
@@ -90,6 +93,7 @@ public class NotificationService {
                 pushTicketEntity.setLocationId(locationId);
                 pushTicketEntity.setWasReceiptChecked(false);
                 pushTicketEntity.setTicketCreatedAt(Instant.now());
+                pushTicketEntity.setLocationId(locationId);
 
                 pushTicketRepository.save(pushTicketEntity);
             }
