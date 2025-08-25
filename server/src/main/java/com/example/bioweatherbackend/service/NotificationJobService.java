@@ -136,11 +136,12 @@ public class NotificationJobService {
 
         var alertConditions = conditions.stream().filter(c -> c.getSeverity() > 2).toList();
         var selectedConditions = device.getSelectedBwConditions() == null ? List.of() : device.getSelectedBwConditions();
-        if (selectedConditions.isEmpty()) {
-            log.info("No selected conditions for device: {}, location: {}", device.getPushToken(), location.getId());
+        alertConditions = alertConditions.stream().filter(c -> selectedConditions.contains(c.getCondition())).toList();
+
+        if (alertConditions.isEmpty()) {
+            log.info("No alert conditions for device: {}, location: {}, date: {}", device.getPushToken(), location.getId(), targetDate);
             return;
         }
-        alertConditions = alertConditions.stream().filter(c -> selectedConditions.contains(c.getCondition())).toList();
 
         var translations = translationService.getTranslationsMap(device.getLanguage());
 
