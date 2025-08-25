@@ -42,7 +42,6 @@ public class NotificationService {
         notification.setSubtitle(subtitle);
         notification.setBody(subtitle);
         notification.setSound("default");
-//        notification.setCategoryId("bwtoday");
         notification.setData(Map.of("notificationType", notificationType.getValue()));
 
         TicketResponse response = restClient.post()
