@@ -8,6 +8,7 @@ public final class TranslationKeys {
 
     static {
         TRANSLATION_KEYS.add("language.name");
+        TRANSLATION_KEYS.add("language.lbl");
         TRANSLATION_KEYS.add("appname");
         TRANSLATION_KEYS.add("loading");
         TRANSLATION_KEYS.add("cancel");
