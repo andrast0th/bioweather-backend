@@ -11,11 +11,11 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 @ControllerAdvice
-public class GlobalExceptionHandler{
+public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    @ResponseStatus(code=HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<ErrorResponse> handle(Exception ex){
+    @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<ErrorResponse> handle(Exception ex) {
 
         var statusCode = HttpStatus.INTERNAL_SERVER_ERROR.value();
         String message = null;

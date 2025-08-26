@@ -101,9 +101,7 @@ public class DeviceManagementService {
 
     @Transactional
     public List<DeviceDto> getDevices(String query) {
-        var entities = StringUtils.hasText(query)
-                ? deviceRepository.findAllByDeviceInfoContainingIgnoreCaseOrderByUpdatedTimestampDesc(query)
-                : deviceRepository.findAllByOrderByUpdatedTimestampDesc();
+        var entities = StringUtils.hasText(query) ? deviceRepository.findAllByDeviceInfoContainingIgnoreCaseOrderByUpdatedTimestampDesc(query) : deviceRepository.findAllByOrderByUpdatedTimestampDesc();
 
         return dashboardMapper.toDeviceDtoList(entities);
     }

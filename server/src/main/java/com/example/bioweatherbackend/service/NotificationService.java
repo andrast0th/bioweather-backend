@@ -44,12 +44,7 @@ public class NotificationService {
         notification.setSound("default");
         notification.setData(Map.of("notificationType", notificationType.getValue()));
 
-        TicketResponse response = restClient.post()
-                .uri("/push/send")
-                .contentType(APPLICATION_JSON)
-                .body(notification)
-                .retrieve()
-                .body(TicketResponse.class);
+        TicketResponse response = restClient.post().uri("/push/send").contentType(APPLICATION_JSON).body(notification).retrieve().body(TicketResponse.class);
 
         if (response != null) {
             handlePushTicketResponse(Collections.singletonList(pushToken), response.getData(), notificationType, notification.getTitle(), notification.getBody(), locationId);
@@ -57,12 +52,7 @@ public class NotificationService {
     }
 
 
-    private void handlePushTicketResponse(List<String> tokens,
-                                          List<TicketResponse.Ticket> tickets,
-                                          NotificationType notificationType,
-                                          String notificationTitle,
-                                          String notificationBody,
-                                          String locationId) {
+    private void handlePushTicketResponse(List<String> tokens, List<TicketResponse.Ticket> tickets, NotificationType notificationType, String notificationTitle, String notificationBody, String locationId) {
         if (tickets == null || tickets.isEmpty()) {
             log.warn("No tickets received from Expo server.");
             return;
@@ -103,7 +93,7 @@ public class NotificationService {
 
         List<PushTicketEntity> res;
 
-        if(locationId == null){
+        if (locationId == null) {
             res = pushTicketRepository.findAllByPushToken(pushToken);
         } else {
             res = pushTicketRepository.findByPushTokenAndLocation(pushToken, locationId);

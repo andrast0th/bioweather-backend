@@ -1,7 +1,9 @@
 package com.example.bioweatherbackend.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
@@ -11,6 +13,8 @@ import java.time.Instant;
 @IdClass(TranslationId.class)
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class TranslationEntity {
     @Id
     @Column(name = "id")

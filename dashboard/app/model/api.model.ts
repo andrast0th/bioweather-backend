@@ -38,9 +38,13 @@ export interface Device {
   selectedBwConditions: string[];
 }
 
+export interface Language {
+  code: string;
+  name: string;
+}
+
 export interface Translation {
   id: string;
-  language: string;
   text: string;
 }
 

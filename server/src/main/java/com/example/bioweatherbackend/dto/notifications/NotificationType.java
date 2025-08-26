@@ -4,25 +4,12 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum NotificationType {
-    BW_TODAY("bw-today"),
-    BW_TOMORROW("bw-tomorrow"),
-    BEDTIME("bedtime"),
-    WAKEUP("wakeup"),
-    LAST_MEAL("last-meal"),
-    NEXT_REST("next-rest"),
-    PEAK("peak"),
-    EXERCISE("exercise"),
-    TEST("test");
+    BW_TODAY("bw-today"), BW_TOMORROW("bw-tomorrow"), BEDTIME("bedtime"), WAKEUP("wakeup"), LAST_MEAL("last-meal"), NEXT_REST("next-rest"), PEAK("peak"), EXERCISE("exercise"), TEST("test");
 
     private final String value;
 
     NotificationType(String value) {
         this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-        return value;
     }
 
     @JsonCreator
@@ -33,5 +20,10 @@ public enum NotificationType {
             }
         }
         throw new IllegalArgumentException("Unknown notification type: " + value);
+    }
+
+    @JsonValue
+    public String getValue() {
+        return value;
     }
 }

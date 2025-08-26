@@ -10,8 +10,7 @@ public class RequireBasicAuthRequestMatcher implements RequestMatcher {
     public boolean matches(HttpServletRequest request) {
         Object handler = request.getAttribute(HandlerMapping.BEST_MATCHING_HANDLER_ATTRIBUTE);
         if (handler instanceof HandlerMethod method) {
-            return method.hasMethodAnnotation(RequireAuth.class)
-                || method.getBeanType().isAnnotationPresent(RequireAuth.class);
+            return method.hasMethodAnnotation(RequireAuth.class) || method.getBeanType().isAnnotationPresent(RequireAuth.class);
         }
         return false;
     }

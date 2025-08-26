@@ -19,9 +19,7 @@ public interface WeatherMapper {
     ApiWeatherForecast toWeatherForecastDto(ForecastsTimeperiod forecastsTimeperiod);
 
     default List<ApiWeatherForecast> toWeatherForecastDto(Forecasts forecasts) {
-        return forecasts.getContent().getTimeperiod().stream()
-                .map(this::toWeatherForecastDto)
-                .collect(Collectors.toList());
+        return forecasts.getContent().getTimeperiod().stream().map(this::toWeatherForecastDto).collect(Collectors.toList());
     }
 
     @Condition

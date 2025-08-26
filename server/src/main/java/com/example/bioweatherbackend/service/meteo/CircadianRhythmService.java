@@ -21,7 +21,7 @@ public class CircadianRhythmService {
 
     @Cacheable(CacheConfig.CIRCADIAN_RHYTHM)
     public CircadianRhythmDto getCircadianRhythm(String locationId, LocalDate localDate) {
-        var location  = meteoNewsDataService.getLocationById(locationId);
+        var location = meteoNewsDataService.getLocationById(locationId);
 
         if (localDate == null) {
             var datetime = dateTimeUtil.getDateTimeForLocation(location);

@@ -25,34 +25,15 @@ public class CacheConfig {
     @Bean
     public CacheManager cacheManager() {
         SimpleCacheManager manager = new SimpleCacheManager();
-        manager.setCaches(List.of(
-                buildUtcAfterMidnightCache(SCALES),
-                buildUtcAfterMidnightCache(WEATHER),
-                buildUtcAfterMidnightCache(ASTRONOMY),
-                buildUtcAfterMidnightCache(CIRCADIAN_RHYTHM),
-                build10MinuteCache(SEARCH_LOCATIONS),
-                build10MinuteCache(LOCATION),
-                build10MinuteCache(GEO_REF_LOCATION),
-                build10MinuteCache(TRANSLATIONS),
-                build10MinuteCache(TRANSLATIONS_MAP)
-        ));
+        manager.setCaches(List.of(buildUtcAfterMidnightCache(SCALES), buildUtcAfterMidnightCache(WEATHER), buildUtcAfterMidnightCache(ASTRONOMY), buildUtcAfterMidnightCache(CIRCADIAN_RHYTHM), build10MinuteCache(SEARCH_LOCATIONS), build10MinuteCache(LOCATION), build10MinuteCache(GEO_REF_LOCATION), build10MinuteCache(TRANSLATIONS), build10MinuteCache(TRANSLATIONS_MAP)));
         return manager;
     }
 
     private CaffeineCache build10MinuteCache(String name) {
-        return new CaffeineCache(name,
-                Caffeine.newBuilder()
-                        .recordStats()
-                        .maximumSize(1000)
-                        .expireAfterWrite(Duration.ofMinutes(10))
-                        .build());
+        return new CaffeineCache(name, Caffeine.newBuilder().recordStats().maximumSize(1000).expireAfterWrite(Duration.ofMinutes(10)).build());
     }
 
     private CaffeineCache buildUtcAfterMidnightCache(String name) {
-        return new CaffeineCache(name,
-                Caffeine.newBuilder()
-                        .recordStats()
-                        .expireAfter(new ExpireAtNextUtcMidnight())
-                        .build());
+        return new CaffeineCache(name, Caffeine.newBuilder().recordStats().expireAfter(new ExpireAtNextUtcMidnight()).build());
     }
 }

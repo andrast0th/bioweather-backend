@@ -7,45 +7,41 @@ import lombok.EqualsAndHashCode;
 
 import java.util.Map;
 
-/** Reponse including receipts for tickets. */
+/**
+ * Reponse including receipts for tickets.
+ */
 @Data
 @EqualsAndHashCode(callSuper = false)
 public final class ReceiptResponse extends ExpoBaseResponse<Map<String, ReceiptResponse.Receipt>> {
 
-  @Data
-  @EqualsAndHashCode(callSuper = false)
-  public static class Receipt extends ExpoBaseResponse.GenericData {
+    private Map<String, Receipt> data;
 
     @Data
-    public static class Details {
+    @EqualsAndHashCode(callSuper = false)
+    public static class Receipt extends ExpoBaseResponse.GenericData {
 
-      public enum Error {
-        @JsonProperty("DeviceNotRegistered")
-        DEVICE_NOT_REGISTERED,
+        private Status status;
+        private String message;
+        private Details details;
 
-        @JsonProperty("MessageTooBig")
-        MESSAGE_TOO_BIG,
+        @Data
+        public static class Details {
 
-        @JsonProperty("MessageRateExceeded")
-        MESSAGE_RATE_EXCEEDED,
+            private Error error;
+            private Integer sentAt;
+            private String errorCodeEnum;
+            private JsonNode additionalProperties;
+            public enum Error {
+                @JsonProperty("DeviceNotRegistered") DEVICE_NOT_REGISTERED,
 
-        @JsonProperty("InvalidCredentials")
-        INVALID_CREDENTIALS,
+                @JsonProperty("MessageTooBig") MESSAGE_TOO_BIG,
 
-        @JsonProperty("InvalidProviderToken")
-        INVALID_PROVIDERTOKEN
-      }
+                @JsonProperty("MessageRateExceeded") MESSAGE_RATE_EXCEEDED,
 
-      private Error error;
-      private Integer sentAt;
-      private String errorCodeEnum;
-      private JsonNode additionalProperties;
+                @JsonProperty("InvalidCredentials") INVALID_CREDENTIALS,
+
+                @JsonProperty("InvalidProviderToken") INVALID_PROVIDERTOKEN
+            }
+        }
     }
-
-    private Status status;
-    private String message;
-    private Details details;
-  }
-
-  private Map<String, Receipt> data;
 }

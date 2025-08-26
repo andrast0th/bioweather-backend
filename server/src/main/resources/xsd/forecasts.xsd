@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet type="text/xsl" href="xs3p.xsl"?>
-<xsd:schema xmlns="http://schema.feeds.meteonews.net" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-            xmlns:common="http://schema.feeds.meteonews.net/common"
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:common="http://schema.feeds.meteonews.net/common"
+            xmlns="http://schema.feeds.meteonews.net"
             targetNamespace="http://schema.feeds.meteonews.net" elementFormDefault="qualified"
             version="2013-12-16 Rev. 299">
     <xsd:annotation>

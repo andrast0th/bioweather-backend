@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class TranslationDto {
-    private String id;
-    private String text;
+public class LanguageDto {
+    private String code;
+    private String name;
 }

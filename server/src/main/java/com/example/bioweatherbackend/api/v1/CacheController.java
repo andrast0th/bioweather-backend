@@ -23,7 +23,7 @@ public class CacheController {
 
     private final CacheManager cacheManager;
 
-    @GetMapping(produces= MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @RequireAuth
     public Map<String, CacheStats> getCacheInfo() {
         Map<String, CacheStats> response = new HashMap<>();

@@ -15,39 +15,22 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public final class PushNotification {
 
-  public enum Priority {
-    @JsonProperty("default")
-    OK,
-    @JsonProperty("high")
-    ERROR,
-    @JsonProperty("normal")
-    NORMAL
-  }
+    private List<String> to;
+    private Map<String, Object> data;
+    private String title;
+    private String subtitle;
+    private String body;
+    private String sound;
+    private Long ttl;
+    private Long expiration;
+    private Priority priority;
+    private Long badge;
+    private String channelId;
+    private String categoryId;
+    private Boolean _contentAvailable;
 
-  private List<String> to;
-
-  private Map<String, Object> data;
-
-  private String title;
-
-  private String subtitle;
-
-  private String body;
-
-  private String sound;
-
-  private Long ttl;
-
-  private Long expiration;
-
-  private Priority priority;
-
-  private Long badge;
-
-  private String channelId;
-
-  private String categoryId;
-
-  private Boolean _contentAvailable;
+    public enum Priority {
+        @JsonProperty("default") OK, @JsonProperty("high") ERROR, @JsonProperty("normal") NORMAL
+    }
 
 }

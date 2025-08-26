@@ -25,6 +25,7 @@ public interface DashboardMapper {
 
     @Mapping(source = "deviceInfo", target = "deviceInfo", qualifiedByName = "customDeviceInfo")
     DeviceDto toDeviceDto(DeviceEntity entity);
+
     @Named("customDeviceInfo")
     default Map<String, String> customDeviceInfo(String deviceInfo) {
 
@@ -45,9 +46,12 @@ public interface DashboardMapper {
 
     @Mapping(source = "device.pushToken", target = "pushToken")
     PushTicketDto toPushTicketDto(PushTicketEntity entity);
+
     List<PushTicketDto> toPushTicketDtoList(List<PushTicketEntity> entity);
 
     TranslationDto toTranslationDto(TranslationEntity entity);
+
     TranslationEntity toTranslationEntity(TranslationDto entity);
+
     List<TranslationDto> toTranslationDtoList(List<TranslationEntity> entity);
 }

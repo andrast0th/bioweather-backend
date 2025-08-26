@@ -11,30 +11,26 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 public final class TicketResponse extends ExpoBaseResponse<List<TicketResponse.Ticket>> {
 
-  @Data
-  @EqualsAndHashCode(callSuper = false)
-  public static class Ticket extends ExpoBaseResponse.GenericData {
-
-    public enum Error {
-      @JsonProperty("DeviceNotRegistered")
-      DEVICE_NOT_REGISTERED,
-      @JsonProperty("InvalidCredentials")
-      INVALID_CREDENTIALS
-    }
+    private List<TicketResponse.Ticket> data;
 
     @Data
-    public static class Details {
-      private Error error;
-      private Integer sentAt;
-      private JsonNode additionalProperties;
-      private String expoPushToken;
+    @EqualsAndHashCode(callSuper = false)
+    public static class Ticket extends ExpoBaseResponse.GenericData {
+
+        private String id;
+        private Status status;
+        private String message;
+        private Details details;
+        public enum Error {
+            @JsonProperty("DeviceNotRegistered") DEVICE_NOT_REGISTERED, @JsonProperty("InvalidCredentials") INVALID_CREDENTIALS
+        }
+
+        @Data
+        public static class Details {
+            private Error error;
+            private Integer sentAt;
+            private JsonNode additionalProperties;
+            private String expoPushToken;
+        }
     }
-
-    private String id;
-    private Status status;
-    private String message;
-    private Details details;
-  }
-
-  private List<TicketResponse.Ticket> data;
 }

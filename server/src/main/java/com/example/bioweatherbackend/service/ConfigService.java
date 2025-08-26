@@ -14,26 +14,10 @@ public class ConfigService {
 
     public ConfigDto getConfig() {
         ConfigDto dto = new ConfigDto();
-        configRepository.findById("notificationJobCron")
-            .ifPresentOrElse(
-                config -> dto.setNotificationJobCron(config.getValue()),
-                () -> dto.setNotificationJobCron("0 */15 * * * *")
-            );
-        configRepository.findById("notificationThresholdMinutes")
-            .ifPresentOrElse(
-                config -> dto.setNotificationThresholdMinutes(Integer.parseInt(config.getValue())),
-                () -> dto.setNotificationThresholdMinutes(10)
-            );
-        configRepository.findById("bwTodayNotificationHour")
-            .ifPresentOrElse(
-                config -> dto.setBwTodayNotificationHour(config.getValue()),
-                () -> dto.setBwTodayNotificationHour("9:00")
-            );
-        configRepository.findById("bwTomorrowNotificationHour")
-            .ifPresentOrElse(
-                config -> dto.setBwTomorrowNotificationHour(config.getValue()),
-                () -> dto.setBwTomorrowNotificationHour("18:00")
-            );
+        configRepository.findById("notificationJobCron").ifPresentOrElse(config -> dto.setNotificationJobCron(config.getValue()), () -> dto.setNotificationJobCron("0 */15 * * * *"));
+        configRepository.findById("notificationThresholdMinutes").ifPresentOrElse(config -> dto.setNotificationThresholdMinutes(Integer.parseInt(config.getValue())), () -> dto.setNotificationThresholdMinutes(10));
+        configRepository.findById("bwTodayNotificationHour").ifPresentOrElse(config -> dto.setBwTodayNotificationHour(config.getValue()), () -> dto.setBwTodayNotificationHour("9:00"));
+        configRepository.findById("bwTomorrowNotificationHour").ifPresentOrElse(config -> dto.setBwTomorrowNotificationHour(config.getValue()), () -> dto.setBwTomorrowNotificationHour("18:00"));
         return dto;
     }
 
@@ -45,17 +29,14 @@ public class ConfigService {
     }
 
     private void saveOrUpdate(String id, String value) {
-        configRepository.findById(id).ifPresentOrElse(
-            config -> {
-                config.setValue(value);
-                configRepository.save(config);
-            },
-            () -> {
-                ConfigEntity entity = new ConfigEntity();
-                entity.setId(id);
-                entity.setValue(value);
-                configRepository.save(entity);
-            }
-        );
+        configRepository.findById(id).ifPresentOrElse(config -> {
+            config.setValue(value);
+            configRepository.save(config);
+        }, () -> {
+            ConfigEntity entity = new ConfigEntity();
+            entity.setId(id);
+            entity.setValue(value);
+            configRepository.save(entity);
+        });
     }
 }

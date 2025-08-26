@@ -12,16 +12,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                new RequireBasicAuthRequestMatcher(),
-                                new AntPathRequestMatcher("/actuator/**")
-                        ).authenticated()
-                        .anyRequest().permitAll()
-                )
-                .httpBasic(Customizer.withDefaults());
+        http.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(auth -> auth.requestMatchers(new RequireBasicAuthRequestMatcher(), new AntPathRequestMatcher("/actuator/**")).authenticated().anyRequest().permitAll()).httpBasic(Customizer.withDefaults());
 
         return http.build();
     }

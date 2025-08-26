@@ -32,17 +32,14 @@ public class NotificationJobManager {
         String oldCron = cronExpression.get();
         String dbCron = configService.getConfig().getNotificationJobCron();
 
-        if(!oldCron.equals(dbCron)) {
+        if (!oldCron.equals(dbCron)) {
             cronExpression.set(dbCron);
             rescheduleTask();
         }
     }
 
     private void scheduleTask(String cron) {
-        ScheduledFuture<?> future = taskScheduler.schedule(
-            notificationJobService::scheduledRunWorkJob,
-            new CronTrigger(cron, ZoneId.of("UTC"))
-        );
+        ScheduledFuture<?> future = taskScheduler.schedule(notificationJobService::scheduledRunWorkJob, new CronTrigger(cron, ZoneId.of("UTC")));
         scheduledFuture.set(future);
     }
 

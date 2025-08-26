@@ -68,17 +68,13 @@ public class ClientLogController {
         StringBuilder response = new StringBuilder();
         File[] files = uploadDir.listFiles();
         if (files != null) {
-            Arrays.stream(files)
-                    .filter(File::isFile)
-                    .sorted(Comparator.comparing(File::getName))
-                    .filter(file -> file.getName().endsWith(".log"))
-                    .forEach(file -> {
-                        try {
-                            response.append(Files.readString(file.toPath()));
-                        } catch (IOException e) {
-                            log.error("Error reading file: {}, skipping", file.getName(), e);
-                        }
-                    });
+            Arrays.stream(files).filter(File::isFile).sorted(Comparator.comparing(File::getName)).filter(file -> file.getName().endsWith(".log")).forEach(file -> {
+                try {
+                    response.append(Files.readString(file.toPath()));
+                } catch (IOException e) {
+                    log.error("Error reading file: {}, skipping", file.getName(), e);
+                }
+            });
         } else {
             log.error("Failed to list files in directory: {}", uploadDir.getAbsolutePath());
             return ResponseEntity.internalServerError().build();

@@ -1,87 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet type="text/xsl" href="xs3p.xsl"?>
-<xsd:schema xmlns="http://schema.feeds.meteonews.net"
-            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
             xmlns:common="http://schema.feeds.meteonews.net/common"
+            xmlns="http://schema.feeds.meteonews.net"
             targetNamespace="http://schema.feeds.meteonews.net"
             elementFormDefault="qualified"
             version="2013-03-20 Rev. 244">
-  <xsd:import namespace="http://schema.feeds.meteonews.net/common" schemaLocation="common.xsd"/>
-  <xsd:annotation>
-    <xsd:documentation xml:lang="en">Specification of the scales-XML-Feed</xsd:documentation>
-  </xsd:annotation>
-  <xsd:element name="scales">
+    <xsd:import namespace="http://schema.feeds.meteonews.net/common" schemaLocation="common.xsd"/>
     <xsd:annotation>
-      <xsd:documentation>root-Tag (contains between 3 and 5 elements: (optionally) parameters, content, errors, ref, (optionally) debug)</xsd:documentation>
+        <xsd:documentation xml:lang="en">Specification of the scales-XML-Feed</xsd:documentation>
     </xsd:annotation>
-    <xsd:complexType>
-      <xsd:sequence>
-        <xsd:element name="parameters" type="ScalesParameters" minOccurs="0"/>
-        <xsd:element name="content" type="ScalesContent"/>
-        <xsd:element name="errors" type="common:Errors"/>
-        <xsd:element name="ref" type="common:HomepageReference"/>
-        <xsd:element name="debug" type="common:Debug" minOccurs="0"/>
-      </xsd:sequence>
+    <xsd:element name="scales">
+        <xsd:annotation>
+            <xsd:documentation>root-Tag (contains between 3 and 5 elements: (optionally) parameters, content, errors,
+                ref, (optionally) debug)
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="parameters" type="ScalesParameters" minOccurs="0"/>
+                <xsd:element name="content" type="ScalesContent"/>
+                <xsd:element name="errors" type="common:Errors"/>
+                <xsd:element name="ref" type="common:HomepageReference"/>
+                <xsd:element name="debug" type="common:Debug" minOccurs="0"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:complexType name="ScalesParameters">
+        <xsd:annotation>
+            <xsd:documentation>This element lists all parameters that are used to create the result of the XML-Feed.
+                These parameters can be set in the query-string part of the URL (except id, this element is set by the
+                path-part of the URL).
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="lang" type="xsd:string"/>
+            <xsd:element name="id" type="xsd:string"/>
+        </xsd:sequence>
     </xsd:complexType>
-  </xsd:element>
-  <xsd:complexType name="ScalesParameters">
-    <xsd:annotation>
-      <xsd:documentation>This element lists all parameters that are used to create the result of the XML-Feed. These parameters can be set in the query-string part of the URL (except id, this element is set by the path-part of the URL).</xsd:documentation>
-    </xsd:annotation>
-    <xsd:sequence>
-      <xsd:element name="lang" type="xsd:string"/>
-      <xsd:element name="id" type="xsd:string"/>
-    </xsd:sequence>
-  </xsd:complexType>
-  <xsd:complexType name="ScalesContent">
-    <xsd:annotation>
-      <xsd:documentation>The content-element contains a sequence of category-elements.</xsd:documentation>
-    </xsd:annotation>
-    <xsd:sequence>
-      <xsd:element name="category" type="ScaleCategory" minOccurs="0" maxOccurs="unbounded"/>
-    </xsd:sequence>
-  </xsd:complexType>
-  <xsd:complexType name="ScaleCategory">
-    <xsd:annotation>
-      <xsd:documentation>Each category refers to a certain scale forecast. The category is called as given in the attribute "name". The scaled forecast returns values between (inclusive) of the attributes "min" and "max". In the attribute "last_update" contains a timestamp, when the forecast was updated/reviewed for the last time. To identify a category the value of "category_id" can be used, this value does not change for a certain category.</xsd:documentation>
-    </xsd:annotation>
-    <xsd:all>
-      <xsd:element name="scales" type="Scales"/>
-      <xsd:element name="source" type="xsd:string"/>
-    </xsd:all>
-    <xsd:attribute name="category_id" type="xsd:string" use="required"/>
-    <xsd:attribute name="name" type="xsd:string" use="required"/>
-    <xsd:attribute name="min" type="xsd:nonNegativeInteger" use="required"/>
-    <xsd:attribute name="max" type="xsd:nonNegativeInteger" use="required"/>
-    <xsd:attribute name="last_update" type="common:DatetimeTimezone" use="required"/>
-  </xsd:complexType>
-  <xsd:complexType name="Scales">
-    <xsd:annotation>
-      <xsd:documentation>For a certain forecast category, there exists several forecasted types. Each of these types is returned in a "scale" element.</xsd:documentation>
-    </xsd:annotation>
-    <xsd:sequence>
-      <xsd:element name="scale" type="Scale" minOccurs="0" maxOccurs="unbounded"/>
-    </xsd:sequence>
-  </xsd:complexType>
-  <xsd:complexType name="Scale">
-    <xsd:annotation>
-      <xsd:documentation>For a certain forecast type, the forecast may exist at several days. Each of these forecast days is returned in a "forecast" element. The "name" attribute returns the name of the forecasted type.</xsd:documentation>
-    </xsd:annotation>
-    <xsd:sequence>
-      <xsd:element name="forecast" type="ScaleForecast" minOccurs="0" maxOccurs="unbounded"/>
-    </xsd:sequence>
-    <xsd:attribute name="scale_id" type="xsd:string" use="required"/>
-    <xsd:attribute name="name" type="xsd:string" use="required"/>
-  </xsd:complexType>
-  <xsd:complexType name="ScaleForecast">
-    <xsd:annotation>
-      <xsd:documentation>A specific forecast for a type. "date" gives the date at which the forecast is valid. The content of the element is a value on a scale (ranges from "min" to "max" (see element "category"). The name of the scale is given in the attribute "name".</xsd:documentation>
-    </xsd:annotation>
-    <xsd:simpleContent>
-      <xsd:extension base="xsd:nonNegativeInteger">
-        <xsd:attribute name="date" type="common:Date" use="required"/>
+    <xsd:complexType name="ScalesContent">
+        <xsd:annotation>
+            <xsd:documentation>The content-element contains a sequence of category-elements.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="category" type="ScaleCategory" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="ScaleCategory">
+        <xsd:annotation>
+            <xsd:documentation>Each category refers to a certain scale forecast. The category is called as given in the
+                attribute "name". The scaled forecast returns values between (inclusive) of the attributes "min" and
+                "max". In the attribute "last_update" contains a timestamp, when the forecast was updated/reviewed for
+                the last time. To identify a category the value of "category_id" can be used, this value does not change
+                for a certain category.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:all>
+            <xsd:element name="scales" type="Scales"/>
+            <xsd:element name="source" type="xsd:string"/>
+        </xsd:all>
+        <xsd:attribute name="category_id" type="xsd:string" use="required"/>
         <xsd:attribute name="name" type="xsd:string" use="required"/>
-      </xsd:extension>
-    </xsd:simpleContent>
-  </xsd:complexType>
+        <xsd:attribute name="min" type="xsd:nonNegativeInteger" use="required"/>
+        <xsd:attribute name="max" type="xsd:nonNegativeInteger" use="required"/>
+        <xsd:attribute name="last_update" type="common:DatetimeTimezone" use="required"/>
+    </xsd:complexType>
+    <xsd:complexType name="Scales">
+        <xsd:annotation>
+            <xsd:documentation>For a certain forecast category, there exists several forecasted types. Each of these
+                types is returned in a "scale" element.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="scale" type="Scale" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="Scale">
+        <xsd:annotation>
+            <xsd:documentation>For a certain forecast type, the forecast may exist at several days. Each of these
+                forecast days is returned in a "forecast" element. The "name" attribute returns the name of the
+                forecasted type.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="forecast" type="ScaleForecast" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="scale_id" type="xsd:string" use="required"/>
+        <xsd:attribute name="name" type="xsd:string" use="required"/>
+    </xsd:complexType>
+    <xsd:complexType name="ScaleForecast">
+        <xsd:annotation>
+            <xsd:documentation>A specific forecast for a type. "date" gives the date at which the forecast is valid. The
+                content of the element is a value on a scale (ranges from "min" to "max" (see element "category"). The
+                name of the scale is given in the attribute "name".
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:nonNegativeInteger">
+                <xsd:attribute name="date" type="common:Date" use="required"/>
+                <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
 </xsd:schema>

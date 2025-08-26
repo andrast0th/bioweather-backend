@@ -13,33 +13,35 @@ import java.util.Map;
 @Data
 public abstract class ExpoBaseResponse<T> {
 
-  protected static class GenericData {
+    private List<Error> errors;
 
-    /** Store unmapped data in case actual response is varying from specification. */
-    private Map<String, JsonNode> any;
+    public abstract T getData();
 
-    @JsonAnyGetter
-    public Map<String, JsonNode> getAny() {
-      return any;
+    protected static class GenericData {
+
+        /**
+         * Store unmapped data in case actual response is varying from specification.
+         */
+        private Map<String, JsonNode> any;
+
+        @JsonAnyGetter
+        public Map<String, JsonNode> getAny() {
+            return any;
+        }
+
+        @JsonAnySetter
+        public void addAny(String key, JsonNode value) {
+            if (any == null) {
+                any = new HashMap<>();
+            }
+            any.put(key, value);
+        }
     }
 
-    @JsonAnySetter
-    public void addAny(String key, JsonNode value) {
-      if (any == null) {
-        any = new HashMap<>();
-      }
-      any.put(key, value);
+    @Data
+    @EqualsAndHashCode(callSuper = false)
+    public static class Error extends GenericData {
+        private String code;
+        private String message;
     }
-  }
-
-  @Data
-  @EqualsAndHashCode(callSuper = false)
-  public static class Error extends GenericData {
-    private String code;
-    private String message;
-  }
-
-  public abstract T getData();
-
-  private List<Error> errors;
 }

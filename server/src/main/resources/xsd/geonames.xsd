@@ -1,109 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet type="text/xsl" href="xs3p.xsl"?>
-<xsd:schema xmlns="http://schema.feeds.meteonews.net"
-            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
             xmlns:common="http://schema.feeds.meteonews.net/common"
+            xmlns="http://schema.feeds.meteonews.net"
             targetNamespace="http://schema.feeds.meteonews.net"
             elementFormDefault="qualified"
             version="2013-09-24 Rev. 286">
-  <xsd:annotation>
-    <xsd:documentation xml:lang="en">Specification of the geonames-XML-Feed</xsd:documentation>
-  </xsd:annotation>
-  <xsd:import namespace="http://schema.feeds.meteonews.net/common" schemaLocation="common.xsd"/>
-  <xsd:element name="geonames">
     <xsd:annotation>
-      <xsd:documentation>root-Tag (contains between 3 and 5 elements: (optionally) parameters, content, errors, ref, (optionally) debug)</xsd:documentation>
+        <xsd:documentation xml:lang="en">Specification of the geonames-XML-Feed</xsd:documentation>
     </xsd:annotation>
-    <xsd:complexType>
-      <xsd:sequence>
-        <xsd:element name="parameters" type="GeonamesParameters" minOccurs="0"/>
-        <xsd:element name="content" type="GeonamesCommonContent"/>
-        <xsd:element name="errors" type="common:Errors"/>
-        <xsd:element name="ref" type="common:HomepageReference"/>
-        <xsd:element name="debug" type="common:Debug" minOccurs="0"/>
-      </xsd:sequence>
+    <xsd:import namespace="http://schema.feeds.meteonews.net/common" schemaLocation="common.xsd"/>
+    <xsd:element name="geonames">
+        <xsd:annotation>
+            <xsd:documentation>root-Tag (contains between 3 and 5 elements: (optionally) parameters, content, errors,
+                ref, (optionally) debug)
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="parameters" type="GeonamesParameters" minOccurs="0"/>
+                <xsd:element name="content" type="GeonamesCommonContent"/>
+                <xsd:element name="errors" type="common:Errors"/>
+                <xsd:element name="ref" type="common:HomepageReference"/>
+                <xsd:element name="debug" type="common:Debug" minOccurs="0"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:complexType name="GeonamesParameters">
+        <xsd:annotation>
+            <xsd:documentation>This element lists all parameters that are used to create the result
+                of the XML-Feed. These parameters can be set in the query-string part
+                of the URL (except the Geoname-ID, which is set by the path-part of the
+                URL). This element contains always 2 elments.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="lang" type="xsd:string"/>
+            <xsd:element name="geoLang" type="xsd:string"/>
+            <xsd:element name="id" type="xsd:string"/>
+        </xsd:sequence>
     </xsd:complexType>
-  </xsd:element>
-  <xsd:complexType name="GeonamesParameters">
-    <xsd:annotation>
-      <xsd:documentation>This element lists all parameters that are used to create the result
-     of the XML-Feed. These parameters can be set in the query-string part
-     of the URL (except the Geoname-ID, which is set by the path-part of the
-     URL). This element contains always 2 elments.</xsd:documentation>
-    </xsd:annotation>
-    <xsd:sequence>
-      <xsd:element name="lang" type="xsd:string"/>
-      <xsd:element name="geoLang" type="xsd:string"/>
-      <xsd:element name="id" type="xsd:string"/>
-    </xsd:sequence>
-  </xsd:complexType>
-  <xsd:complexType name="GeonamesCommonContent">
-    <xsd:annotation>
-      <xsd:documentation>The content-element contains a sequence of elements with informations about a geo-object. The element "zip" contains the zip code of the requested location if applicable/available. The content of the element "wintersport_id" is empty if this geo feature isn't part of wintersport resort. Otherwise (if it isn't empty) you could get furher information about the wintersport resort with the "wintersports" feed (http://*.feeds.meteonews.net/wintersports/id/{wintersport_id}.xml).</xsd:documentation>
-    </xsd:annotation>
-    <xsd:sequence>
-      <xsd:element name="id" type="xsd:string"/>
-      <xsd:element name="name" type="xsd:string"/>
-      <xsd:element name="country" type="GeonamesCommonCountryCode"/>
-      <xsd:element name="subdivision" type="common:Subdivision"/>
-      <xsd:element name="elevation" type="common:ElevationData"/>
-      <xsd:element name="lat" type="common:Lat"/>
-      <xsd:element name="lon" type="common:Lon"/>
-      <xsd:element name="zip" type="xsd:string"/>
-      <xsd:element name="utc_offset" type="UTCOffset"/>
-      <xsd:element name="wintersport_id" type="xsd:string"/>
-      <xsd:element name="near_coast" type="NearCoast"/>
-    </xsd:sequence>
-  </xsd:complexType>
-  <xsd:simpleType name="GeonamesCommonCountryCode">
-    <xsd:annotation>
-      <xsd:documentation>Contains country code (ISO 3166-1 alpha-2) or
-                            is empty</xsd:documentation>
-    </xsd:annotation>
-    <xsd:union memberTypes="common:CountryCode common:Empty"/>
-  </xsd:simpleType>
-  <xsd:complexType name="UTCOffset">
-    <xsd:annotation>
-      <xsd:documentation>Returns the difference between local time and UTC time. A positive value
-     means that the local time is later than the UTC time. Please be aware of
-     offsets with a floating-point number, there exists timezones with a quarter
-     or a half hour offset.</xsd:documentation>
-    </xsd:annotation>
-    <xsd:simpleContent>
-      <xsd:extension base="UTCOffsetData">
-        <xsd:attribute name="unit" type="UTCOffsetUnit" use="required"/>
-      </xsd:extension>
-    </xsd:simpleContent>
-  </xsd:complexType>
-  <xsd:simpleType name="UTCOffsetData">
-    <xsd:annotation>
-      <xsd:documentation>UTC offset is given as a floating number. It exists timezones, which
-     doesn't have an offset to the UTC time of complete hours.</xsd:documentation>
-    </xsd:annotation>
-    <xsd:union memberTypes="DecimalNumberWithTwoFractionDigit common:Empty"/>
-  </xsd:simpleType>
-  <xsd:simpleType name="DecimalNumberWithTwoFractionDigit">
-    <xsd:annotation>
-      <xsd:documentation>A number with 2 fractional digit</xsd:documentation>
-    </xsd:annotation>
-    <xsd:restriction base="xsd:decimal">
-      <xsd:fractionDigits value="2"/>
-    </xsd:restriction>
-  </xsd:simpleType>
-  <xsd:simpleType name="UTCOffsetUnit">
-    <xsd:annotation>
-      <xsd:documentation>UTC offset is given in hours</xsd:documentation>
-    </xsd:annotation>
-    <xsd:restriction base="xsd:string">
-      <xsd:pattern value="h"/>
-    </xsd:restriction>
-  </xsd:simpleType>
-  <xsd:simpleType name="NearCoast">
-    <xsd:annotation>
-      <xsd:documentation>Indicates whether the geo feature lies near a coast and we can provide further data as e.g. sea surface temperature or wave datas. The element contains a boolean value (1 or 0).</xsd:documentation>
-    </xsd:annotation>
-    <xsd:restriction base="xsd:string">
-      <xsd:pattern value="1|0"/>
-    </xsd:restriction>
-  </xsd:simpleType>
+    <xsd:complexType name="GeonamesCommonContent">
+        <xsd:annotation>
+            <xsd:documentation>The content-element contains a sequence of elements with informations about a geo-object.
+                The element "zip" contains the zip code of the requested location if applicable/available. The content
+                of the element "wintersport_id" is empty if this geo feature isn't part of wintersport resort. Otherwise
+                (if it isn't empty) you could get furher information about the wintersport resort with the
+                "wintersports" feed (http://*.feeds.meteonews.net/wintersports/id/{wintersport_id}.xml).
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="id" type="xsd:string"/>
+            <xsd:element name="name" type="xsd:string"/>
+            <xsd:element name="country" type="GeonamesCommonCountryCode"/>
+            <xsd:element name="subdivision" type="common:Subdivision"/>
+            <xsd:element name="elevation" type="common:ElevationData"/>
+            <xsd:element name="lat" type="common:Lat"/>
+            <xsd:element name="lon" type="common:Lon"/>
+            <xsd:element name="zip" type="xsd:string"/>
+            <xsd:element name="utc_offset" type="UTCOffset"/>
+            <xsd:element name="wintersport_id" type="xsd:string"/>
+            <xsd:element name="near_coast" type="NearCoast"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:simpleType name="GeonamesCommonCountryCode">
+        <xsd:annotation>
+            <xsd:documentation>Contains country code (ISO 3166-1 alpha-2) or
+                is empty
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:union memberTypes="common:CountryCode common:Empty"/>
+    </xsd:simpleType>
+    <xsd:complexType name="UTCOffset">
+        <xsd:annotation>
+            <xsd:documentation>Returns the difference between local time and UTC time. A positive value
+                means that the local time is later than the UTC time. Please be aware of
+                offsets with a floating-point number, there exists timezones with a quarter
+                or a half hour offset.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleContent>
+            <xsd:extension base="UTCOffsetData">
+                <xsd:attribute name="unit" type="UTCOffsetUnit" use="required"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:simpleType name="UTCOffsetData">
+        <xsd:annotation>
+            <xsd:documentation>UTC offset is given as a floating number. It exists timezones, which
+                doesn't have an offset to the UTC time of complete hours.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:union memberTypes="DecimalNumberWithTwoFractionDigit common:Empty"/>
+    </xsd:simpleType>
+    <xsd:simpleType name="DecimalNumberWithTwoFractionDigit">
+        <xsd:annotation>
+            <xsd:documentation>A number with 2 fractional digit</xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:decimal">
+            <xsd:fractionDigits value="2"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="UTCOffsetUnit">
+        <xsd:annotation>
+            <xsd:documentation>UTC offset is given in hours</xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="h"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="NearCoast">
+        <xsd:annotation>
+            <xsd:documentation>Indicates whether the geo feature lies near a coast and we can provide further data as
+                e.g. sea surface temperature or wave datas. The element contains a boolean value (1 or 0).
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="1|0"/>
+        </xsd:restriction>
+    </xsd:simpleType>
 </xsd:schema>

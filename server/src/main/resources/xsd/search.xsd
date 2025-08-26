@@ -1,115 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet type="text/xsl" href="xs3p.xsl"?>
-<xsd:schema xmlns="http://schema.feeds.meteonews.net"
-            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
             xmlns:common="http://schema.feeds.meteonews.net/common"
+            xmlns="http://schema.feeds.meteonews.net"
             targetNamespace="http://schema.feeds.meteonews.net"
             elementFormDefault="qualified"
             version="2013-03-21 Rev. 255">
-  <xsd:import namespace="http://schema.feeds.meteonews.net/common" schemaLocation="common.xsd"/>
-  <xsd:annotation>
-    <xsd:documentation xml:lang="en">Specification of the search-XML-Feed</xsd:documentation>
-  </xsd:annotation>
-  <xsd:element name="search">
+    <xsd:import namespace="http://schema.feeds.meteonews.net/common" schemaLocation="common.xsd"/>
     <xsd:annotation>
-      <xsd:documentation>root-Tag (contains between 3 and 5 elements: (optionally) parameters, content, errors, ref, (optionally) debug)</xsd:documentation>
+        <xsd:documentation xml:lang="en">Specification of the search-XML-Feed</xsd:documentation>
     </xsd:annotation>
-    <xsd:complexType>
-      <xsd:sequence>
-        <xsd:element name="parameters" type="SearchParameters" minOccurs="0"/>
-        <xsd:element name="content" type="SearchContent"/>
-        <xsd:element name="errors" type="common:Errors"/>
-        <xsd:element name="ref" type="common:HomepageReference"/>
-        <xsd:element name="debug" type="common:Debug" minOccurs="0"/>
-      </xsd:sequence>
+    <xsd:element name="search">
+        <xsd:annotation>
+            <xsd:documentation>root-Tag (contains between 3 and 5 elements: (optionally) parameters, content, errors,
+                ref, (optionally) debug)
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="parameters" type="SearchParameters" minOccurs="0"/>
+                <xsd:element name="content" type="SearchContent"/>
+                <xsd:element name="errors" type="common:Errors"/>
+                <xsd:element name="ref" type="common:HomepageReference"/>
+                <xsd:element name="debug" type="common:Debug" minOccurs="0"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:complexType name="SearchParameters">
+        <xsd:annotation>
+            <xsd:documentation>This element lists all parameters that are used to create the result of the XML-Feed.
+                These parameters can be set in the query-string part of the URL (except string, this element is set by
+                the path-part of the URL).
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="lang" type="xsd:string"/>
+            <xsd:element name="string" type="xsd:string"/>
+            <xsd:element name="autofill" type="SearchAutofill"/>
+            <xsd:element name="limit" type="xsd:nonNegativeInteger"/>
+            <xsd:element name="country" type="SearchCountryCode"/>
+            <xsd:element name="lat" type="SearchLat"/>
+            <xsd:element name="lon" type="SearchLon"/>
+            <xsd:element name="meta" type="SearchMeta"/>
+        </xsd:sequence>
     </xsd:complexType>
-  </xsd:element>
-  <xsd:complexType name="SearchParameters">
-    <xsd:annotation>
-      <xsd:documentation>This element lists all parameters that are used to create the result of the XML-Feed. These parameters can be set in the query-string part of the URL (except string, this element is set by the path-part of the URL).</xsd:documentation>
-    </xsd:annotation>
-    <xsd:sequence>
-      <xsd:element name="lang" type="xsd:string"/>
-      <xsd:element name="string" type="xsd:string"/>
-      <xsd:element name="autofill" type="SearchAutofill"/>
-      <xsd:element name="limit" type="xsd:nonNegativeInteger"/>
-      <xsd:element name="country" type="SearchCountryCode"/>
-      <xsd:element name="lat" type="SearchLat"/>
-      <xsd:element name="lon" type="SearchLon"/>
-      <xsd:element name="meta" type="SearchMeta"/>
-    </xsd:sequence>
-  </xsd:complexType>
-  <xsd:simpleType name="SearchAutofill">
-    <xsd:annotation>
-      <xsd:documentation>Contains possible values for the meta parameter</xsd:documentation>
-    </xsd:annotation>
-    <xsd:restriction base="xsd:integer">
-      <xsd:minInclusive value="0"/>
-      <xsd:maxInclusive value="1"/>
-    </xsd:restriction>
-  </xsd:simpleType>
-  <xsd:simpleType name="SearchCountryCode">
-    <xsd:annotation>
-      <xsd:documentation>Contains country code (ISO 3166-1 alpha-2) or 
-                            is empty</xsd:documentation>
-    </xsd:annotation>
-    <xsd:union memberTypes="common:CountryCode common:Empty"/>
-  </xsd:simpleType>
-  <xsd:simpleType name="SearchLat">
-    <xsd:annotation>
-      <xsd:documentation>Contains latitude or is empty</xsd:documentation>
-    </xsd:annotation>
-    <xsd:union memberTypes="common:Lat common:Empty"/>
-  </xsd:simpleType>
-  <xsd:simpleType name="SearchLon">
-    <xsd:annotation>
-      <xsd:documentation>Contains longitude or is empty</xsd:documentation>
-    </xsd:annotation>
-    <xsd:union memberTypes="common:Lon common:Empty"/>
-  </xsd:simpleType>
-  <xsd:simpleType name="SearchMeta">
-    <xsd:annotation>
-      <xsd:documentation>Contains possible values for the meta parameter</xsd:documentation>
-    </xsd:annotation>
-    <xsd:restriction base="xsd:string">
-      <xsd:pattern value="(more|less)"/>
-    </xsd:restriction>
-  </xsd:simpleType>
-  <xsd:complexType name="SearchContent">
-    <xsd:annotation>
-      <xsd:documentation>The content-element contains a sequence of suggest-elements</xsd:documentation>
-    </xsd:annotation>
-    <xsd:sequence>
-      <xsd:element name="suggest" type="Suggest" minOccurs="0" maxOccurs="unbounded"/>
-    </xsd:sequence>
-  </xsd:complexType>
-  <xsd:complexType name="Suggest">
-    <xsd:annotation>
-      <xsd:documentation>The suggest-element contains information about a found geographical object. The attribute "id" contains the id of the geo object, this id must be used to request further information (e.g. forecasts, geo object information, …).</xsd:documentation>
-    </xsd:annotation>
-    <xsd:sequence>
-      <xsd:element name="match_string" type="xsd:string"/>
-      <xsd:element name="name" type="xsd:string"/>
-      <xsd:element name="zip" type="xsd:string"/>
-      <xsd:element name="country" type="common:CountryCode"/>
-      <xsd:element name="geoname_id" type="common:GeonameID"/>
-      <xsd:element name="state" type="State"/>
-      <xsd:element name="subdivision" type="common:Subdivision"/>
-      <xsd:element name="elevation" type="common:ElevationData" minOccurs="0"/>
-      <xsd:element name="lat" type="common:Lat" minOccurs="0"/>
-      <xsd:element name="lon" type="common:Lon" minOccurs="0"/>
-    </xsd:sequence>
-    <xsd:attribute name="id" type="xsd:string" use="required"/>
-  </xsd:complexType>
-  <xsd:complexType name="State">
-    <xsd:annotation>
-      <xsd:documentation>This tag is deprecated. See the subdivision
-                            tag for a replacement.</xsd:documentation>
-    </xsd:annotation>
-    <xsd:simpleContent>
-      <xsd:extension base="xsd:string">
-        <xsd:attribute name="deprecated" type="xsd:string" use="required"/>
-      </xsd:extension>
-    </xsd:simpleContent>
-  </xsd:complexType>
+    <xsd:simpleType name="SearchAutofill">
+        <xsd:annotation>
+            <xsd:documentation>Contains possible values for the meta parameter</xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:integer">
+            <xsd:minInclusive value="0"/>
+            <xsd:maxInclusive value="1"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="SearchCountryCode">
+        <xsd:annotation>
+            <xsd:documentation>Contains country code (ISO 3166-1 alpha-2) or
+                is empty
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:union memberTypes="common:CountryCode common:Empty"/>
+    </xsd:simpleType>
+    <xsd:simpleType name="SearchLat">
+        <xsd:annotation>
+            <xsd:documentation>Contains latitude or is empty</xsd:documentation>
+        </xsd:annotation>
+        <xsd:union memberTypes="common:Lat common:Empty"/>
+    </xsd:simpleType>
+    <xsd:simpleType name="SearchLon">
+        <xsd:annotation>
+            <xsd:documentation>Contains longitude or is empty</xsd:documentation>
+        </xsd:annotation>
+        <xsd:union memberTypes="common:Lon common:Empty"/>
+    </xsd:simpleType>
+    <xsd:simpleType name="SearchMeta">
+        <xsd:annotation>
+            <xsd:documentation>Contains possible values for the meta parameter</xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="(more|less)"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:complexType name="SearchContent">
+        <xsd:annotation>
+            <xsd:documentation>The content-element contains a sequence of suggest-elements</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="suggest" type="Suggest" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="Suggest">
+        <xsd:annotation>
+            <xsd:documentation>The suggest-element contains information about a found geographical object. The attribute
+                "id" contains the id of the geo object, this id must be used to request further information (e.g.
+                forecasts, geo object information, …).
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="match_string" type="xsd:string"/>
+            <xsd:element name="name" type="xsd:string"/>
+            <xsd:element name="zip" type="xsd:string"/>
+            <xsd:element name="country" type="common:CountryCode"/>
+            <xsd:element name="geoname_id" type="common:GeonameID"/>
+            <xsd:element name="state" type="State"/>
+            <xsd:element name="subdivision" type="common:Subdivision"/>
+            <xsd:element name="elevation" type="common:ElevationData" minOccurs="0"/>
+            <xsd:element name="lat" type="common:Lat" minOccurs="0"/>
+            <xsd:element name="lon" type="common:Lon" minOccurs="0"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:string" use="required"/>
+    </xsd:complexType>
+    <xsd:complexType name="State">
+        <xsd:annotation>
+            <xsd:documentation>This tag is deprecated. See the subdivision
+                tag for a replacement.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute name="deprecated" type="xsd:string" use="required"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
 </xsd:schema>

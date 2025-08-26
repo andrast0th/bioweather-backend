@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xsd:schema xmlns="http://schema.feeds.meteonews.net/common"
-            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns="http://schema.feeds.meteonews.net/common"
             targetNamespace="http://schema.feeds.meteonews.net/common"
             elementFormDefault="qualified">
     <!-- Common types for geonames and search feeds -->

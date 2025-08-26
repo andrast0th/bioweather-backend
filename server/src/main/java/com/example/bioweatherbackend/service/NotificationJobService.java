@@ -7,6 +7,7 @@ import com.example.bioweatherbackend.repository.DeviceRepository;
 import com.example.bioweatherbackend.service.meteo.CircadianRhythmService;
 import com.example.bioweatherbackend.service.meteo.DateTimeUtil;
 import com.example.bioweatherbackend.service.meteo.MeteoNewsDataService;
+import com.example.bioweatherbackend.service.translation.TranslationService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,10 +25,7 @@ import java.util.Objects;
 @Slf4j
 public class NotificationJobService {
 
-    private static final DateTimeFormatter[] TIME_FORMATTERS = {
-        DateTimeFormatter.ofPattern("H:mm"),
-        DateTimeFormatter.ofPattern("HH:mm")
-    };
+    private static final DateTimeFormatter[] TIME_FORMATTERS = {DateTimeFormatter.ofPattern("H:mm"), DateTimeFormatter.ofPattern("HH:mm")};
 
     private final DeviceRepository deviceRepo;
     private final NotificationService notificationService;
@@ -61,11 +59,9 @@ public class NotificationJobService {
                 var notificationThresholdMinutes = configService.getConfig().getNotificationThresholdMinutes();
 
                 try {
-                    if (NotificationType.BW_TODAY == sub.getNotificationType() &&
-                        isInTimeRange(datetimeLocation, localTimeBwToday, Duration.ofMinutes(notificationThresholdMinutes), Duration.ofMinutes(notificationThresholdMinutes))) {
+                    if (NotificationType.BW_TODAY == sub.getNotificationType() && isInTimeRange(datetimeLocation, localTimeBwToday, Duration.ofMinutes(notificationThresholdMinutes), Duration.ofMinutes(notificationThresholdMinutes))) {
                         sendBwNotification(device, location, sub.getNotificationType(), datetimeLocation);
-                    } else if (NotificationType.BW_TOMORROW == sub.getNotificationType() &&
-                        isInTimeRange(datetimeLocation, localTimeBwTomorrow, Duration.ofMinutes(notificationThresholdMinutes), Duration.ofMinutes(notificationThresholdMinutes))) {
+                    } else if (NotificationType.BW_TOMORROW == sub.getNotificationType() && isInTimeRange(datetimeLocation, localTimeBwTomorrow, Duration.ofMinutes(notificationThresholdMinutes), Duration.ofMinutes(notificationThresholdMinutes))) {
                         sendBwNotification(device, location, sub.getNotificationType(), datetimeLocation);
                     } else {
                         checkAndSendCrNotification(device, location, sub.getNotificationType(), datetimeLocation);

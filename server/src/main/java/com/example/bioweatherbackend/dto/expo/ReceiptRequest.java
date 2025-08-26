@@ -10,5 +10,6 @@ import java.util.List;
 @AllArgsConstructor
 public final class ReceiptRequest {
 
-  @NonNull private final List<String> ids;
+    @NonNull
+    private final List<String> ids;
 }

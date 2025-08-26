@@ -40,8 +40,7 @@ public class NotificationsController {
 
     @GetMapping("/history/{pushToken}")
     @RequireAuth
-    public List<PushTicketDto> getHistory(@PathVariable String pushToken,
-                                          @RequestParam(required = false) String locationId) {
+    public List<PushTicketDto> getHistory(@PathVariable String pushToken, @RequestParam(required = false) String locationId) {
 
         return notificationService.getNotificationHistory(pushToken, locationId);
     }

@@ -28,15 +28,11 @@ public interface ScalesMapper {
             });
         }
 
-        return conditionsByDateMap
-                .entrySet()
-                .stream()
-                .map((entry) -> {
-                    ApiBioWeatherByDate apiBioWeatherByDate = new ApiBioWeatherByDate();
-                    apiBioWeatherByDate.setDate(entry.getKey());
-                    apiBioWeatherByDate.setConditions(entry.getValue());
-                    return apiBioWeatherByDate;
-                })
-                .toList();
+        return conditionsByDateMap.entrySet().stream().map((entry) -> {
+            ApiBioWeatherByDate apiBioWeatherByDate = new ApiBioWeatherByDate();
+            apiBioWeatherByDate.setDate(entry.getKey());
+            apiBioWeatherByDate.setConditions(entry.getValue());
+            return apiBioWeatherByDate;
+        }).toList();
     }
 }

@@ -19,26 +19,15 @@ public class RestConfig {
 
     @Bean
     public RestClient expoRestClient() {
-        return RestClient.builder()
-                .baseUrl(expoApiUrl)
-                .defaultHeader("Authorization", "Bearer " + expoApiKey)
-                .requestInterceptor(new RestClientLoggingInterceptor())
-                .requestFactory(new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory()))
-                .build();
+        return RestClient.builder().baseUrl(expoApiUrl).defaultHeader("Authorization", "Bearer " + expoApiKey).requestInterceptor(new RestClientLoggingInterceptor()).requestFactory(new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory())).build();
     }
 
     @Bean
     public RestClient meteoNewsRestClient() {
-        return RestClient.builder()
-                .baseUrl(meteoNewsApiUrl)
-                .defaultHeader("Authorization", meteoNewsApiKey)
-                .requestInterceptor(new RestClientLoggingInterceptor())
-                .requestFactory(new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory()))
-                .messageConverters(converters -> {
-                    converters.add(new org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter());
-                    converters.add(new org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter());
-                })
-                .build();
+        return RestClient.builder().baseUrl(meteoNewsApiUrl).defaultHeader("Authorization", meteoNewsApiKey).requestInterceptor(new RestClientLoggingInterceptor()).requestFactory(new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory())).messageConverters(converters -> {
+            converters.add(new org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter());
+            converters.add(new org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter());
+        }).build();
     }
 
 }

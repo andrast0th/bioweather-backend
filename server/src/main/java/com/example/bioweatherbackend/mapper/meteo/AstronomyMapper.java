@@ -38,12 +38,7 @@ public interface AstronomyMapper {
     }
 
     default List<ApiAstronomy> toApiResponse(Astronomy astronomy) {
-        return astronomy
-                .getContent()
-                .getDay()
-                .stream()
-                .map(this::toDto)
-                .collect(Collectors.toList());
+        return astronomy.getContent().getDay().stream().map(this::toDto).collect(Collectors.toList());
     }
 
 }
