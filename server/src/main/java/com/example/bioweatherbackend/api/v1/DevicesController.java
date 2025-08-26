@@ -1,6 +1,5 @@
 package com.example.bioweatherbackend.api.v1;
 
-import com.example.bioweatherbackend.config.sec.RequireAuth;
 import com.example.bioweatherbackend.dto.notifications.DeviceDto;
 import com.example.bioweatherbackend.service.DeviceManagementService;
 import lombok.AllArgsConstructor;
@@ -19,7 +18,6 @@ public class DevicesController {
     private DeviceManagementService service;
 
     @GetMapping
-    @RequireAuth
     public List<DeviceDto> getDevices(@RequestParam(required = false) String query) {
         return service.getDevices(query);
     }
