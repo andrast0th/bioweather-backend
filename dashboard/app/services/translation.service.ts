@@ -12,9 +12,9 @@ export const getTranslations = async (lang: String): Promise<Translation[]> => {
 };
 
 export const deleteTranslations = async (lang: String): Promise<void> => {
-  await apiClient.delete<void>(`/translations/${lang}`);
+  await apiClient.delete<void>(`/admin/translations/${lang}`);
 };
 
 export const importTranslations = async (lang: String, payload: any): Promise<void> => {
-  await apiClient.post<void>(`/translations/${lang}/import`, payload);
+  await apiClient.post<void>(`/admin/translations/${lang}/import`, payload);
 };

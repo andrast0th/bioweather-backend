@@ -1,4 +1,4 @@
-package com.example.bioweatherbackend.api.v1;
+package com.example.bioweatherbackend.api.v1.admin;
 
 import com.example.bioweatherbackend.config.sec.RequireAuth;
 import com.example.bioweatherbackend.dto.notifications.NotificationType;
@@ -14,23 +14,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/notifications")
+@RequestMapping("/api/v1/admin/notifications")
 @AllArgsConstructor
-public class NotificationsController {
+public class NotificationAdminController {
 
     private DeviceManagementService service;
     private NotificationService notificationService;
     private NotificationJobService jobService;
-
-    @PostMapping("subscription")
-    public void subscribe(@RequestBody SubscriptionDto subscription) {
-        service.subscribe(subscription);
-    }
-
-    @DeleteMapping("subscription")
-    public void unsubscribe(@RequestBody SubscriptionDto subscription) {
-        service.unsubscribe(subscription);
-    }
 
     @GetMapping("/subscription/{pushToken}")
     @RequireAuth
@@ -56,6 +46,5 @@ public class NotificationsController {
     public void triggerJob() {
         jobService.scheduledRunWorkJob();
     }
-
-
+    
 }

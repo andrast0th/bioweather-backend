@@ -1,4 +1,4 @@
-package com.example.bioweatherbackend.api.v1;
+package com.example.bioweatherbackend.api.v1.admin;
 
 import com.example.bioweatherbackend.config.sec.RequireAuth;
 import com.example.bioweatherbackend.dto.ConfigDto;
@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/config")
+@RequestMapping("/api/v1/admin/config")
 @AllArgsConstructor
 public class ConfigController {
 

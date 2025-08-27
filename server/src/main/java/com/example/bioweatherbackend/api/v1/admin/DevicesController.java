@@ -1,4 +1,4 @@
-package com.example.bioweatherbackend.api.v1;
+package com.example.bioweatherbackend.api.v1.admin;
 
 import com.example.bioweatherbackend.config.sec.RequireAuth;
 import com.example.bioweatherbackend.dto.notifications.DeviceDto;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/devices")
+@RequestMapping("/api/v1/admin/devices")
 @AllArgsConstructor
 public class DevicesController {
 

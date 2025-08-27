@@ -1,4 +1,4 @@
-package com.example.bioweatherbackend.api.v1;
+package com.example.bioweatherbackend.api.v1.admin;
 
 import com.example.bioweatherbackend.config.sec.RequireAuth;
 import com.github.benmanes.caffeine.cache.Cache;
@@ -16,7 +16,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping("/api/v1/cache")
+@RequestMapping("/api/v1/admin/cache")
 @Slf4j
 @AllArgsConstructor
 public class CacheController {

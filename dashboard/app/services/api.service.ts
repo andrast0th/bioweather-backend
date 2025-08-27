@@ -53,20 +53,20 @@ export const getActuatorInfo = async (): Promise<ActuatorInfo> => {
 };
 
 export const getCacheStatistics = async (): Promise<CacheStatistics> => {
-  const response = await apiClient.get<CacheStatistics>('/cache');
+  const response = await apiClient.get<CacheStatistics>('/admin/cache');
   return response.data;
 };
 
 export const fetchSubscriptions = async (pushToken: string): Promise<Subscription[]> => {
   const response = await apiClient.get<Subscription[]>(
-    `/notifications/subscription/${encodeURIComponent(pushToken)}`
+    `/admin/notifications/subscription/${encodeURIComponent(pushToken)}`
   );
   return response.data;
 };
 
 export const fetchDevices = async (query?: string): Promise<Device[]> => {
   const params = query ? { params: { query } } : {};
-  const response = await apiClient.get<Device[]>('/devices', params);
+  const response = await apiClient.get<Device[]>('/admin/devices', params);
   return response.data;
 };
 
@@ -77,7 +77,7 @@ export const fetchNotificationHistory = async (
   const params = locationId ? { params: { locationId } } : {};
 
   const response = await apiClient.get<PushTicket[]>(
-    `/notifications/history/${encodeURIComponent(pushToken)}`,
+    `/admin/notifications/history/${encodeURIComponent(pushToken)}`,
     params
   );
 
@@ -85,17 +85,17 @@ export const fetchNotificationHistory = async (
 };
 
 export const sendTestNotification = async (pushToken: string, message: string): Promise<void> => {
-  await apiClient.post<void>('/notifications/test-notification', {
+  await apiClient.post<void>('/admin/notifications/test-notification', {
     pushToken,
     message,
   });
 };
 
 export const getConfig = async (): Promise<Config> => {
-  const response = await apiClient.get<Config>('/config');
+  const response = await apiClient.get<Config>('/admin/config');
   return response.data;
 };
 
 export const updateConfig = async (config: Config): Promise<void> => {
-  await apiClient.put<void>('/config', config);
+  await apiClient.put<void>('/admin/config', config);
 };
