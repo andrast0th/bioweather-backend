@@ -1,6 +1,5 @@
 package com.example.bioweatherbackend.api.v1.admin;
 
-import com.example.bioweatherbackend.config.sec.RequireAuth;
 import com.example.bioweatherbackend.dto.ConfigDto;
 import com.example.bioweatherbackend.service.ConfigService;
 import lombok.AllArgsConstructor;
@@ -14,13 +13,11 @@ public class ConfigController {
     private ConfigService configService;
 
     @GetMapping
-    @RequireAuth
     public ConfigDto getConfig() {
         return configService.getConfig();
     }
 
     @PutMapping
-    @RequireAuth
     public void setConfig(@RequestBody ConfigDto configDto) {
         configService.updateConfig(configDto);
     }

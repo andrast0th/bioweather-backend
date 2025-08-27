@@ -1,6 +1,5 @@
 package com.example.bioweatherbackend.api.v1.admin;
 
-import com.example.bioweatherbackend.config.sec.RequireAuth;
 import com.example.bioweatherbackend.dto.notifications.NotificationType;
 import com.example.bioweatherbackend.dto.notifications.PushTicketDto;
 import com.example.bioweatherbackend.dto.notifications.SubscriptionDto;
@@ -23,28 +22,24 @@ public class NotificationAdminController {
     private NotificationJobService jobService;
 
     @GetMapping("/subscription/{pushToken}")
-    @RequireAuth
     public List<SubscriptionDto> getSubscriptionsByPushToken(@PathVariable String pushToken) {
         return service.getSubscriptions(pushToken);
     }
 
     @GetMapping("/history/{pushToken}")
-    @RequireAuth
     public List<PushTicketDto> getHistory(@PathVariable String pushToken, @RequestParam(required = false) String locationId) {
 
         return notificationService.getNotificationHistory(pushToken, locationId);
     }
 
     @PostMapping("/test-notification")
-    @RequireAuth
     public void triggerNotification(@RequestBody TestNotificationDto notificationDto) {
         notificationService.sendTextNotification(notificationDto.getPushToken(), "Test Notification", notificationDto.getMessage(), NotificationType.TEST, null);
     }
 
     @PostMapping("/test-job")
-    @RequireAuth
     public void triggerJob() {
         jobService.scheduledRunWorkJob();
     }
-    
+
 }

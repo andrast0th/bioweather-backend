@@ -1,6 +1,5 @@
 package com.example.bioweatherbackend.api.v1;
 
-import com.example.bioweatherbackend.config.sec.RequireAuth;
 import com.example.bioweatherbackend.repository.DeviceRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +51,6 @@ public class ClientLogController {
     }
 
     @GetMapping("/{pushToken}")
-    @RequireAuth
     public ResponseEntity<String> getLogs(@PathVariable("pushToken") String pushToken) {
         if (!deviceRepository.existsById(pushToken)) {
             log.error("Push token not found {}", pushToken);
@@ -67,7 +65,7 @@ public class ClientLogController {
 
         StringBuilder response = new StringBuilder();
         File[] files = uploadDir.listFiles();
-        if (files != null) {
+        if (files!=null) {
             Arrays.stream(files).filter(File::isFile).sorted(Comparator.comparing(File::getName)).filter(file -> file.getName().endsWith(".log")).forEach(file -> {
                 try {
                     response.append(Files.readString(file.toPath()));
