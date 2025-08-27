@@ -1,5 +1,6 @@
 package com.example.bioweatherbackend.api.v1;
 
+import com.example.bioweatherbackend.config.sec.RequireAuth;
 import com.example.bioweatherbackend.entity.LanguageDto;
 import com.example.bioweatherbackend.entity.TranslationDto;
 import com.example.bioweatherbackend.service.translation.TranslationService;
@@ -30,14 +31,17 @@ public class TranslationsController {
     }
 
     @DeleteMapping("/{lang}")
+    @RequireAuth
     public void deleteLanguage(@PathVariable("lang") String lang) {
         if (lang.equals("en")) {
             throw new IllegalArgumentException("Cannot delete default language!");
         }
+
         service.deleteLanguage(lang);
     }
 
     @GetMapping("/{lang}/export")
+    @RequireAuth
     public ResponseEntity<byte[]> exportLang(@PathVariable("lang") String lang) {
         String properties = service.exportTranslationsAsJson(lang);
 
@@ -53,9 +57,11 @@ public class TranslationsController {
     }
 
     @PostMapping("/{lang}/import")
+    @RequireAuth
     public ResponseEntity<Void> importLang(@PathVariable("lang") String lang, @RequestBody Map<String, Object> json) {
         service.importLanguages(lang, json);
         return ResponseEntity.accepted().build();
     }
-    
+
+
 }

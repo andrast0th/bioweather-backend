@@ -1,5 +1,6 @@
 package com.example.bioweatherbackend.api.v1;
 
+import com.example.bioweatherbackend.config.sec.RequireAuth;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.stats.CacheStats;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,7 @@ public class CacheController {
     private final CacheManager cacheManager;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequireAuth
     public Map<String, CacheStats> getCacheInfo() {
         Map<String, CacheStats> response = new HashMap<>();
 
