@@ -1,7 +1,6 @@
 package com.example.bioweatherbackend.service;
 
-import com.example.bioweatherbackend.dto.notifications.DeviceDto;
-import com.example.bioweatherbackend.dto.notifications.SubscriptionDto;
+import com.example.bioweatherbackend.dto.notifications.*;
 import com.example.bioweatherbackend.entity.DeviceEntity;
 import com.example.bioweatherbackend.entity.NotificationSubscriptionEntity;
 import com.example.bioweatherbackend.mapper.DashboardMapper;
@@ -12,12 +11,15 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 @AllArgsConstructor
@@ -54,54 +56,69 @@ public class DeviceManagementService {
     }
 
     private void saveNotificationTypes(SubscriptionDto subscriptionDto) {
-        subscriptionRepository.deleteByPushTokenAndLocationId(subscriptionDto.getPushToken(), subscriptionDto.getLocationId());
-        var subs = subscriptionDto.getNotificationTypes().stream().map(type -> {
-            var entity = new NotificationSubscriptionEntity();
-            entity.setPushToken(subscriptionDto.getPushToken());
-            entity.setLocationId(subscriptionDto.getLocationId());
-            entity.setNotificationType(type);
-            return entity;
-        }).toList();
+        subscriptionRepository.deleteByPushToken(subscriptionDto.getPushToken());
+
+        var subs = new ArrayList<NotificationSubscriptionEntity>();
+        subscriptionDto.getNotificationInfo().forEach(notificationDto -> {
+            notificationDto.getNotificationTypes().forEach(notificationType -> {
+                var entity = new NotificationSubscriptionEntity();
+                entity.setPushToken(subscriptionDto.getPushToken());
+                entity.setLocationId(notificationDto.getLocationId());
+                entity.setNotificationType(notificationType);
+                subs.add(entity);
+            });
+        });
 
         subscriptionRepository.saveAll(subs);
     }
 
     @Transactional
-    public void unsubscribe(SubscriptionDto subscriptionDto) {
-        subscriptionRepository.deleteByPushTokenAndLocationId(subscriptionDto.getPushToken(), subscriptionDto.getLocationId());
+    public void unsubscribe(UnsubscribeDto unsubscribeDto) {
+        subscriptionRepository.deleteByPushTokenAndLocationId(unsubscribeDto.getPushToken(), unsubscribeDto.getLocationId());
     }
 
     @Transactional
-    public List<SubscriptionDto> getSubscriptions(String pushToken) {
-        var entities = subscriptionRepository.findByPushToken(pushToken);
+    public SubscriptionDto getSubscriptions(String pushToken) {
+        var device = deviceRepository.findById(pushToken).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Unable to find device."));
 
-        if (entities.isEmpty()) {
-            return Collections.emptyList();
-        }
+        var result = new SubscriptionDto();
+        result.setDeviceInfo(device.getDeviceInfo());
+        result.setLanguage(device.getLanguage());
+        result.setPushToken(device.getPushToken());
+        result.setTimezoneOffset(device.getTimezoneOffset());
+        result.setUserId(device.getUserId());
+        result.setSelectedBwConditions(device.getSelectedBwConditions());
 
-        // Group by locationId
-        var groupedByLoc = new ArrayList<SubscriptionDto>();
-        var locationMap = new HashMap<String, SubscriptionDto>();
+        result.setNotificationInfo(getNotificationInfo(pushToken));
 
-        for (var entity : entities) {
-            var locationId = entity.getLocationId();
-            var dto = locationMap.get(locationId);
-            if (dto == null) {
-                dto = dashboardMapper.toSubscriptionDto(entity);
-                dto.getNotificationTypes().clear();
-                dto.setLocationName(meteoNewsDataService.getLocationById(locationId).getName());
-                locationMap.put(locationId, dto);
-                groupedByLoc.add(dto);
-            }
-            dto.getNotificationTypes().add(entity.getNotificationType());
-        }
+        return result;
+    }
 
-        return groupedByLoc;
+    private List<NotificationInfoDto> getNotificationInfo(String pushToken) {
+        var subs = subscriptionRepository.findByPushToken(pushToken);
+
+        // Group subscriptions by locationId using a map
+        Map<String, List<NotificationType>> locationNotificationMap = subs.stream()
+            .collect(Collectors.groupingBy(
+                NotificationSubscriptionEntity::getLocationId,
+                Collectors.mapping(NotificationSubscriptionEntity::getNotificationType, Collectors.toList())
+            ));
+
+        // Convert map to NotificationInfoDto list
+        return locationNotificationMap.entrySet().stream()
+            .map(entry -> {
+                var notificationInfo = new NotificationInfoDto();
+                notificationInfo.setLocationId(entry.getKey());
+                notificationInfo.setLocationName(meteoNewsDataService.getLocationById(entry.getKey()).getName());
+                notificationInfo.setNotificationTypes(entry.getValue());
+                return notificationInfo;
+            })
+            .collect(Collectors.toList());
     }
 
     @Transactional
     public List<DeviceDto> getDevices(String query) {
-        var entities = StringUtils.hasText(query) ? deviceRepository.findAllByDeviceInfoContainingIgnoreCaseOrderByUpdatedTimestampDesc(query) : deviceRepository.findAllByOrderByUpdatedTimestampDesc();
+        var entities = StringUtils.hasText(query) ? deviceRepository.findAllByDeviceInfoContainingIgnoreCaseOrderByUpdatedTimestampDesc(query):deviceRepository.findAllByOrderByUpdatedTimestampDesc();
 
         return dashboardMapper.toDeviceDtoList(entities);
     }

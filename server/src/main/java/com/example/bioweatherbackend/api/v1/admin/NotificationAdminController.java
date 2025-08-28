@@ -22,7 +22,7 @@ public class NotificationAdminController {
     private NotificationJobService jobService;
 
     @GetMapping("/subscription/{pushToken}")
-    public List<SubscriptionDto> getSubscriptionsByPushToken(@PathVariable String pushToken) {
+    public SubscriptionDto getSubscriptionsByPushToken(@PathVariable String pushToken) {
         return service.getSubscriptions(pushToken);
     }
 

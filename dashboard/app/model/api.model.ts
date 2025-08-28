@@ -5,7 +5,14 @@ export type NotificationType =
   | 'last-meal'
   | 'next-rest'
   | 'peak'
-  | 'exercise';
+  | 'exercise'
+  | 'test';
+
+export interface NotificationInfo {
+  locationId: string;
+  locationName: string;
+  notificationTypes: NotificationType[];
+}
 
 export interface Subscription {
   pushToken: string;
@@ -13,9 +20,8 @@ export interface Subscription {
   deviceInfo: string;
   language: string;
   timezoneOffset: number;
-  locationId: string;
-  locationName: string;
-  notificationTypes: NotificationType[];
+  notificationInfo: NotificationInfo[];
+  selectedBwConditions: string[];
 }
 
 export interface DeviceInfo {

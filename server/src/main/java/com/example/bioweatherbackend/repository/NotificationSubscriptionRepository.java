@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface NotificationSubscriptionRepository extends JpaRepository<NotificationSubscriptionEntity, NotificationSubscriptionId> {
     void deleteByPushTokenAndLocationId(String pushToken, String locationId);
+    
+    void deleteByPushToken(String pushToken);
 
     List<NotificationSubscriptionEntity> findByPushToken(String pushToken);
 }

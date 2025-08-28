@@ -1,6 +1,7 @@
 package com.example.bioweatherbackend.api.v1;
 
 import com.example.bioweatherbackend.dto.notifications.SubscriptionDto;
+import com.example.bioweatherbackend.dto.notifications.UnsubscribeDto;
 import com.example.bioweatherbackend.service.DeviceManagementService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -17,9 +18,9 @@ public class NotificationSubscriptionController {
         service.subscribe(subscription);
     }
 
-    @DeleteMapping("subscription")
-    public void unsubscribe(@RequestBody SubscriptionDto subscription) {
-        service.unsubscribe(subscription);
+    @DeleteMapping("subscription/")
+    public void unsubscribe(@RequestBody UnsubscribeDto unsubscribeDto) {
+        service.unsubscribe(unsubscribeDto);
     }
 
 

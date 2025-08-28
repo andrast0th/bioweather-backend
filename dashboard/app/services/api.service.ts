@@ -57,8 +57,8 @@ export const getCacheStatistics = async (): Promise<CacheStatistics> => {
   return response.data;
 };
 
-export const fetchSubscriptions = async (pushToken: string): Promise<Subscription[]> => {
-  const response = await apiClient.get<Subscription[]>(
+export const fetchSubscriptions = async (pushToken: string): Promise<Subscription> => {
+  const response = await apiClient.get<Subscription>(
     `/admin/notifications/subscription/${encodeURIComponent(pushToken)}`
   );
   return response.data;
