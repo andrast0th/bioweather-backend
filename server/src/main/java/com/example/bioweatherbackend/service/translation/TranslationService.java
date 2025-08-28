@@ -15,6 +15,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +40,7 @@ public class TranslationService {
             var name = entity.map(TranslationEntity::getText).orElse(code);
 
             return new LanguageDto(code, name);
-        }).toList();
+        }).sorted(Comparator.comparing(LanguageDto::getName)).toList();
     }
 
     @Cacheable(CacheConfig.TRANSLATIONS)
