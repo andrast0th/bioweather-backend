@@ -85,7 +85,10 @@ export interface PushTicket {
 
 export interface Config {
   notificationJobCron: string;
-  notificationThresholdMinutes: number;
+  bwNotificationThresholdMinMinutes: number;
+  bwNotificationThresholdMaxMinutes: number;
+  crNotificationThresholdMinMinutes: number;
+  crNotificationThresholdMaxMinutes: number;
   bwTodayNotificationHour: string;
   bwTomorrowNotificationHour: string;
 }

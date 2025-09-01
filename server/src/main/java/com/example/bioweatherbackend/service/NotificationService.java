@@ -46,14 +46,13 @@ public class NotificationService {
 
         TicketResponse response = restClient.post().uri("/push/send").contentType(APPLICATION_JSON).body(notification).retrieve().body(TicketResponse.class);
 
-        if (response != null) {
+        if (response!=null) {
             handlePushTicketResponse(Collections.singletonList(pushToken), response.getData(), notificationType, notification.getTitle(), notification.getBody(), locationId);
         }
     }
 
-
     private void handlePushTicketResponse(List<String> tokens, List<TicketResponse.Ticket> tickets, NotificationType notificationType, String notificationTitle, String notificationBody, String locationId) {
-        if (tickets == null || tickets.isEmpty()) {
+        if (tickets==null || tickets.isEmpty()) {
             log.warn("No tickets received from Expo server.");
             return;
         }
@@ -63,11 +62,11 @@ public class NotificationService {
             // get associated token
             String pushToken = tokens.get(tickets.indexOf(ticket));
 
-            if (ticket.getStatus() == Status.ERROR) {
+            if (ticket.getStatus()==Status.ERROR) {
                 log.error("Ticket response with error, unsubscribing: {}", ticket.getDetails().getError());
             }
 
-            if (ticket.getStatus() == Status.OK) {
+            if (ticket.getStatus()==Status.OK) {
                 // save ticket details to check for errors later
                 PushTicketEntity pushTicketEntity = new PushTicketEntity();
                 pushTicketEntity.setId(ticket.getId());
@@ -93,7 +92,7 @@ public class NotificationService {
 
         List<PushTicketEntity> res;
 
-        if (locationId == null) {
+        if (locationId==null) {
             res = pushTicketRepository.findAllByPushToken(pushToken);
         } else {
             res = pushTicketRepository.findByPushTokenAndLocation(pushToken, locationId);

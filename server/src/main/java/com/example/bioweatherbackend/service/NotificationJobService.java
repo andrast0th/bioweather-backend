@@ -47,7 +47,7 @@ public class NotificationJobService {
             subs.forEach(sub -> {
                 log.info("Processing subscription for device: {}, location: {}, type: {}", device.getPushToken(), sub.getLocationId(), sub.getNotificationType());
 
-                if (sub.getLocationId() == null) {
+                if (sub.getLocationId()==null) {
                     return;
                 }
 
@@ -56,12 +56,14 @@ public class NotificationJobService {
 
                 var localTimeBwToday = parseDbTime(configService.getConfig().getBwTodayNotificationHour());
                 var localTimeBwTomorrow = parseDbTime(configService.getConfig().getBwTomorrowNotificationHour());
-                var notificationThresholdMinutes = configService.getConfig().getNotificationThresholdMinutes();
+
+                var bwMinThreshold = Duration.ofMinutes(configService.getConfig().getBwNotificationThresholdMaxMinutes());
+                var bwMaxThreshold = Duration.ofMinutes(configService.getConfig().getBwNotificationThresholdMaxMinutes());
 
                 try {
-                    if (NotificationType.BW_TODAY == sub.getNotificationType() && isInTimeRange(datetimeLocation, localTimeBwToday, Duration.ofMinutes(notificationThresholdMinutes), Duration.ofMinutes(notificationThresholdMinutes))) {
+                    if (NotificationType.BW_TODAY==sub.getNotificationType() && isInTimeRange(datetimeLocation, localTimeBwToday, bwMinThreshold, bwMaxThreshold)) {
                         sendBwNotification(device, location, sub.getNotificationType(), datetimeLocation);
-                    } else if (NotificationType.BW_TOMORROW == sub.getNotificationType() && isInTimeRange(datetimeLocation, localTimeBwTomorrow, Duration.ofMinutes(notificationThresholdMinutes), Duration.ofMinutes(notificationThresholdMinutes))) {
+                    } else if (NotificationType.BW_TOMORROW==sub.getNotificationType() && isInTimeRange(datetimeLocation, localTimeBwTomorrow, bwMinThreshold, bwMaxThreshold)) {
                         sendBwNotification(device, location, sub.getNotificationType(), datetimeLocation);
                     } else {
                         checkAndSendCrNotification(device, location, sub.getNotificationType(), datetimeLocation);
@@ -88,7 +90,13 @@ public class NotificationJobService {
         crMap.put(NotificationType.EXERCISE, cr.getExerciseStart());
 
         crMap.forEach((crKey, crValue) -> {
-            if (notificationType == crKey && isInTimeRange(datetimeLocation, crValue.toLocalTime(), Duration.ofMinutes(configService.getConfig().getNotificationThresholdMinutes()), Duration.ofMinutes(configService.getConfig().getNotificationThresholdMinutes()))) {
+
+            var inTimeRange = isInTimeRange(datetimeLocation, crValue.toLocalTime(),
+                Duration.ofMinutes(configService.getConfig().getCrNotificationThresholdMinMinutes()),
+                Duration.ofMinutes(configService.getConfig().getCrNotificationThresholdMaxMinutes())
+            );
+
+            if (notificationType==crKey && inTimeRange) {
                 log.info("Sending circadian rhythm notification for device: {}, location: {}, type: {}", device.getPushToken(), location.getId(), notificationType);
                 var translations = translationService.getTranslationsMap(device.getLanguage());
 
@@ -112,9 +120,9 @@ public class NotificationJobService {
         var scalesByDates = meteoNewsDataService.getScalesByLocationId(location.getId());
         LocalDate targetDate;
 
-        if (notificationType == NotificationType.BW_TODAY) {
+        if (notificationType==NotificationType.BW_TODAY) {
             targetDate = datetimeLocation.toLocalDate();
-        } else if (notificationType == NotificationType.BW_TOMORROW) {
+        } else if (notificationType==NotificationType.BW_TOMORROW) {
             targetDate = datetimeLocation.toLocalDate().plusDays(1);
         } else {
             throw new IllegalStateException("Unexpected BW notification type: " + notificationType);
@@ -123,7 +131,7 @@ public class NotificationJobService {
 
         var scales = scalesByDates.stream().filter(s -> Objects.equals(s.getDate(), targetDate.toString())).findAny().orElse(null);
 
-        if (scales == null) {
+        if (scales==null) {
             log.warn("No scales found for location: {}, date: {}", location.getId(), datetimeLocation.toLocalDate());
             return;
         }
@@ -131,7 +139,7 @@ public class NotificationJobService {
         var conditions = scales.getConditions();
 
         var alertConditions = conditions.stream().filter(c -> c.getSeverity() > 2).toList();
-        var selectedConditions = device.getSelectedBwConditions() == null ? List.of() : device.getSelectedBwConditions();
+        var selectedConditions = device.getSelectedBwConditions()==null ? List.of():device.getSelectedBwConditions();
         alertConditions = alertConditions.stream().filter(c -> selectedConditions.contains(c.getCondition())).toList();
 
         if (alertConditions.isEmpty()) {

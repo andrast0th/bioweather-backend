@@ -6,7 +6,6 @@ import Typography from '@mui/material/Typography';
 import { fetchNotificationHistory, fetchSubscriptions } from '~/services/api.service';
 import { CircularProgress, Paper, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { dateIsoToString } from '~/services/util.service';
 
 const columns: GridColDef<PushTicket[][number]>[] = [
   {
@@ -18,13 +17,13 @@ const columns: GridColDef<PushTicket[][number]>[] = [
     field: 'ticketCreatedAt',
     headerName: 'Created',
     width: 200,
-    valueGetter: (value, row) => dateIsoToString(value),
+    valueGetter: (value, row) => new Date(value).toISOString(),
   },
   {
     field: 'receiptCheckedAt',
     headerName: 'Checked',
     width: 100,
-    valueGetter: (value, row) => (row.wasReceiptChecked ? dateIsoToString(value) : '-'),
+    valueGetter: (value, row) => (row.wasReceiptChecked ? new Date(value).toISOString() : '-'),
   },
   {
     field: 'notificationTitle',

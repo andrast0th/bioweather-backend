@@ -63,14 +63,41 @@ export default function Config() {
           {cronDescription}
         </Typography>
         <Divider />
+        <Typography variant="subtitle2">BW Notification Threshold (Minutes)</Typography>
         <TextField
-          label="Notification Threshold Minutes"
-          name="notificationThresholdMinutes"
+          label="BW Min"
+          name="bwNotificationThresholdMinMinutes"
           type="number"
-          value={config.notificationThresholdMinutes}
+          value={config.bwNotificationThresholdMinMinutes}
           onChange={handleNumberChange}
           fullWidth
         />
+        <TextField
+          label="BW Max"
+          name="bwNotificationThresholdMaxMinutes"
+          type="number"
+          value={config.bwNotificationThresholdMaxMinutes}
+          onChange={handleNumberChange}
+          fullWidth
+        />
+        <Typography variant="subtitle2">CR Notification Threshold (Minutes)</Typography>
+        <TextField
+          label="CR Min"
+          name="crNotificationThresholdMinMinutes"
+          type="number"
+          value={config.crNotificationThresholdMinMinutes}
+          onChange={handleNumberChange}
+          fullWidth
+        />
+        <TextField
+          label="CR Max"
+          name="crNotificationThresholdMaxMinutes"
+          type="number"
+          value={config.crNotificationThresholdMaxMinutes}
+          onChange={handleNumberChange}
+          fullWidth
+        />
+        <Divider />
         <TextField
           label="BW Today Notification Hour"
           name="bwTodayNotificationHour"
