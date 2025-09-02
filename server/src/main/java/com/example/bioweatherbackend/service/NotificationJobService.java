@@ -57,7 +57,7 @@ public class NotificationJobService {
                 var localTimeBwToday = parseDbTime(configService.getConfig().getBwTodayNotificationHour());
                 var localTimeBwTomorrow = parseDbTime(configService.getConfig().getBwTomorrowNotificationHour());
 
-                var bwMinThreshold = Duration.ofMinutes(configService.getConfig().getBwNotificationThresholdMaxMinutes());
+                var bwMinThreshold = Duration.ofMinutes(configService.getConfig().getBwNotificationThresholdMinMinutes());
                 var bwMaxThreshold = Duration.ofMinutes(configService.getConfig().getBwNotificationThresholdMaxMinutes());
 
                 try {
@@ -163,7 +163,7 @@ public class NotificationJobService {
 
 
     private boolean isInTimeRange(ZonedDateTime zonedDateTime, LocalTime targetTime, Duration startOffset, Duration endOffset) {
-        ZonedDateTime startTime = zonedDateTime.with(targetTime).minus(startOffset);
+        ZonedDateTime startTime = zonedDateTime.with(targetTime).plus(startOffset);
         ZonedDateTime endTime = zonedDateTime.with(targetTime).plus(endOffset);
 
         ZonedDateTime now = ZonedDateTime.now(zonedDateTime.getZone());
