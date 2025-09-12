@@ -91,6 +91,10 @@ export const sendTestNotification = async (pushToken: string, message: string): 
   });
 };
 
+export const reSendNotification = async (ticketId: string): Promise<void> => {
+  await apiClient.post<void>(`/admin/notifications/resend-notification/${ticketId}`);
+};
+
 export const getConfig = async (): Promise<Config> => {
   const response = await apiClient.get<Config>('/admin/config');
   return response.data;

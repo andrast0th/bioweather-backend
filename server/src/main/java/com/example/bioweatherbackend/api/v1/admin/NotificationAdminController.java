@@ -37,6 +37,11 @@ public class NotificationAdminController {
         notificationService.sendTextNotification(notificationDto.getPushToken(), "Test Notification", notificationDto.getMessage(), NotificationType.TEST, null);
     }
 
+    @PostMapping("/resend-notification/{ticketId}")
+    public void triggerNotification(@PathVariable String ticketId) {
+        notificationService.resendNotification(ticketId);
+    }
+
     @PostMapping("/test-job")
     public void triggerJob() {
         jobService.scheduledRunWorkJob();

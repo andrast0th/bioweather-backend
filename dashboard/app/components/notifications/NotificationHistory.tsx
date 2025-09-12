@@ -3,9 +3,14 @@ import * as React from 'react';
 import { useEffect } from 'react';
 import type { Device, NotificationInfo, PushTicket, Subscription } from '~/model/api.model';
 import Typography from '@mui/material/Typography';
-import { fetchNotificationHistory, fetchSubscriptions } from '~/services/api.service';
+import {
+  fetchNotificationHistory,
+  fetchSubscriptions,
+  reSendNotification,
+} from '~/services/api.service';
 import { CircularProgress, Paper, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import Button from '@mui/material/Button';
 
 const columns: GridColDef<PushTicket[][number]>[] = [
   {
@@ -34,6 +39,24 @@ const columns: GridColDef<PushTicket[][number]>[] = [
     field: 'notificationBody',
     headerName: 'Notification Content',
     flex: 1,
+  },
+  {
+    field: 'actions',
+    headerName: 'Actions',
+    width: 120,
+    sortable: false,
+    filterable: false,
+    renderCell: (params) => (
+      <Button
+        variant="contained"
+        size="small"
+        onClick={async () => {
+          await reSendNotification(params.row.id);
+        }}
+      >
+        Re-Send
+      </Button>
+    ),
   },
 ];
 

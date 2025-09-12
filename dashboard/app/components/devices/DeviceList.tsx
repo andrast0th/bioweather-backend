@@ -60,7 +60,7 @@ export function DeviceList({ selectedDevice, setSelectedDevice }: DeviceListProp
   }
 
   function getDeviceAvatar(device: Device) {
-    return device.deviceInfo.osName.toLowerCase().includes('ios') ? <Apple /> : <Android />;
+    return device.deviceInfo.brand.toLowerCase() === 'apple' ? <Apple /> : <Android />;
   }
 
   return (

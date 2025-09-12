@@ -16,8 +16,8 @@ import org.springframework.web.client.RestClient;
 
 import java.time.Instant;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
@@ -39,16 +39,27 @@ public class NotificationService {
         PushNotification notification = new PushNotification();
         notification.setTo(Collections.singletonList(pushToken));
         notification.setTitle(title);
-        notification.setSubtitle(subtitle);
         notification.setBody(subtitle);
         notification.setSound("default");
-        notification.setData(Map.of("notificationType", notificationType.getValue()));
+
+        var data = new HashMap<String, Object>();
+        data.put("notificationType", notificationType.getValue());
+        if (locationId!=null) {
+            data.put("locationId", locationId);
+        }
+        notification.setData(data);
 
         TicketResponse response = restClient.post().uri("/push/send").contentType(APPLICATION_JSON).body(notification).retrieve().body(TicketResponse.class);
 
         if (response!=null) {
             handlePushTicketResponse(Collections.singletonList(pushToken), response.getData(), notificationType, notification.getTitle(), notification.getBody(), locationId);
         }
+    }
+
+    public void resendNotification(String ticketId) {
+        pushTicketRepository.findById(ticketId).ifPresent(pushTicket -> {
+            sendTextNotification(pushTicket.getDevice().getPushToken(), pushTicket.getNotificationTitle(), pushTicket.getNotificationBody(), pushTicket.getNotificationType(), pushTicket.getLocationId());
+        });
     }
 
     private void handlePushTicketResponse(List<String> tokens, List<TicketResponse.Ticket> tickets, NotificationType notificationType, String notificationTitle, String notificationBody, String locationId) {
