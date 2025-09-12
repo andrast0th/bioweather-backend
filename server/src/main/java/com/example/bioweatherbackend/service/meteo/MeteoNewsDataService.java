@@ -22,6 +22,7 @@ import java.util.Optional;
 public class MeteoNewsDataService {
 
     public static final String DEFAULT_LANGUAGE = "en";
+    public static final List<String> SUPPORTED_API_LANGS = List.of("en", "de", "fr", "it");
 
     private final RestClient restClient;
     private final LocationMapper locationMapper;
@@ -39,14 +40,23 @@ public class MeteoNewsDataService {
 
     @Cacheable(CacheConfig.LOCATION)
     public ApiLocation getLocationById(String id, String language) {
-        Geonames response = restClient.get().uri(uriBuilder -> uriBuilder.path("geonames/id/{id}.xml").queryParam("lang", language).build(id.trim())).retrieve().body(Geonames.class);
+        Geonames response = restClient.get().uri(uriBuilder -> uriBuilder.path("geonames/id/{id}.xml")
+                .queryParam("lang", this.getApiLanguage(language))
+                .build(id.trim()))
+            .retrieve()
+            .body(Geonames.class);
 
         return locationMapper.toLocationDto(response);
     }
 
     @Cacheable(CacheConfig.GEO_REF_LOCATION)
     public ApiLocation geoRef(String lat, String lon, String language) {
-        Geo response = restClient.get().uri(uriBuilder -> uriBuilder.path("/geo/id.xml").queryParam("lang", language).queryParam("lat", lat.trim()).queryParam("lon", lon.trim()).build()).retrieve().body(Geo.class);
+        Geo response = restClient.get()
+            .uri(uriBuilder -> uriBuilder.path("/geo/id.xml")
+                .queryParam("lang", this.getApiLanguage(language)).queryParam("lat", lat.trim())
+                .queryParam("lon", lon.trim()).build())
+            .retrieve()
+            .body(Geo.class);
 
         return Optional.ofNullable(response)
             .map(Geo::getContent)
@@ -60,7 +70,7 @@ public class MeteoNewsDataService {
             .uri(uriBuilder -> uriBuilder.path("search/{query}.xml")
                 .queryParam("autofill", 0)
                 .queryParam("limit", 10)
-                .queryParam("lang", language)
+                .queryParam("lang", this.getApiLanguage(language))
                 .build(searchQuery.trim()))
             .retrieve()
             .body(Search.class);
@@ -74,7 +84,7 @@ public class MeteoNewsDataService {
     public List<ApiWeatherForecast> getWeatherByLocationId(String id, CumulationPeriod period, String language) {
         Forecasts response = restClient.get()
             .uri(uriBuilder -> uriBuilder.path("forecasts/id/{id}.xml")
-                .queryParam("lang", language)
+                .queryParam("lang", this.getApiLanguage(language))
                 .queryParam("cumulation", period.getValue())
                 .build(id.trim())).retrieve()
             .body(Forecasts.class);
@@ -85,7 +95,7 @@ public class MeteoNewsDataService {
     @Cacheable(CacheConfig.ASTRONOMY)
     public List<ApiAstronomy> getAstronomy(String id, String beginDate, String endDate, String language) {
         Astronomy response = restClient.get().uri(uriBuilder -> {
-            var builder = uriBuilder.path("astronomy/id/{id}.xml").queryParam("lang", language);
+            var builder = uriBuilder.path("astronomy/id/{id}.xml").queryParam("lang", this.getApiLanguage(language));
 
             if (StringUtils.isNotEmpty(beginDate)) {
                 builder = builder.queryParam("begin", beginDate);
@@ -111,7 +121,7 @@ public class MeteoNewsDataService {
     public List<ApiBioWeatherByDate> getScalesByLocationId(String id, String language) {
         Scales scales = restClient.get()
             .uri(uriBuilder -> uriBuilder.path("scales/id/{id}.xml")
-                .queryParam("lang", language)
+                .queryParam("lang", this.getApiLanguage(language))
                 .build(id.trim()))
             .retrieve().body(Scales.class);
 
@@ -124,6 +134,10 @@ public class MeteoNewsDataService {
             .map(scalesMapper::toResponse)
             .orElse(Collections.emptyList());
 
+    }
+
+    private String getApiLanguage(String language) {
+        return SUPPORTED_API_LANGS.contains(language) ? language:DEFAULT_LANGUAGE;
     }
 
 }
