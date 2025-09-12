@@ -109,7 +109,7 @@ public class DeviceManagementService {
             .map(entry -> {
                 var notificationInfo = new NotificationInfoDto();
                 notificationInfo.setLocationId(entry.getKey());
-                notificationInfo.setLocationName(meteoNewsDataService.getLocationById(entry.getKey()).getName());
+                notificationInfo.setLocationName(meteoNewsDataService.getLocationById(entry.getKey(), MeteoNewsDataService.DEFAULT_LANGUAGE).getName());
                 notificationInfo.setNotificationTypes(entry.getValue());
                 return notificationInfo;
             })
@@ -118,7 +118,9 @@ public class DeviceManagementService {
 
     @Transactional
     public List<DeviceDto> getDevices(String query) {
-        var entities = StringUtils.hasText(query) ? deviceRepository.findAllByDeviceInfoContainingIgnoreCaseOrderByUpdatedTimestampDesc(query):deviceRepository.findAllByOrderByUpdatedTimestampDesc();
+        var entities = StringUtils.hasText(query)
+            ? deviceRepository.findAllByDeviceInfoContainingIgnoreCaseOrderByUpdatedTimestampDesc(query)
+            :deviceRepository.findAllByOrderByUpdatedTimestampDesc();
 
         return dashboardMapper.toDeviceDtoList(entities);
     }

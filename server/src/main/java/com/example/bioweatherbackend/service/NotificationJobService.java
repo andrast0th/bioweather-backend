@@ -51,7 +51,7 @@ public class NotificationJobService {
                     return;
                 }
 
-                ApiLocation location = meteoNewsDataService.getLocationById(sub.getLocationId());
+                ApiLocation location = meteoNewsDataService.getLocationById(sub.getLocationId(), device.getLanguage());
                 var datetimeLocation = dateTimeUtil.getDateTimeForLocation(location);
 
                 var localTimeBwToday = parseDbTime(configService.getConfig().getBwTodayNotificationHour());
@@ -79,7 +79,7 @@ public class NotificationJobService {
     }
 
     private void checkAndSendCrNotification(DeviceEntity device, ApiLocation location, NotificationType notificationType, ZonedDateTime datetimeLocation) {
-        var cr = circadianRhythmService.getCircadianRhythm(location.getId(), datetimeLocation.toLocalDate());
+        var cr = circadianRhythmService.getCircadianRhythm(location.getId(), datetimeLocation.toLocalDate(), device.getLanguage());
 
         var crMap = new HashMap<NotificationType, LocalDateTime>();
         crMap.put(NotificationType.BEDTIME, cr.getBed());
@@ -117,7 +117,7 @@ public class NotificationJobService {
         // This could involve creating a PushTicketEntity and saving it to the repository
         log.info("Sending notification for device: {}, location: {}, type: {}", device.getPushToken(), location.getId(), notificationType);
 
-        var scalesByDates = meteoNewsDataService.getScalesByLocationId(location.getId());
+        var scalesByDates = meteoNewsDataService.getScalesByLocationId(location.getId(), device.getLanguage());
         LocalDate targetDate;
 
         if (notificationType==NotificationType.BW_TODAY) {

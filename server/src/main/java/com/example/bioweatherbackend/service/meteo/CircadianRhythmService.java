@@ -20,28 +20,28 @@ public class CircadianRhythmService {
     private final DateTimeUtil dateTimeUtil;
 
     @Cacheable(CacheConfig.CIRCADIAN_RHYTHM)
-    public CircadianRhythmDto getCircadianRhythm(String locationId, LocalDate localDate) {
-        var location = meteoNewsDataService.getLocationById(locationId);
+    public CircadianRhythmDto getCircadianRhythm(String locationId, LocalDate localDate, String language) {
+        var location = meteoNewsDataService.getLocationById(locationId, language);
 
-        if (localDate == null) {
+        if (localDate==null) {
             var datetime = dateTimeUtil.getDateTimeForLocation(location);
             localDate = datetime.toLocalDate();
         }
 
-        List<ApiAstronomy> astronomyList = meteoNewsDataService.getAstronomy(locationId, localDate.toString(), localDate.toString());
-        ApiAstronomy astronomy = astronomyList.isEmpty() ? null : astronomyList.getFirst();
+        List<ApiAstronomy> astronomyList = meteoNewsDataService.getAstronomy(locationId, localDate.toString(), localDate.toString(), language);
+        ApiAstronomy astronomy = astronomyList.isEmpty() ? null:astronomyList.getFirst();
 
         CircadianRhythmDto result = new CircadianRhythmDto();
         result.setDateStr(localDate.toString());
 
-        LocalDateTime sunrise = parseAstronomyTime(localDate, astronomy != null ? astronomy.getSunrise() : null);
-        LocalDateTime sunset = parseAstronomyTime(localDate, astronomy != null ? astronomy.getSunset() : null);
+        LocalDateTime sunrise = parseAstronomyTime(localDate, astronomy!=null ? astronomy.getSunrise():null);
+        LocalDateTime sunset = parseAstronomyTime(localDate, astronomy!=null ? astronomy.getSunset():null);
 
         LocalDateTime sunriseMax = localDate.atTime(7, 0);
 
         LocalDateTime wakeUp;
-        if (sunrise != null && sunset != null) {
-            wakeUp = sunrise.isAfter(sunriseMax) ? dateTimeUtil.roundToNextQuarterHour(sunriseMax) : dateTimeUtil.roundToNextQuarterHour(sunrise);
+        if (sunrise!=null && sunset!=null) {
+            wakeUp = sunrise.isAfter(sunriseMax) ? dateTimeUtil.roundToNextQuarterHour(sunriseMax):dateTimeUtil.roundToNextQuarterHour(sunrise);
             result.setSunrise(sunrise);
             result.setSunset(sunset);
         } else {
@@ -66,7 +66,7 @@ public class CircadianRhythmService {
     }
 
     private LocalDateTime parseAstronomyTime(LocalDate date, String time) {
-        if (time == null) return null;
+        if (time==null) return null;
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd H:mm");
             return LocalDateTime.parse(date + " " + time, formatter);
